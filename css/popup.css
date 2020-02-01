@@ -1,0 +1,157 @@
+@keyframes blink { 50% { background-color: #1da1f2; color: #fff }  }
+
+.flash {
+	animation: blink ease-in-out 0.7s;
+	animation-iteration-count: 3;
+}
+
+::-webkit-scrollbar {
+  width: 3px !important;
+  height: 3px !important;
+}
+
+/* Menu on top */
+.menu {
+  margin-top: 0px !important;
+}
+
+.mopub-menu {
+	background: #14171a !important;
+	box-shadow: 0 2px 3px rgba(0,0,0,.35) !important;
+}
+
+.no-radius {
+	border-radius: 0px !important;
+}
+
+/* AdUnit Info Labels */
+.mopub-label-title {
+	width: 80px;
+}
+
+.mopub-label-title-longer {
+	width: 120px;
+}
+
+.mopub-color {
+	background-color: #1da1f2 !important;
+	border-color: #1da1f2 !important;
+	color: #FFFFFF !important;
+}
+
+.mopub-label-color {
+	/* background-color: #1da1f2 !important; */
+	/* border-color: #1da1f2 !important; */
+	/* color: #FFFFFF !important; */
+	/* background-color: transparent !important; */
+	/* border-color: #1da1f2 !important; */
+	/* color: black !important; */
+}
+
+.mopub-label-radius {
+	padding: 0.4rem !important;
+	border-radius: 1.6rem !important;
+}
+
+.mopub-label-value {
+	margin-left: 10px;
+}
+
+.adunit-header {
+	margin-left: 10px;
+}
+
+/* Button Color Override */
+.mopub-button-color {
+	background-color: #1da1f2 !important;
+	border-color: #1da1f2 !important;
+	color: #FFFFFF !important;
+}
+
+.mopub-button-color:hover {
+	background-color: #1a91da !important;
+	border-color: #1a91da !important;
+	color: #fff !important;
+}
+
+
+
+/* Button Radius */
+.mopub-button-radius {
+	border-radius: 1.6rem !important;
+}
+
+/* Mopub Operation Button Color Override */
+.mopub-ops-button-color {
+	background-color: #fff !important;
+	border: 1px solid #657786 !important;
+	color: #657786 !important;
+	font-weight: bold !important;
+	box-shadow: none !important;
+}
+
+.mopub-ops-button-color:hover {
+	background-color: #f0f1f3 !important;
+	border-color: #657786 !important;
+	color: #657786 !important;
+}
+
+/* Tabulator */
+.tabulator {
+	font-size: 12px;
+}
+
+.tabulator-group-toggle {
+	float: left; /* To have the arrow on the right for grouping */
+}
+
+.tabulator .tabulator-header {
+	color: #657786 !important;
+}
+
+/* .tabulator-row.tabulator-group { */
+/* 	background-color: #D2E9FA; !important; */
+/* 	color: #fff !important; */
+/* } */
+/*  */
+/* .tabulator-row.tabulator-group:hover { */
+/* 	background-color: rgb(29, 161, 242); !important; */
+/* 	color: #fff !important; */
+/* } */
+
+.tabulator-row.tabulator-selectable:hover {
+	background-color: #eaf5fd !important;
+}
+
+/* Cell Edit */
+.tabulator-row .tabulator-cell.tabulator-editing {
+  /* border: 1px solid #1D68CD; */
+  /* padding: 0; */
+
+	/* box-shadow: inset 0 0 0 1px transparent;a */
+	/* border: 1px solid #ccd6dd; */
+	/* background: #fff; */
+	/* color: #14171a; */
+	/* transition: border-color .25s,box-shadow .25s;a */
+	/* border-radius: .2rem; */
+	/* font-size: .6rem; */
+	/* line-height: .8rem; */
+	/* min-height: 1.2rem; */
+	/* padding: 2px; */
+}
+
+
+
+/* Loader */
+.ui.inverted.dimmer .ui.loader:after {
+	/* border-color: #1da1f2 #1da1f2 transparent !important; */
+	border-color: #1da1f2 transparent transparent !important;
+}
+
+.ui.inverted.dimmer .ui.loader:before {
+	/* border-color: rgba(0, 0, 0, 0) !important; */
+	border-color: rgb(210, 233, 250) !important;
+}
+
+
+

@@ -1,0 +1,31 @@
+{
+  "name": "WaterfallBuilder",
+  "version": "0.0.1",
+  "description": "Brandnew WaterfallBuilder",
+  "manifest_version": 2,
+  "background": {
+    "persistent": true,
+    "scripts": [
+      "lib/jquery-3.4.1.min.js",
+      "lib/lodash-core.js",
+      "lib/http.js",
+      "js/sessionHandler.js",
+      "js/background.js"
+    ]
+  },
+  "browser_action": {
+    // "default_popup": "popup.html",
+    "default_title": "WaterfallBuilder"
+  },
+  "icons": {
+  },
+  "permissions": [
+    "activeTab",
+    "storage",
+    "tabs",
+    "webRequest",
+    "webNavigation",
+    "webRequestBlocking",
+    "*://*.mopub.com/"
+  ]
+}
