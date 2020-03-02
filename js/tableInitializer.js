@@ -2,6 +2,17 @@ var tableInitializer = (function(global) {
   "use strict";
 
 	let placeHolder = `<br><h4 class="ui header grey">No Data Available</h4><br><br><br>`;
+	let lineItemSearchInputHtml = `<span class="count-lineitems-wrapper"></span>
+																 <div class="ui icon input small search-table-wrapper">
+																 	 <input type="text" placeholder="Search line item name" id="line-item-search" class="mopub-input-search">
+																	 <i class="search icon"></i>
+																 </div>`;
+	let orderSearchInputHtml = `<span class="count-orders-wrapper"></span>
+															<div class="ui icon input small search-table-wrapper">
+																<input type="text" placeholder="Search order name" id="order-search" class="mopub-input-search">
+																<i class="search icon"></i>
+															</div>`;
+	let waterfallTableFooterHtml = `<span class="count-waterfall-wrapper"></span>`;
 
 	function init() {
 		initAdUnitWaterfallTable();
@@ -9,57 +20,79 @@ var tableInitializer = (function(global) {
 		initLineItemListTable();
 	}
 
-	function jsonArrayFormatter(cell, formatterParams, onRendered) {
-		let value = cell.getValue();
-		if (jQuery.type(value) == "object") {
-			value = JSON.stringify(value, null, 2);
-		} else if (jQuery.type(value) == "array") {
-			value = value.toString();
+  function flashRow(row, status) {
+		loadingIndicator.increaseBar(); // Hmm..
+    let rowElement = row.getElement();
+		if (status == 'new') {
+			$(rowElement).addClass("flash");
+			notifier.show({
+				header: `LineItems Added (${loadingIndicator.getBarLength()} Items)`,
+				message: `${row.getData().name}: <b>${row.getData().key}</b>`, 
+				type: "success", 
+				append: true
+			});
 		}
-		return value;
-	}
-
-	function editCheck(cell) {
-		let rowData = cell.getRow().getData();
-		let field = cell.getColumn().getField();
-
-		// For default "marketplace", users only should be able to change CPM and status field.
-		if (rowData.type == "marketplace") {
-			if (field != "bid" && field != "status") {
-				console.log("This field is not editable");
-				return false;
-			}
+		if (status == 'updated') {
+			$(rowElement).addClass("flash");
 		}
-		return true;
+  }
+
+	function updateWaterfallItemCount(count) {
+		let html = `<span class="count-waterfall-items">Total ${count} Line Items</span>`;
+		$(".count-waterfall-wrapper").html(html);
 	}
 
 	function initAdUnitWaterfallTable() {
     WaterfallTable = new Tabulator("#waterfall-adunit", {
 			data: [],
 			layout: "fitColumns",
-			index: "key", // To avoid duplicate in the table
+			index: "key", // To avoid duplicates in the table
 			tooltips: true,
 			placeholder: placeHolder,
-			rowAdded: function(row) {
-				let rowElement = row.getElement();
-				$(rowElement).addClass("flash");
-				$("#status-filter").trigger('change');
-				WaterfallTable.setSort([
-					{ column: "bid", dir:"desc" },
-					{ column: 'priority', dir:"asc" }
-				]);
+
+			// Row Change callbacks
+      rowAdded: function(row) { 
+				flashRow(row, 'new');
+				updateWaterfallItemCount(WaterfallTable.getDataCount("active"));
+
+				// let rowData = row.getData();
+				// if (!_.has(rowData, "origin")) rowData.origin = "new";
+				// WaterfallTable.updateData([rowData]);
+			},
+      rowUpdated: function(row) { 
+				flashRow(row, 'updated');
+			},
+			rowMoved: function(row) {
+				// flashRow(row, 'moved');
+				// this.setSort([
+				// 	{ column: "bid", dir:"desc" },
+				// 	{ column: 'priority', dir:"asc" }
+				// ]);
+			},
+			rowDeleted: function(row) { 
+				updateWaterfallItemCount(WaterfallTable.getDataCount("active"));
+				// Need to track deleted items
+				// loadingIndicator.increaseBar(); 
+				// notifier.show({
+				// 	header: "Removed LineItems",
+				// 	message: `${row.getData().name} - ${row.getData().key}`, 
+				// 	type: "info", 
+				// 	append: true
+				// });
+			},
+
+			dataFiltered: function(filters, rows) {
+				updateWaterfallItemCount(rows.length);
 			},
 
 			// Manage Row Movement
 			movableRows: true,
-			movableRowsReceivingStart: function(fromRow, fromTable) {
-				let rowData = fromRow.getData();
-				rowData['secondaryName'] = rowData.orderName;
-		  },
 			movableRowsReceiver: function(fromRow, toRow, fromTable) {
 				let insertData = fromRow.getData();
 				if (!insertData.adUnitKeys.includes(AdUnitId)) {
-					insertData.adUnitKeys.push(AdUnitId); // Connect to New AdUnit #Important!. AdUnitId is global var
+					insertData.adUnitKeys.push(AdUnitId); // Connect to New AdUnit #Important! AdUnitId is global variable
+					// insertData.origin = "assigned";
+					console.log(`Assigning adunit ${AdUnitId} for ${insertData.key}`);
 				}
 				WaterfallTable.updateOrAddData([insertData]);
 				return true;
@@ -69,103 +102,34 @@ var tableInitializer = (function(global) {
 			groupBy: "priority",
 			groupToggleElement: false,
 			groupHeader: function(value, count, data, group) {
-				return "Priority " + value;
+				let html = `Priority ${value} (${count} line items)`;
+				// let html = `Priority <a class="ui gray circular label">${value}</a>`;
+				return html;
+			},
+
+			// Disable Rows that doesn't supported for now.
+			selectableCheck: function(row) {
+				let status = row.getData().status;
+				let type = row.getData().type;
+				let regex = /campaign\-|segment\-|scheduled/;
+				let regexType = /advanced\_/;
+				if (status.match(regex) || type.match(regexType)) {
+					let rowElement = row.getElement();
+					$(rowElement).addClass('tabulator-unselectable');
+					return false;	
+				}
+				return true;
 			},
 			
-			// Column Definition
-			columns: [
-				{ rowHandle: true, formatter: "handle", headerSort: false, resizable: false, width: 30, minWidth: 30 },
-				{ formatter: "rowSelection", titleFormatter: "rowSelection", headerSort: false, resizable: false, cellClick: function(e, cell) {
-						cell.getRow().toggleSelect();
-					},
-					width: 5
-				},
-				{ field: 'name', title: 'Name', visible: true, download: true, editor: "input", editable: editCheck, minWidth: 80 },
-				{ field: 'type', title: 'Item Type', visible: true, download: true, minWidth: 110, width: 110 },
-				{ field: 'networkType', title: 'Network Type', visible: true, download: true, minWidth: 150, width: 150 },
-				{ field: 'bid', title: 'CPM', sorter: "number", visible: true, download: true, editor: "number", editable: editCheck, editorParams: {
-						min: 0,
-						max: 5000,
-						step: 1,
-						elementAttributes: {
-							maxlength: "10"
-						}
-					},
-					formatter: "money",
-					formatterParams:{
-						symbol: "$ "
-					},
-					cellEdited: function(cell) {
-						this.setSort([
-							{ column: "bid", dir: "desc" }, //then sort by this second
-							{ column: 'priority', dir: "asc" } //sort by this first
-						]);
-					},
-					minWidth: 100,
-					width: 100
-				},
-				{ field: 'priority', title: 'Priority', visible: true, download: true, editor: "number", editable: editCheck, editorParams: {
-						min: 1,
-						max: 16,
-						step: 1,
-						elementAttributes:{
-							maxlength: "2", //set the maximum character length of the input element to 10 characters
-						},
-						verticalNavigation: "table",
-					},
-					validator: ["required", "min:1", "max:16"],
-					sorter: "number",
-					cellEdited: function(cell) {
-						this.setSort([
-							{ column: "bid", dir:"desc" },
-							{ column: 'priority', dir:"asc" }
-						]);
-					},
-					align: "left",
-					minWidth: 90,
-					width: 90
-				},
-				{ field: 'status', title: 'Status', visible: true, download: true, editor: "select", editable: editCheck, editorParams: {
-						values: [
-							{ label: "Running", value: "running" }, 
-							{ label: "Paused", value: "paused" }
-						]
-					},
-					width: 90,
-					minWidth: 90
-				},
-				{ field: 'secondaryName', title: 'Order', visible: true, download: true, minWidth: 80 },
-				{ field: 'network', title: 'Network', visible: false, download: true, formatter: jsonArrayFormatter },
-				{ field: 'overrideFields', title: 'Override Fields', download: true, formatter: jsonArrayFormatter, visible: false },
-				{ field: 'start', title: 'Start', visible: false, download: true },
-				{ field: 'end', title: 'End', visible: false, download: true },
-				{ field: 'active', title: 'Active', visible: false, download: true },
-				{ field: 'disabled', title: 'Disabled', visible: false, download: true },
-				{ field: 'keywords', title: 'Keywords', visible: false, download: true },
-				{ field: 'includeGeoTargeting', title: 'Geo Targeting Mode', visible: false, download: true },
-				{ field: 'countries', title: 'Countries', visible: false, download: true },
-				{ field: 'regions', title: 'Regions', visible: false, download: true },
-				{ field: 'cities', title: 'Cities', visible: false, download: true },
-				{ field: 'zipCodes', title: 'ZipCodes', visible: false, download: true },
-				{ field: 'autoCpm', title: 'AutoCpm', visible: false, download: true },
-				{ field: 'key', title: 'Key', visible: false, download: true },
-				{ field: 'budget', title: 'Budget', visible: false, download: true },
-				{ field: 'budgetType', title: 'Budget Type', visible: false, download: true },
-				{ field: 'pacing', title: 'Pacing', visible: false, download: true },
-				{ field: 'frequencyCaps', title: 'Frequency Caps', visible: false, download: true },
-				{ field: 'bidStrategy', title: 'Bid Strategy', visible: false, download: true },
-				{ field: 'percentDelivered', title: 'Percent Delivered', visible: false, download: true },
-			],
+			columns: tableColumnDef.getColumnDef("WaterfallTable"),
+
 			initialSort: [
 				{ column:"bid", dir:"desc" },
 				{ column:"priority", dir:"asc" }
 			],
-			rowMoved: function(row) {
-				this.setSort([
-					{ column: "bid", dir:"desc" },
-					{ column: 'priority', dir:"asc" }
-				]);
-			}
+			
+			// Footer
+			footerElement: waterfallTableFooterHtml
 		});
 	}
 
@@ -185,29 +149,28 @@ var tableInitializer = (function(global) {
 
 			// Pagination
 			pagination: "local",
-			paginationSize: 15,
+			paginationSize: 10,
+
+			rowAdded: function(row) {
+				let html = `<span class="count-lineitems">${LineItemTable.getDataCount()} Items</span>`;
+				$(".count-lineitems-wrapper").html(html);
+			},
+
+			dataFiltered: function(filters, rows) {
+				let html = `<span class="count-lineitems">${rows.length} Items</span>`;
+				$(".count-lineitems-wrapper").html(html);
+			},
 
 			// Column Definition
-			columns: [
-				{ rowHandle:true, formatter: "handle", headerSort: false, width: 30, minWidth: 30 },
-				{ formatter: "rowSelection", titleFormatter: "rowSelection", headerSort: false, resizable: false, cellClick: function(e, cell) {
-						cell.getRow().toggleSelect();
-					},
-          width: 5
-				},
-				{ field: 'name', title: 'Name', visible: true, minWidth: 100 },
-				{ field: 'type', title: 'Type', visible: true },
-				{ field: 'priority', title: 'Priority', visible: true },
-				{ field: 'bid', title: 'CPM', sorter: "number", visible: true, formatter: "money", formatterParams: {symbol: "$ "} },
-				{ field: 'status', title: 'Status', visible: true },
-				{ field: 'orderName', title: 'Order', visible: true },
-				{ field: 'key', title: 'Key', visible: false }
-			],
+			columns: tableColumnDef.getColumnDef("LineItemTable"),
 
 			// Initial Sort
 			initialSort:[
 				// { column:"activeLineItemCount", dir:"desc" }
-			]
+			],
+
+			// Footer Search
+			footerElement: lineItemSearchInputHtml
 		});
 	}
 
@@ -223,22 +186,35 @@ var tableInitializer = (function(global) {
 			pagination: "local",
 			paginationSize: 10,
 
-			columns: [
-				{ formatter:"rowSelection", titleFormatter: "rowSelection", headerSort: false, resizable: false, cellClick: function(e, cell) {
-						cell.getRow().toggleSelect();
-					},
-          width: 5
-				},
-				{ field: 'name', title: 'Order', visible: true },
-				{ field: 'lineItemCount', title: 'Total', visible: true, minWidth: 90, width: 90 },
-				{ field: 'activeLineItemCount', title: 'Active', visible: true, minWidth: 90, width: 90 },
-				{ field: 'status', title: 'Status', visible: true, minWidth: 90, width: 90 },
-				{ field: 'key', title: 'Key', visible: false },
-				{ field: 'description', title: 'Description', visible: false }
-			],
+			// selectable Check for Status
+			selectableCheck: function(row) {
+				let status = row.getData().status;
+				if (status != "running") {
+					let rowElement = row.getElement();
+					$(rowElement).addClass('tabulator-unselectable');
+					return false;	
+				}
+				return true;
+			},
+	
+			dataLoaded: function(data) {
+				let html = `<span class="count-orders">${data.length} Items</span>`;
+				$(".count-orders-wrapper").html(html);
+			},
+			
+			dataFiltered: function(filters, rows) {
+				let html = `<span class="count-orders">${rows.length} Items</span>`;
+				$(".count-orders-wrapper").html(html);
+			},
+
+			columns: tableColumnDef.getColumnDef("OrderTable"),
+
 			initialSort:[
 				{ column:"activeLineItemCount", dir:"desc" }
-			]
+			],
+
+			// Footer Search
+			footerElement: orderSearchInputHtml
 		});
 	}
 

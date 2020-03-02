@@ -1,0 +1,148 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Import Insturction</title>
+    <link rel="stylesheet" type="text/css" href="css/semantic.css">
+		<style>
+			.field-name {
+				font-weight: bold;
+			}
+			.top-margin {
+				margin-top: 1em !important;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="ui grid container">
+			<div class="sixteen wide column">
+				<h3 class="ui header top-margin">Import Format Insturction</h3>
+				<table class="ui celled blue table">
+					<thead>
+						<tr>
+							<th>Field</th>
+							<th>To create a new line item</th>
+							<th>To update existing line item</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td class="field-name">Name</td>
+							<td colspan="2">Required.</td>
+						</tr>
+						<tr>
+							<td class="field-name">Line Item Key</td>
+							<td>Leave blank. Line item key does not exist yet.</td>
+							<td>Required. This value should match to the line item key that need updates.</td>
+						</tr>
+						<tr>
+							<td class="field-name">Order Key</td>
+							<td>Required. Enter order key where line item should belong to.</td>
+							<td>Leave blank. Otherwise value will be ignored.</td>
+						</tr>
+						<tr>
+							<td class="field-name">Priority</td>
+							<td colspan="2">Required. Enter between 1 ~ 16 integer. Ex) 5</td>
+						</tr>
+						<tr>
+							<td class="field-name">CPM</td>
+							<td colspan="2">Required. Enter between 0 &lt; CPM &lt; 5000. It can be entered upto two decimal point. Ex) 10.50</td>
+						</tr>
+						<tr>
+							<td class="field-name">Type</td>
+							<td colspan="2">
+								<p>Required. Choose from:</p>
+								<ul class="ui list">
+									<li>gtee</li>
+									<li>non_gtee</li>
+									<li>promo</li>
+									<li>backfill_promo</li>
+									<li>mpx_line_item</li>
+									<li>network</li>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td class="field-name">Network Type</td>
+							<td colspan=2"">
+								<p>Required only when "Type" is network. Available values are:</p>
+								<ul class="ui list">
+									<li>admob_native</li>
+									<li>applovin_sdk</li>
+									<li>adcolony</li>
+									<li>chartboost</li>
+									<li>facebook</li>
+									<li>ironsource</li>
+									<li>tapjoy</li>
+									<li>vungle</li>
+									<li>custom_native</li>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td class="field-name">Network Account Id</td>
+							<td colspan="2">Depending on the network type.</td>
+						</tr>
+						<tr>
+							<td class="field-name">Network Adunit Id</td>
+							<td colspan="2">Depending on the network type.</td>
+						</tr>
+						<tr>
+							<td class="field-name">Network App Id</td>
+							<td colspan="2">Depending on the network type.</td>
+						</tr>
+						<tr>
+							<td class="field-name">Network App Signature</td>
+							<td colspan="2">Required only for Chartboost network.</td>
+						</tr>
+						<tr>
+							<td class="field-name">Location</td>
+							<td colspan="2">Required only for Chartboost network.</td>
+						</tr>
+						<tr>
+							<td class="field-name">Custom Event Class Name</td>
+							<td colspan="2'">Required only for Custom JS Network.</td>
+						</tr>
+						<tr>
+							<td class="field-name">Custom Event Class Data</td>
+							<td colspan="2">Required only for Custom JS Network.</td>
+						</tr>
+						<tr>
+							<td class="field-name">Status</td>
+							<td colspan="2">
+								<p>Required. Available values are:</p>
+								<ul class="ui list">
+									<li>running</li>
+									<li>paused</li>
+									<li>archived</li>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td class="field-name">Keywords</td>
+							<td colspan="2">Optional. Comma separated. Ex) keyword1,keyword2</td>
+						</tr>
+						<tr>
+							<td class="field-name">Geo Targeting Mode</td>
+							<td colspan="2">
+								<p>Optional. Available values are:</p>
+								<ul class="ui list">
+									<li>all</li>
+									<li>include</li>
+									<li>exclude</li>
+								</ul>
+							</td>
+						</tr>
+						<tr>
+							<td class="field-name">Countries</td>
+							<td colspan="2">
+								<p>Optional. This will be ignored if geo targeting mode is "all". Comma separated. Ex) us,kr,jp,fr</p>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<script type="text/javascript" src="lib/semantic.min.js"></script>
+	</body>
+</html>

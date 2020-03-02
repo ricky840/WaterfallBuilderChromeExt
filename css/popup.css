@@ -1,4 +1,4 @@
-@keyframes blink { 50% { background-color: #1da1f2; color: #fff }  }
+@keyframes blink { 50% { background-color: #B5E1FB; color: #000 } }
 
 .flash {
 	animation: blink ease-in-out 0.7s;
@@ -7,7 +7,11 @@
 
 ::-webkit-scrollbar {
   width: 3px !important;
-  height: 3px !important;
+  height: 5px !important;
+}
+
+.no-padding {
+	padding: 0px !important;
 }
 
 /* Menu on top */
@@ -17,11 +21,26 @@
 
 .mopub-menu {
 	background: #14171a !important;
-	box-shadow: 0 2px 3px rgba(0,0,0,.35) !important;
+	box-shadow: 0 2px 5px rgba(0,0,0,.35) !important;
+}
+
+/* Bar Loader */
+#loader-bar {
+  box-shadow: 0 2px 4px rgba(0,0,0,.35) !important;
+}
+
+.ui.progress.success .bar {
+  /* background-color: #1da1f2 !important; */
+  background-color: red !important;
 }
 
 .no-radius {
 	border-radius: 0px !important;
+}
+
+/* Content Wrapper */
+.all-content-wrapper {
+	margin-top: 2rem !important;
 }
 
 /* AdUnit Info Labels */
@@ -74,12 +93,26 @@
 	color: #fff !important;
 }
 
-
-
 /* Button Radius */
 .mopub-button-radius {
 	border-radius: 1.6rem !important;
 }
+
+/* Search Input */
+.mopub-input-search {
+	border-radius: 1.6rem !important;
+	/* border: 1px solid #657786 !important; */
+	/* color: #657786 !important; */
+	/* font-weight: bold !important; */
+	/* box-shadow: none !important; */
+}
+
+/* Search Input Wrapper */
+.search-table-wrapper {
+	width: 200px;
+	float: left;
+}
+
 
 /* Mopub Operation Button Color Override */
 .mopub-ops-button-color {
@@ -109,15 +142,63 @@
 	color: #657786 !important;
 }
 
-/* .tabulator-row.tabulator-group { */
-/* 	background-color: #D2E9FA; !important; */
-/* 	color: #fff !important; */
-/* } */
-/*  */
-/* .tabulator-row.tabulator-group:hover { */
-/* 	background-color: rgb(29, 161, 242); !important; */
-/* 	color: #fff !important; */
-/* } */
+.tabulator-col.tabulator-sortable {
+	border-width: 1px;
+	border-color: #e4e5e5;
+	border-right-style: solid;
+}
+
+.tabulator-unselectable {
+	pointer-events: none !important;
+	color: #D0D0D0 !important;
+}
+
+.tabulator input[type='checkbox'] { 
+	position: relative;
+	cursor: pointer;
+}
+
+.tabulator input[type='checkbox']:before { 
+	/* border: 1px solid #D4D4D5; */
+	content: "";
+	display: block;
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	top: 0;
+	left: 0;
+	border: 1px solid rgba(34, 36, 38, 0.35);
+	border-radius: 3px;
+	background-color: white;
+}
+
+.tabulator input[type='checkbox']:checked:after { 
+	content: "";
+	display: block;
+	width: 5px;
+	height: 10px;
+	border: solid black;
+	border-width: 0 2px 2px 0;
+	-webkit-transform: rotate(45deg);
+	-ms-transform: rotate(45deg);
+	transform: rotate(45deg);
+	position: absolute;
+	top: 2px;
+	left: 6px;
+}
+
+.tabulator .tabulator-unselectable input[type='checkbox']:before { 
+	content: "";
+	display: block;
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	top: 0;
+	left: 0;
+	border: 1px solid #E7E7E7;
+	border-radius: 3px;
+	background-color: white;
+}
 
 .tabulator-row.tabulator-selectable:hover {
 	background-color: #eaf5fd !important;
@@ -125,24 +206,24 @@
 
 /* Cell Edit */
 .tabulator-row .tabulator-cell.tabulator-editing {
-  /* border: 1px solid #1D68CD; */
-  /* padding: 0; */
-
-	/* box-shadow: inset 0 0 0 1px transparent;a */
-	/* border: 1px solid #ccd6dd; */
-	/* background: #fff; */
-	/* color: #14171a; */
-	/* transition: border-color .25s,box-shadow .25s;a */
-	/* border-radius: .2rem; */
-	/* font-size: .6rem; */
-	/* line-height: .8rem; */
-	/* min-height: 1.2rem; */
-	/* padding: 2px; */
+  border: 0.1em solid #1da1f2;
+	border-radius: 5px;
+}
+.editable-cell:hover {
+  border: 0.1em solid #1da1f2;
+	border-radius: 5px;
+	box-shadow: 0 0 0.5pt 0.5pt #1da1f2;
+}
+.editable-cell input:focus {
+	outline: none !important;
 }
 
+/* Tabulator Footer Override */
+.tabulator-footer {
+	height: 4.5em !important;
+}
 
-
-/* Loader */
+/* Circle Loader */
 .ui.inverted.dimmer .ui.loader:after {
 	/* border-color: #1da1f2 #1da1f2 transparent !important; */
 	border-color: #1da1f2 transparent transparent !important;
@@ -152,6 +233,133 @@
 	/* border-color: rgba(0, 0, 0, 0) !important; */
 	border-color: rgb(210, 233, 250) !important;
 }
+
+/* UI Update Loader */
+.update-loader {
+	top: 300px !important;
+}
+
+/* header inside the table */
+.cell-header {
+	color: #657786 !important;
+	text-transform: capitalize !important;
+}
+
+.less-padding-label {
+	padding: 4.5px !important;
+	margin: 1px !important;
+}
+
+/* Notification Success LineItem */
+.update-success-lineitem {
+	color: green !important;
+}
+
+/* Notification Fail LineItem */
+.update-fail-lineitem {
+	color: red !important;
+}
+
+/* Adunit list when duplicate (copy modal) */
+.customSuggestionsList {
+	width: 100% !important;
+}
+
+/* Capitalize Text */
+.capitalize {
+	text-transform: capitalize !important;
+}
+
+/* CPM Label Styling */
+.cpm-label {
+	padding: 0.35em !important;
+	min-width: 50px !important;
+	color: unset !important;
+	text-align: right !important;
+}
+
+/* table line item */
+.lineitem-name {
+	/* color: #1da1f2; */
+	font-weight: bold;
+}
+
+.lineitem-ordername {
+	color: #657786;
+}
+
+.lineitem-networktype {
+	color: #657786;
+}
+
+/* Item Count in Table footer */
+.count-orders {
+	float: left;
+	padding-right: 10px;
+	font-weight: bold;
+}
+.count-lineitems {
+	float: left;
+	padding-right: 10px;
+	font-weight: bold;
+}
+.count-waterfall-items {
+	float: left;
+	padding-right: 10px;
+	font-weight: bold;
+}
+
+/* Import Instruction */
+.import-instruction {
+	color: #1da1f2;
+	cursor: default;
+}
+.import-instruction:hover {
+	text-decoration: underline;
+	cursor: default;
+}
+
+/* Changes Pre Tag */
+.change-pre {
+	width: 30em;
+	padding: 15px;
+	background: aliceblue;
+}
+
+/* Log in the menu */
+.mopub-logo-menu {
+	overflow: hidden;
+	background: url(/img/main_mopug_logo.svg) 0 no-repeat;
+	width: 80px;
+	height: 29px;
+	margin-left: 8px;
+}
+
+/* Logged in as label */
+.logged-in-label {
+  margin-right: 1em !important;
+	padding: 0.4em !important;
+	padding-top: 0.2em !important;
+	padding-bottom: 0.2em !important;
+}
+.logged-in-account {
+	font-weight: bold;
+	font-size: 1.1em !important;
+}
+.logged-in-account-desc {
+	font-weight: normal;
+	font-size: 0.8em !important;
+	color: gray;
+	margin-top: 5px;
+}
+
+/* For version label */
+.mopub-color-label {
+	background-color: #1da1f2 !important;
+	border-color: #1da1f2 !important;
+	margin: 0px !important;
+}
+
 
 
 

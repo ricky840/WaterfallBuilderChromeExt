@@ -2,238 +2,371 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Waterfall Builder for MoPub</title>
+		<title>Waterfall Builder for MoPub Twitter</title>
     <link rel="stylesheet" type="text/css" href="css/semantic.css">
-    <link rel="stylesheet" type="text/css" href="table-css/semantic-ui/tabulator_semantic-ui.css">
+    <link rel="stylesheet" type="text/css" href="css/table-css/semantic-ui/tabulator_semantic-ui.css">
+    <link rel="stylesheet" type="text/css" href="css/tagify.css">
 		<link rel="stylesheet" type="text/css" href="css/popup.css">
 	</head>
 	<body>
 
 		<!-- Menu -->
-		<div class="ui small menu inverted no-radius mopub-menu">
-			<a class="item"><h4>Waterfall Builder for MoPub</h4></a>
+		<div class="ui tiny menu inverted no-radius mopub-menu">
+			<a class="header item" href="">
+				<h4 style="margin-bottom: 0px;">Waterfall Builder for</h4>
+				<div class="mopub-logo-menu"></div>
+			</a>
 			<div class="item">
-				<div class="ui action input">
-					<input id="adunit-id" type="text" placeholder="Please enter adunit Id..." style="width: 300px;">
-					<div id="load-waterfall" class="ui button tiny mopub-button-color">Load</div>
+				<div style="background: white; color: black; width: 600px;">
+					<input id="adunit-selector" class='selectMode'>
 				</div>
 			</div>
 			<div class="right menu">
-				<a class="item">jaejun@twitter.com</a>
+				<a class="item" href="https://app.mopub.com/account" target="_blank">
+					<div class="ui orange label logged-in-label">Logged in as</div>
+					<div id="logged-in-account" class="logged-in-account"></div>
+				</a>
 				<a class="item">
-					<div class="ui label blue">v0.0.1</div>
+					<div class="ui label mopub-color-label wb-version small"></div>
 				</a>
 			</div>
 		</div>
 
-		<!-- Grid -->
-    <div class="ui grid container loader-wrapper loader-adunit-info" style="width: 99% !important;">
+		<div class="ui grid">
+			<div class="one column row no-padding">
+				<div class="column">
+					<div id="loader-bar" class="ui bottom attached indicating progress inverted blue" data-value="0" style="visibility: hidden;">
+						<div class="bar"></div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="ui grid all-content-wrapper">
 			<!-- Loader -->
-			<div class="ui top aligned inverted dimmer">
-				<div class="ui text loader">Loading</div>
+			<div class="ui dimmer inverted">
+				<div class="ui text large loader updating-message update-loader"></div>
 			</div>
-			<!-- First Row -->	
-			<div class="row">
-				<div class="twelve wide column">
-					<div class="adunit-header">
-						<h2 class="ui header">
-							<span id="info-adunit-name">Please enter Adunit Id</span>
-							<a id="info-adunit-status" class="ui gray label mini">Inactive</a>
-							<div id="info-adunit-id" class="sub header"></div>
-						</h2>
+			<!-- Grid -->
+			<div class="ui grid container loader-wrapper loader-adunit-info" style="width: 99% !important;">
+				<!-- Loader -->
+				<div class="ui top inverted aligned dimmer">
+					<div class="ui loader"></div>
+				</div>
+				<!-- First Row -->	
+				<div class="row">
+					<div class="twelve wide column">
+						<div class="adunit-header">
+							<h2 class="ui header">
+								<span id="info-adunit-name"><div class="ui active inline loader small"></div> Loading..</span>
+								<a id="info-adunit-status" class="ui gray empty circular label"></a>
+								<div id="info-adunit-id" class="sub header"></div>
+							</h2>
+						</div>
+					</div>
+					<div class="four wide column">
+						<button id="add-adsource" class="ui labeled icon button tiny right floated mopub-button-color mopub-button-radius">
+							<i class="chevron right icon"></i>
+							Hide Line Items
+						</button>
 					</div>
 				</div>
-				<div class="four wide column">
-					<button id="add-adsource" class="ui labeled icon button tiny right floated mopub-button-color mopub-button-radius">
-						<i class="chevron right icon"></i>
-						Hide LineItems
-					</button>
-				</div>
-			</div>
-			<!-- Second Row -->
-			<div class="three column row">
-				<div class="column">
-					<div class="ui divided selection list tiny">
-						<a class="item">
-							<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">App Name</div>
-							<span id="info-app-name" class="mopub-label-value"></span>
-						</a>
-						<a class="item">
-							<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">App Key</div>
-							<span id="info-app-key" class="mopub-label-value"></span>
-						</a>
-						<a class="item">
-							<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">OS Type</div>
-							<span id="info-app-os" class="mopub-label-value"></span>
-						</a>
+				<!-- Second Row -->
+				<div class="three column row">
+					<div class="column">
+						<div class="ui divided selection list tiny">
+							<a class="item">
+								<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">App Name</div>
+								<span id="info-app-name" class="mopub-label-value"></span>
+							</a>
+							<a class="item">
+								<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">App Key</div>
+								<span id="info-app-key" class="mopub-label-value"></span>
+							</a>
+							<a class="item">
+								<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">OS Type</div>
+								<span id="info-app-os" class="mopub-label-value"></span>
+							</a>
+						</div>
 					</div>
-				</div>
-				<div class="column">
-					<div class="ui divided selection list tiny">
-						<a class="item">
-							<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">Format</div>
-							<span id="info-adunit-format" class="mopub-label-value"></span>
-						</a>
-						<a class="item">
-							<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">Unified</div>
-							<span id="info-adunit-unified" class="mopub-label-value"></span>
-						</a>
-						<a class="item">
-							<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">Landscape</div>
-							<span id="info-adunit-landscape" class="mopub-label-value"></span>
-						</a>
+					<div class="column">
+						<div class="ui divided selection list tiny">
+							<a class="item">
+								<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">Format</div>
+								<span id="info-adunit-format" class="mopub-label-value"></span>
+							</a>
+							<a class="item">
+								<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">Unified</div>
+								<span id="info-adunit-unified" class="mopub-label-value"></span>
+							</a>
+							<a class="item">
+								<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">Landscape</div>
+								<span id="info-adunit-landscape" class="mopub-label-value"></span>
+							</a>
+						</div>
 					</div>
-				</div>
-				<div class="column">
-					<div class="ui divided selection list tiny">
-						<a class="item">
-							<div class="ui horizontal label mopub-label-title-longer mopub-label-color mopub-label-radius">Device Format</div>
-							<span id="info-adunit-device-format" class="mopub-label-value"></span>
-						</a>
-						<a class="item">
-							<div class="ui horizontal label mopub-label-title-longer mopub-label-color mopub-label-radius">Refresh Interval</div>
-							<span id="info-adunit-refresh-interval" class="mopub-label-value"></span>
-						</a>
+					<div class="column">
+						<div class="ui divided selection list tiny">
+							<a class="item">
+								<div class="ui horizontal label mopub-label-title-longer mopub-label-color mopub-label-radius">Device Format</div>
+								<span id="info-adunit-device-format" class="mopub-label-value"></span>
+							</a>
+							<a class="item">
+								<div class="ui horizontal label mopub-label-title-longer mopub-label-color mopub-label-radius">Refresh Interval</div>
+								<span id="info-adunit-refresh-interval" class="mopub-label-value"></span>
+							</a>
+						</div>
 					</div>
 				</div>
-			</div>
-		</div> <!-- grid end -->
+			</div> <!-- grid end -->
 
-		<!-- Grid -->
-    <div class="ui grid container" style="width: 99% !important;">
+			<!-- Grid -->
+			<div class="ui grid container" style="width: 99% !important;">
 
-			<!-- Notification -->
-			<div class="one column row">
-				<div class="column">
-					<div id="notification"></div>
+				<!-- Notification -->
+				<div class="one column row">
+					<div class="column">
+						<div id="notification"></div>
+					</div>
 				</div>
-			</div>
 
-			<div class="row">
-				<!-- Waterfall section -->
-				<div class="nine wide column" id="waterfall-section">
+				<div class="row">
+					<!-- Waterfall section -->
+					<div class="nine wide column" id="waterfall-section">
 
-					<!-- Status Filter -->
-					<div id="status-filter" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius">
-						<i class="filter icon"></i>
-						<div class="default text">Filter Status</div>
-						<div class="menu">
-							<div class="item" data-value="running">
-								<div class="ui green empty circular label tiny"></div>Running
-							</div>
-							<div class="item" data-value="all">
-								<div class="ui light blue empty circular label tiny"></div>All
-							</div>
-						</div>
-					</div>
-
-					<!-- Column Selector -->
-					<div id="column-selector" class="ui labeled dropdown icon button tiny mopub-ops-button-color mopub-button-radius">
-						<i class="dropdown icon"></i>
-						<span class="ui">Show Columns</span>
-						<div class="menu">
-							<div class="ui icon search input">
-								<i class="search icon"></i>
-								<input type="text" name="Search" placeholder="Search&hellip;">
-							</div>
-							<div class="scrolling menu"></div>
-						</div>
-					</div>
-
-					<!-- Select All -->
-					<button id="select-all-waterfall" class="ui button tiny mopub-ops-button-color mopub-button-radius">Select All</button>
-
-					<!-- Grouping -->
-					<button id="disable-grouping-waterfall" class="ui button tiny mopub-ops-button-color mopub-button-radius">Grouping</button>
-
-					<!-- Download / Upload -->
-					<div class="ui icon buttons right floated tiny basic">
-						<button class="ui button"><i class="upload icon"></i></button>
-						<button id="waterfall-download-csv" class="ui button"><i class="download icon"></i></button>
-					</div>
-
-					<!-- Waterfall Table -->
-					<div class="loader-wrapper loader-waterfall-table">
-						<div class="ui top aligned inverted dimmer">
-							<div class="ui text loader">Loading</div>
-						</div>
-						<div id="waterfall-adunit"></div>
-					</div>
-					<button id="edit-selected" class="ui button tiny mopub-button-color mopub-button-radius">Edit Selected</button>
-					<button id="apply-waterfall" class="ui button right floated tiny mopub-button-color mopub-button-radius">Apply to MoPub UI</button>
-
-				</div> <!-- Waterfall section end -->
-
-				<!-- Lineitem section -->
-				<div class="seven wide column" id="adsource-section">
-					<!-- Status Filter -->
-					<div id="status-filter-lineitem" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius">
-						<i class="filter icon"></i>
-						<div class="default text">Filter Status</div>
-						<div class="menu">
-							<div class="item" data-value="running">
-								<div class="ui green empty circular label tiny"></div>Running
-							</div>
-							<div class="item" data-value="all">
-								<div class="ui light blue empty circular label tiny"></div>All
+						<!-- Status Filter -->
+						<div id="status-filter" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius">
+							<i class="filter icon"></i>
+							<div class="default text">Filter Status</div>
+							<div class="menu">
+								<div class="item" data-value="running">
+									<div class="ui green empty circular label tiny"></div>Running
+								</div>
+								<div class="item" data-value="all">
+									<div class="ui light blue empty circular label tiny"></div>All
+								</div>
+								<div class="item" data-value="paused">
+									<div class="ui yellow empty circular label tiny"></div>Paused
+								</div>
+								<div class="item" data-value="archived">
+									<div class="ui gray empty circular label tiny"></div>Archived
+								</div>
 							</div>
 						</div>
-					</div>
-					<button id="move-selected" class="ui button tiny right floated mopub-button-color mopub-button-radius">Move Selected</button>	
-					<button id="select-all-lineitem" class="ui button tiny mopub-ops-button-color mopub-button-radius">Select All</button>	
 
-					<div id="loader-lineitem-table">
-						<div class="ui top aligned inverted dimmer">
-							<div class="ui text loader">Loading</div>
-						</div>
-						<div id="lineitem-list"></div>
-					</div>
-
-					<!-- Status Filter -->
-					<div id="status-filter-order" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius">
-						<i class="filter icon"></i>
-						<div class="default text">Filter Status</div>
-						<div class="menu">
-							<div class="item" data-value="running">
-								<div class="ui green empty circular label tiny"></div>Running
-							</div>
-							<div class="item" data-value="all">
-								<div class="ui light blue empty circular label tiny"></div>All
+						<!-- Column Selector -->
+						<div id="column-selector" class="ui labeled dropdown icon button tiny mopub-ops-button-color mopub-button-radius">
+							<i class="dropdown icon"></i>
+							<span class="ui">Columns</span>
+							<div class="menu">
+								<div class="ui icon search input">
+									<i class="search icon"></i>
+									<input type="text" name="Search" placeholder="Search&hellip;">
+								</div>
+								<div class="scrolling menu"></div>
 							</div>
 						</div>
-					</div>
-					<button id="select-all-order" class="ui button tiny mopub-ops-button-color mopub-button-radius">Select All</button>	
-					<button id="load-lineitem-btn" class="ui button blue right floated tiny mopub-button-color mopub-button-radius">Load LineItems</button>
-					<div class="loader-wrapper loader-order-table">
-						<div class="ui top aligned inverted dimmer">
-							<div class="ui text loader">Loading</div>
+
+						<!-- Select All -->
+						<button class="ui button tiny mopub-ops-button-color mopub-button-radius select-all" table="waterfall">Select All</button>
+
+						<!-- Grouping -->
+						<button id="disable-grouping-waterfall" class="ui button tiny mopub-ops-button-color mopub-button-radius">Grouping</button>
+
+						<!-- Download / Upload -->
+						<input type="file" id="upload-file" accept=".csv" style="display: none;">
+						<div class="ui icon buttons right floated tiny basic">
+							<button id="waterfall-upload-csv" class="ui button"><i class="upload icon"></i></button>
+							<button id="waterfall-download-csv" class="ui button"><i class="download icon"></i></button>
 						</div>
-						<div id="order-list"></div>
-					</div>
-				</div> <!-- Lineitem section end -->
 
-			</div> <!-- Row end -->
-		</div> <!-- End of Grid -->
+						<!-- Waterfall Table -->
+						<div class="loader-wrapper loader-waterfall-table">
+							<div class="ui top aligned inverted dimmer">
+								<div class="ui loader"></div>
+							</div>
+							<div id="waterfall-adunit"></div>
+						</div>
+						<button id="edit-selected" class="ui button tiny mopub-button-color mopub-button-radius">Edit Line Item</button>
+						<!-- <button id="delete&#45;selected" class="ui button tiny mopub&#45;button&#45;color mopub&#45;button&#45;radius">Deassign</button> -->
+						<button id="apply-waterfall" class="ui button right floated tiny mopub-button-color mopub-button-radius">Apply to MoPub UI</button>
+						<button id="copy-waterfall" class="ui button right floated tiny mopub-button-color mopub-button-radius">Copy Waterfall</button>
 
-		<!-- Modal -->
-		<div class="ui small modal">
+					</div> <!-- Waterfall section end -->
+
+					<!-- Lineitem section -->
+					<div class="seven wide column" id="adsource-section">
+						<!-- Status Filter -->
+						<div id="status-filter-lineitem" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius">
+							<i class="filter icon"></i>
+							<div class="default text">Filter Status</div>
+							<div class="menu">
+								<div class="item" data-value="running">
+									<div class="ui green empty circular label tiny"></div>Running
+								</div>
+								<div class="item" data-value="all">
+									<div class="ui light blue empty circular label tiny"></div>All
+								</div>
+								<div class="item" data-value="paused">
+									<div class="ui yellow empty circular label tiny"></div>Paused
+								</div>
+								<div class="item" data-value="archived">
+									<div class="ui gray empty circular label tiny"></div>Archived
+								</div>
+							</div>
+						</div>
+						<button class="lineitem-action-buttons ui button tiny right floated mopub-button-color mopub-button-radius" action="duplicate">Duplicate</button>	
+						<button class="lineitem-action-buttons ui button tiny right floated mopub-button-color mopub-button-radius" action="assign">Assign</button>	
+						<button class="ui button tiny mopub-ops-button-color mopub-button-radius select-all" table="lineitem">Select All</button>	
+						<div id="loader-lineitem-table">
+							<div class="ui top aligned inverted dimmer">
+								<div class="ui loader"></div>
+							</div>
+							<div id="lineitem-list"></div>
+						</div>
+
+						<!-- Order -->
+						<!-- Status Filter -->
+						<div id="status-filter-order" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius">
+							<i class="filter icon"></i>
+							<div class="default text">Filter Status</div>
+							<div class="menu">
+								<div class="item" data-value="running">
+									<div class="ui green empty circular label tiny"></div>Running
+								</div>
+								<div class="item" data-value="all">
+									<div class="ui light blue empty circular label tiny"></div>All
+								</div>
+								<div class="item" data-value="paused">
+									<div class="ui yellow empty circular label tiny"></div>Paused
+								</div>
+								<div class="item" data-value="archived">
+									<div class="ui gray empty circular label tiny"></div>Archived
+								</div>
+							</div>
+						</div>
+						<button class="ui button tiny mopub-ops-button-color mopub-button-radius select-all" table="order">Select All</button>	
+						<button id="load-lineitem-btn" class="ui button blue right floated tiny mopub-button-color mopub-button-radius">Load Line Items</button>
+						<div class="loader-wrapper loader-order-table">
+							<div class="ui top aligned inverted dimmer">
+								<div class="ui loader"></div>
+							</div>
+							<div id="order-list"></div>
+						</div>
+					</div> <!-- Lineitem section end -->
+
+				</div> <!-- Row end -->
+			</div> <!-- End of Grid -->
+		</div> <!-- End of content wrapper -->
+
+		<!-- Modals -->
+		<!-- Copy Waterfall -->
+		<div class="ui modal copy-waterfall-modal">
 			<i class="close icon"></i>
-			<div class="ui header small">
-				Edit Selected
+			<div class="ui header small">Copy Waterfall</div>
+			<div class="scrolling content">
+				<form id="copy-waterfall-form" class="ui small form">
+					<div class="field">
+						<div id="copy-form-notification"></div>
+					</div>
+					<div class="field">
+						<label>Duplicate Mode</label>
+						<select id="copy-mode" class="ui dropdown selection">
+							<option value="in_same_order" selected>Duplicate line items within the current order</option>
+							<option value="in_one_new_order">Duplicate line items and merge into a new order</option>
+							<option value="in_new_order_with_neighbour">Duplicate line items with the same order structure</option>
+						</select>
+						<div class="ui message small">
+							<ul class="list">
+								<li>Duplicated line items will have suffix of "(new)" in the name.</li>
+								<li>Newly created order will have suffix of "(Created by WBExt)" in the name.</li>
+							</ul>
+						</div>
+					</div>
+					<div class="field">
+						<label>Target Line Items</label>
+						<div class="ui checkbox">
+							<input id="copy-only-filtered" type="checkbox">
+							<label>Copy Only Filtered Line Items</label>
+						</div>
+					</div>
+					<div class="field">
+						<label>Select Target Ad Unit</label>
+						<input id="tagify-adunits">
+					</div>
+				</form>
 			</div>
-			<!-- Body (form) -->
+			<div class="actions">
+				<div id="copy-cancel" class="ui tiny deny button mopub-ops-button-color mopub-button-radius">Cancel</div>
+				<div id="copy-submit" class="ui right tiny button mopub-button-color mopub-button-radius">Copy Waterfall</div>
+			</div>
+		</div>
+
+		<!-- Download Format Modal -->
+		<div class="ui modal download-option-modal mini">
+			<i class="close icon"></i>
+			<div class="header">Choose Download Format</div>
 			<div class="content">
+				<div class="ui tiny header">Including all fields</div>
+				<p>Download every fields in the waterfall. This cannot be imported.</p>
+				<div class="ui tiny header">Importable fields only</div>
+				<p>Download only fields that can be imported. This will export items that has running, paused, archived status only. Custom JS Network and Advanced Bidding items will not be exported.</p>
+				<a class="import-instruction" href="importInstruction.html" target="_blank">Import Instruction</a>
+			</div>
+			<div class="actions" style="float: left">
+				<div class="ui button tiny mopub-button-color mopub-button radius download-button" option="all">Including all fields</div>
+				<div class="ui button tiny mopub-button-color mopub-button radius download-button" option="importable">Importable fields only</div>
+			</div>
+		</div>
+
+		<!-- Review Change Modal -->
+		<div class="ui modal large review-change-modal">
+			<i class="close icon"></i>
+			<div class="ui header small">Review Changes</div>
+			<div class="scrolling content">
+				<table class="ui table small striped blue">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Key</th>
+							<th>Action</th>
+							<th>Type</th>
+							<th>Changes to be made</th>
+						</tr>
+					</thead>
+					<tbody id="change-table-body">
+					</tbody>
+					<tfoot>
+						<tr>
+							<th id="change-table-count" colspan="6"></th>
+						</tr>
+					</tfoot>
+				</table>
+			</div>
+			<div class="actions">
+				<div id="review-cancel" class="ui tiny deny button mopub-ops-button-color mopub-button-radius">Cancel</div>
+				<div id="review-submit" class="ui right tiny button mopub-button-color mopub-button-radius">Apply</div>
+			</div>
+		</div>
+
+		<!-- Edit Modal -->
+		<div class="ui small modal edit-modal">
+			<i class="close icon"></i>
+			<div class="ui header small">Edit Selected Line Items</div>
+			<!-- Body (form) -->
+			<div class="scrolling content">
 				<form id="edit-form" class="ui form small">
+					<div id="edit-form-notification"></div>
 					<div class="ui message info">
-						<p>For <b>marketplace (not mpx_line_item) type</b>, CPM and Status will only be updated.</p>
+						<p>For <b>Marketplace (not mpx_line_item) type</b>, only CPM and Status will be updated.</p>
 					</div>
 					<div class="inline field">
 						<label>Rate</label>
-						$ <input type="number" name="cpm" min="0.00" step="0.1" max="5000" placeholder="00.00"> CPM
+						$ <input id="edit-cpm" type="number" name="cpm" min="0.00" step="0.1" max="3000" placeholder="00.00"> CPM
 					</div>
 					<div class="field">
 						<label>Priority</label>
-						<select class="ui search dropdown edit-dropdown" name="priority">
+						<select id="edit-priority-select" class="ui dropdown" name="priority">
 							<option value="">Priority</option>
 							<option value="1">1</option>
 							<option value="2">2</option>
@@ -254,35 +387,34 @@
 					</div>
 					<div class="field">
 						<label>Status</label>
-						<select class="ui search dropdown edit-dropdown" name="status">
+						<select id="edit-status-select" class="ui dropdown" name="status">
 							<option value="">Status</option>
 							<option value="running">Running</option>
 							<option value="paused">Paused</option>
+							<option value="archived">Archived</option>
 						</select>
 					</div>
-
-					<h4 class="ui dividing header blue">Network Override (Network line item only)</h4>
-					<div class="ui message info">
-						<p>Each network requires different field for example, AdMob only requires adunit id whereas AppLovin needs app id. Please make sure that you are updating the right field for the network. This will <b>NOT</b> override existing data if you leave it empty.</p>
-					</div>
-
+					<h4 class="ui dividing header blue">Network Override Field (Only applied to the matching network)</h4>
 					<div class="field">
-						<label>Network Adunit Id</label>
-						<input type="text" name="network_adunit_id" placeholder="Network Adunit Id">
+						<label>Select Network</label>
+						<select id="edit-network-select" class="ui dropdown" name="network_type">
+							<option value="">Network</option>
+							<option value="admob_native">AdMob</option>
+							<option value="applovin_sdk">AppLovin</option>
+							<option value="adcolony">Adcolony</option>
+							<option value="chartboost">Chartboost</option>
+							<option value="facebook">Facebook</option>
+							<option value="ironsource">IronSource</option>
+							<option value="tapjoy">Tapjoy</option>
+							<option value="vungle">Vungle</option>
+							<option value="custom_native">Custom SDK Network</option>
+						</select>
 					</div>
-					<div class="field">
-						<label>Network App Id</label>
-						<input type="text" name="network_app_id" placeholder="Network App Id">
-					</div>
-					<div class="field">
-						<label>Network Account Id</label>
-						<input type="text" name="network_account_id" placeholder="Network Account Id">
-					</div>
-
-					<h4 class="ui dividing header blue">Targeting</h4>
+					<div id="network-fields"></div>
+					<h4 class="ui dividing header blue">Geo Targeting</h4>
 					<div class="field">
 						<label>Geo Targeting Mode</label>
-						<select id="target-mode" class="ui search dropdown" name="target-mode">
+						<select id="target-mode" class="ui dropdown" name="target_mode">
 							<option value="">Mode</option>
 							<option value="all">All</option>
 							<option value="include">Include</option>
@@ -291,278 +423,55 @@
 					</div>
 					<div class="field disabled">
 						<label>Country Trageting</label>
-							<div id="target-country" class="ui fluid multiple search selection dropdown">
-								<input type="hidden" name="target-country">
-								<i class="dropdown icon"></i>
-								<div class="default text">Select Country</div>
-								<div class="menu">
-									<div class="item" data-value="AF">Afghanistan</div>
-									<div class="item" data-value="AX">Aland Islands</div>
-									<div class="item" data-value="AL">Albania</div>
-									<div class="item" data-value="DZ">Algeria</div>
-									<div class="item" data-value="AS">American Samoa</div>
-									<div class="item" data-value="AD">Andorra</div>
-									<div class="item" data-value="AO">Angola</div>
-									<div class="item" data-value="AI">Anguilla</div>
-									<div class="item" data-value="AG">Antigua</div>
-									<div class="item" data-value="AR">Argentina</div>
-									<div class="item" data-value="AM">Armenia</div>
-									<div class="item" data-value="AW">Aruba</div>
-									<div class="item" data-value="AU">Australia</div>
-									<div class="item" data-value="AT">Austria</div>
-									<div class="item" data-value="AZ">Azerbaijan</div>
-									<div class="item" data-value="BS">Bahamas</div>
-									<div class="item" data-value="BH">Bahrain</div>
-									<div class="item" data-value="BD">Bangladesh</div>
-									<div class="item" data-value="BB">Barbados</div>
-									<div class="item" data-value="BY">Belarus</div>
-									<div class="item" data-value="BE">Belgium</div>
-									<div class="item" data-value="BZ">Belize</div>
-									<div class="item" data-value="BJ">Benin</div>
-									<div class="item" data-value="BM">Bermuda</div>
-									<div class="item" data-value="BT">Bhutan</div>
-									<div class="item" data-value="BO">Bolivia</div>
-									<div class="item" data-value="BA">Bosnia</div>
-									<div class="item" data-value="BW">Botswana</div>
-									<div class="item" data-value="BV">Bouvet Island</div>
-									<div class="item" data-value="BR">Brazil</div>
-									<div class="item" data-value="VG">British Virgin Islands</div>
-									<div class="item" data-value="BN">Brunei</div>
-									<div class="item" data-value="BG">Bulgaria</div>
-									<div class="item" data-value="BF">Burkina Faso</div>
-									<div class="item" data-value="MM">Burma</div>
-									<div class="item" data-value="BI">Burundi</div>
-									<div class="item" data-value="TC">Caicos Islands</div>
-									<div class="item" data-value="KH">Cambodia</div>
-									<div class="item" data-value="CM">Cameroon</div>
-									<div class="item" data-value="CA">Canada</div>
-									<div class="item" data-value="CV">Cape Verde</div>
-									<div class="item" data-value="KY">Cayman Islands</div>
-									<div class="item" data-value="CF">Central African Republic</div>
-									<div class="item" data-value="TD">Chad</div>
-									<div class="item" data-value="CL">Chile</div>
-									<div class="item" data-value="CN">China</div>
-									<div class="item" data-value="CX">Christmas Island</div>
-									<div class="item" data-value="CC">Cocos Islands</div>
-									<div class="item" data-value="CO">Colombia</div>
-									<div class="item" data-value="KM">Comoros</div>
-									<div class="item" data-value="CG">Congo Brazzaville</div>
-									<div class="item" data-value="CD">Congo</div>
-									<div class="item" data-value="CK">Cook Islands</div>
-									<div class="item" data-value="CR">Costa Rica</div>
-									<div class="item" data-value="CI">Cote Divoire</div>
-									<div class="item" data-value="HR">Croatia</div>
-									<div class="item" data-value="CU">Cuba</div>
-									<div class="item" data-value="CY">Cyprus</div>
-									<div class="item" data-value="CZ">Czech Republic</div>
-									<div class="item" data-value="DK">Denmark</div>
-									<div class="item" data-value="DJ">Djibouti</div>
-									<div class="item" data-value="DM">Dominica</div>
-									<div class="item" data-value="DO">Dominican Republic</div>
-									<div class="item" data-value="EC">Ecuador</div>
-									<div class="item" data-value="EG">Egypt</div>
-									<div class="item" data-value="SV">El Salvador</div>
-									<div class="item" data-value="GB">England</div>
-									<div class="item" data-value="GQ">Equatorial Guinea</div>
-									<div class="item" data-value="ER">Eritrea</div>
-									<div class="item" data-value="EE">Estonia</div>
-									<div class="item" data-value="ET">Ethiopia</div>
-									<div class="item" data-value="EU">European Union</div>
-									<div class="item" data-value="FK">Falkland Islands</div>
-									<div class="item" data-value="FO">Faroe Islands</div>
-									<div class="item" data-value="FJ">Fiji</div>
-									<div class="item" data-value="FI">Finland</div>
-									<div class="item" data-value="FR">France</div>
-									<div class="item" data-value="GF">French Guiana</div>
-									<div class="item" data-value="PF">French Polynesia</div>
-									<div class="item" data-value="TF">French Territories</div>
-									<div class="item" data-value="GA">Gabon</div>
-									<div class="item" data-value="GM">Gambia</div>
-									<div class="item" data-value="GE">Georgia</div>
-									<div class="item" data-value="DE">Germany</div>
-									<div class="item" data-value="GH">Ghana</div>
-									<div class="item" data-value="GI">Gibraltar</div>
-									<div class="item" data-value="GR">Greece</div>
-									<div class="item" data-value="GL">Greenland</div>
-									<div class="item" data-value="GD">Grenada</div>
-									<div class="item" data-value="GP">Guadeloupe</div>
-									<div class="item" data-value="GU">Guam</div>
-									<div class="item" data-value="GT">Guatemala</div>
-									<div class="item" data-value="GW">Guinea-Bissau</div>
-									<div class="item" data-value="GN">Guinea</div>
-									<div class="item" data-value="GY">Guyana</div>
-									<div class="item" data-value="HT">Haiti</div>
-									<div class="item" data-value="HM">Heard Island</div>
-									<div class="item" data-value="HN">Honduras</div>
-									<div class="item" data-value="HK">Hong Kong</div>
-									<div class="item" data-value="HU">Hungary</div>
-									<div class="item" data-value="IS">Iceland</div>
-									<div class="item" data-value="IN">India</div>
-									<div class="item" data-value="IO">Indian Ocean Territory</div>
-									<div class="item" data-value="ID">Indonesia</div>
-									<div class="item" data-value="IR">Iran</div>
-									<div class="item" data-value="IQ">Iraq</div>
-									<div class="item" data-value="IE">Ireland</div>
-									<div class="item" data-value="IL">Israel</div>
-									<div class="item" data-value="IT">Italy</div>
-									<div class="item" data-value="JM">Jamaica</div>
-									<div class="item" data-value="JP">Japan</div>
-									<div class="item" data-value="JO">Jordan</div>
-									<div class="item" data-value="KZ">Kazakhstan</div>
-									<div class="item" data-value="KE">Kenya</div>
-									<div class="item" data-value="KI">Kiribati</div>
-									<div class="item" data-value="KW">Kuwait</div>
-									<div class="item" data-value="KG">Kyrgyzstan</div>
-									<div class="item" data-value="LA">Laos</div>
-									<div class="item" data-value="LV">Latvia</div>
-									<div class="item" data-value="LB">Lebanon</div>
-									<div class="item" data-value="LS">Lesotho</div>
-									<div class="item" data-value="LR">Liberia</div>
-									<div class="item" data-value="LY">Libya</div>
-									<div class="item" data-value="LI">Liechtenstein</div>
-									<div class="item" data-value="LT">Lithuania</div>
-									<div class="item" data-value="LU">Luxembourg</div>
-									<div class="item" data-value="MO">Macau</div>
-									<div class="item" data-value="MK">Macedonia</div>
-									<div class="item" data-value="MG">Madagascar</div>
-									<div class="item" data-value="MW">Malawi</div>
-									<div class="item" data-value="MY">Malaysia</div>
-									<div class="item" data-value="MV">Maldives</div>
-									<div class="item" data-value="ML">Mali</div>
-									<div class="item" data-value="MT">Malta</div>
-									<div class="item" data-value="MH">Marshall Islands</div>
-									<div class="item" data-value="MQ">Martinique</div>
-									<div class="item" data-value="MR">Mauritania</div>
-									<div class="item" data-value="MU">Mauritius</div>
-									<div class="item" data-value="YT">Mayotte</div>
-									<div class="item" data-value="MX">Mexico</div>
-									<div class="item" data-value="FM">Micronesia</div>
-									<div class="item" data-value="MD">Moldova</div>
-									<div class="item" data-value="MC">Monaco</div>
-									<div class="item" data-value="MN">Mongolia</div>
-									<div class="item" data-value="ME">Montenegro</div>
-									<div class="item" data-value="MS">Montserrat</div>
-									<div class="item" data-value="MA">Morocco</div>
-									<div class="item" data-value="MZ">Mozambique</div>
-									<div class="item" data-value="NA">Namibia</div>
-									<div class="item" data-value="NR">Nauru</div>
-									<div class="item" data-value="NP">Nepal</div>
-									<div class="item" data-value="AN">Netherlands Antilles</div>
-									<div class="item" data-value="NL">Netherlands</div>
-									<div class="item" data-value="NC">New Caledonia</div>
-									<div class="item" data-value="PG">New Guinea</div>
-									<div class="item" data-value="NZ">New Zealand</div>
-									<div class="item" data-value="NI">Nicaragua</div>
-									<div class="item" data-value="NE">Niger</div>
-									<div class="item" data-value="NG">Nigeria</div>
-									<div class="item" data-value="NU">Niue</div>
-									<div class="item" data-value="NF">Norfolk Island</div>
-									<div class="item" data-value="KP">North Korea</div>
-									<div class="item" data-value="MP">Northern Mariana Islands</div>
-									<div class="item" data-value="NO">Norway</div>
-									<div class="item" data-value="OM">Oman</div>
-									<div class="item" data-value="PK">Pakistan</div>
-									<div class="item" data-value="PW">Palau</div>
-									<div class="item" data-value="PS">Palestine</div>
-									<div class="item" data-value="PA">Panama</div>
-									<div class="item" data-value="PY">Paraguay</div>
-									<div class="item" data-value="PE">Peru</div>
-									<div class="item" data-value="PH">Philippines</div>
-									<div class="item" data-value="PN">Pitcairn Islands</div>
-									<div class="item" data-value="PL">Poland</div>
-									<div class="item" data-value="PT">Portugal</div>
-									<div class="item" data-value="PR">Puerto Rico</div>
-									<div class="item" data-value="QA">Qatar</div>
-									<div class="item" data-value="RE">Reunion</div>
-									<div class="item" data-value="RO">Romania</div>
-									<div class="item" data-value="RU">Russia</div>
-									<div class="item" data-value="RW">Rwanda</div>
-									<div class="item" data-value="SH">Saint Helena</div>
-									<div class="item" data-value="KN">Saint Kitts and Nevis</div>
-									<div class="item" data-value="LC">Saint Lucia</div>
-									<div class="item" data-value="PM">Saint Pierre</div>
-									<div class="item" data-value="VC">Saint Vincent</div>
-									<div class="item" data-value="WS">Samoa</div>
-									<div class="item" data-value="SM">San Marino</div>
-									<div class="item" data-value="GS">Sandwich Islands</div>
-									<div class="item" data-value="ST">Sao Tome</div>
-									<div class="item" data-value="SA">Saudi Arabia</div>
-									<div class="item" data-value="SN">Senegal</div>
-									<div class="item" data-value="CS">Serbia</div>
-									<div class="item" data-value="RS">Serbia</div>
-									<div class="item" data-value="SC">Seychelles</div>
-									<div class="item" data-value="SL">Sierra Leone</div>
-									<div class="item" data-value="SG">Singapore</div>
-									<div class="item" data-value="SK">Slovakia</div>
-									<div class="item" data-value="SI">Slovenia</div>
-									<div class="item" data-value="SB">Solomon Islands</div>
-									<div class="item" data-value="SO">Somalia</div>
-									<div class="item" data-value="ZA">South Africa</div>
-									<div class="item" data-value="KR">South Korea</div>
-									<div class="item" data-value="ES">Spain</div>
-									<div class="item" data-value="LK">Sri Lanka</div>
-									<div class="item" data-value="SD">Sudan</div>
-									<div class="item" data-value="SR">Suriname</div>
-									<div class="item" data-value="SJ">Svalbard</div>
-									<div class="item" data-value="SZ">Swaziland</div>
-									<div class="item" data-value="SE">Sweden</div>
-									<div class="item" data-value="CH">Switzerland</div>
-									<div class="item" data-value="SY">Syria</div>
-									<div class="item" data-value="TW">Taiwan</div>
-									<div class="item" data-value="TJ">Tajikistan</div>
-									<div class="item" data-value="TZ">Tanzania</div>
-									<div class="item" data-value="TH">Thailand</div>
-									<div class="item" data-value="TL">Timorleste</div>
-									<div class="item" data-value="TG">Togo</div>
-									<div class="item" data-value="TK">Tokelau</div>
-									<div class="item" data-value="TO">Tonga</div>
-									<div class="item" data-value="TT">Trinidad</div>
-									<div class="item" data-value="TN">Tunisia</div>
-									<div class="item" data-value="TR">Turkey</div>
-									<div class="item" data-value="TM">Turkmenistan</div>
-									<div class="item" data-value="TV">Tuvalu</div>
-									<div class="item" data-value="UG">Uganda</div>
-									<div class="item" data-value="UA">Ukraine</div>
-									<div class="item" data-value="AE">United Arab Emirates</div>
-									<div class="item" data-value="US">United States</div>
-									<div class="item" data-value="UY">Uruguay</div>
-									<div class="item" data-value="UM">Us Minor Islands</div>
-									<div class="item" data-value="VI">Us Virgin Islands</div>
-									<div class="item" data-value="UZ">Uzbekistan</div>
-									<div class="item" data-value="VU">Vanuatu</div>
-									<div class="item" data-value="VA">Vatican City</div>
-									<div class="item" data-value="VE">Venezuela</div>
-									<div class="item" data-value="VN">Vietnam</div>
-									<div class="item" data-value="WF">Wallis and Futuna</div>
-									<div class="item" data-value="EH">Western Sahara</div>
-									<div class="item" data-value="YE">Yemen</div>
-									<div class="item" data-value="ZM">Zambia</div>
-									<div class="item" data-value="ZW">Zimbabwe</div>
-								</div>
-							</div>
+						<div id="target-country" class="ui fluid multiple search selection dropdown">
+							<input type="hidden" name="target_country">
+							<i class="dropdown icon"></i>
+							<div class="default text">Select Country</div>
+							<div class="menu"></div>
 						</div>
-					</form>
-				</div> <!-- Content end -->
-				<!-- buttons -->
-				<div class="actions">
-					<div class="ui tiny deny button mopub-ops-button-color mopub-button-radius">Cancel</div>
-					<div id="edit-submit" class="ui right tiny button mopub-button-color mopub-button-radius">Edit</div>
-				</div>
-			</div> <!-- Model end -->
+					</div>
+					<h4 class="ui dividing header blue">Keyword Targeting</h4>
+					<div class="field">
+						<label>Keywords</label>
+						<input id="tagify-keywords" type="text" placeholder="Enter Keywords" name="keywords">
+					</div>
+				</form>
+			</div> <!-- Content end -->
+			<!-- buttons -->
+			<div class="actions">
+				<div class="ui tiny deny button mopub-ops-button-color mopub-button-radius">Cancel</div>
+				<div id="edit-submit" class="ui right tiny button mopub-button-color mopub-button-radius">Edit</div>
+			</div>
+		</div> <!-- Edit model end -->
 
 		<script type="text/javascript" src="lib/jquery-3.4.1.min.js"></script>
 		<script type="text/javascript" src="lib/semantic.min.js"></script>
-		<script type="text/javascript" src="table-js/tabulator.js"></script>
+		<script type="text/javascript" src="/lib/table-js/tabulator.js"></script>
 		<script type="text/javascript" src="lib/lodash.js"></script>
-
 		<script type="text/javascript" src="lib/http.js"></script>
+		<script type="text/javascript" src="lib/papaparse.min.js"></script>
+		<script type="text/javascript" src="lib/tagify.js"></script>
+    <script type="text/javascript" src="js/utils.js"></script>
+
     <script type="text/javascript" src="js/global.js"></script>
     <script type="text/javascript" src="js/notifier.js"></script>
+    <script type="text/javascript" src="js/customHtmlStore.js"></script>
+    <script type="text/javascript" src="js/tableColumnDef.js"></script>
+    <script type="text/javascript" src="js/adSourceManager.js"></script>
+    <script type="text/javascript" src="js/adUnitManager.js"></script>
+    <script type="text/javascript" src="js/overrideFieldValidator.js"></script>
+    <script type="text/javascript" src="js/csvManager.js"></script>
+    <script type="text/javascript" src="js/editFormManager.js"></script>
+    <script type="text/javascript" src="js/waterfallDuplicator.js"></script>
+    <script type="text/javascript" src="js/reviewChange.js"></script>
+    <script type="text/javascript" src="js/accountManager.js"></script>
+
     <script type="text/javascript" src="js/tableInitializer.js"></script>
-    <script type="text/javascript" src="js/orderCacher.js"></script>
-    <script type="text/javascript" src="js/lineItemCacher.js"></script>
-    <script type="text/javascript" src="js/updateMoPub.js"></script>
-    <script type="text/javascript" src="js/formCreator.js"></script>
+    <script type="text/javascript" src="js/orderManager.js"></script>
+    <script type="text/javascript" src="js/lineItemManager.js"></script>
+    <script type="text/javascript" src="js/moPubUI.js"></script>
+    <script type="text/javascript" src="js/loadingIndicator.js"></script>
+
     <script type="text/javascript" src="js/popupEvents.js"></script>
     <script type="text/javascript" src="js/popup.js"></script>
 	</body>

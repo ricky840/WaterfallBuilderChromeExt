@@ -2,8 +2,47 @@ $(document).ready(function() {
 
 	tableInitializer.init();
 
+	// Init Loading Indicator Bar
+	loadingIndicator.init($("#loader-bar"));
+
+	// Load AdUnits
+	adUnitManager.loadAdUnits("list-name-id", function(adUnitList) {
+		if (adUnitList) {
+			$("#info-adunit-name").html("Please Select Ad Unit Id");
+			let input = $("#adunit-selector")[0];
+			let menuAdUnitTagify = new Tagify(input, {
+				mode: "select",
+				enforceWhitelist: true,
+				whitelist: adUnitList,
+				keepInvalidTags: false,
+				placeholder: "Select or search ad unit",
+				skipInvalid: true,
+				dropdown: {
+					position: "all",
+					maxItems: Infinity,
+					closeOnSelect: true
+				}
+			});
+			menuAdUnitTagify.on('add', function(e) {
+				let selectedValue = e.detail.data.value;
+				let adUnitId = selectedValue.match(/.*\(([0-9|a-z]{32})\)$/)[1];
+				console.log(`Loading waterfall for ad unit ${selectedValue}`);
+				loadWaterfall(adUnitId, function() {
+					$(".button, .search-table-wrapper").removeClass('disabled');
+					console.log("Eanbling all buttons");
+				});
+			});
+		}
+	});
+
+	// Load Account Info
+	accountManager.updateHtmlEmail();
+
+	// Version Update
+	$(".wb-version").html(`v${chrome.runtime.getManifest().version}`);	
+
 	// Column Selector
-	var colDefs = WaterfallTable.getColumnDefinitions() // Get column definition array
+	let colDefs = WaterfallTable.getColumnDefinitions(); // Get column definition array
 	for(let i =0; i < colDefs.length; i++) {
 		if (colDefs[i]["field"]) {
 			let checked = colDefs[i].visible == true ? "checked" : "";
@@ -12,49 +51,49 @@ $(document).ready(function() {
         <input type="checkbox" name="${colDefs[i].field}" ${checked}>
         <label>${colDefs[i].title}</label>
       </div>`;
-			$(".scrolling").append(html);
+			$(".scrolling.menu").append(html);
 		}
 	}
 
 	// Column Select
 	$("#column-selector").dropdown({
-		action: function(text, value, element){
+		action: function(text, value, element) {
 			WaterfallTable.toggleColumn(value);
+			WaterfallTable.redraw();
 		}
 	});
 
 	// Init Checkboxes
 	$('.ui.checkbox').checkbox();
 
-	// Modal
-	$('.edit-dropdown').dropdown();
+	// Init Edit Form
+	editFormManager.initForm();
+	
+	// Copy Mode (Copy waterfall form)
+	$("#copy-mode").dropdown({ showOnFocus: false	});
 
-	// Modal targeting country
-	$('#target-country').dropdown({
-		onChange: function(value, text, element) {
-			$("#target-country").closest('.field').removeClass('error');
-		}
-	});
-
-	// Modal geo targeting mode
-	$('#target-mode').dropdown({
-		onChange: function(value, text, element) {
-			if (value != "all") {
-				$("#target-country").closest('.field').removeClass('disabled').addClass('required');
-			} else {
-				$("#target-country").closest('.field').addClass('disabled').removeClass('required');
-				$("#target-country").dropdown('clear');
-			}
-		}
-	});
+	// Disable all buttons
+	if (AdUnitId == undefined) {
+		$(".button, .search-table-wrapper").addClass('disabled');
+		console.log("Disabling all buttons");
+	}
 
 	// Status Filter Init
 	$('#status-filter').dropdown({
 		onChange: function(value, text, element) {
-			if (value == "all") {
-				WaterfallTable.clearFilter(true);
-			} else {
-				WaterfallTable.setFilter("status", "=", "running");
+			switch (value) {
+				case "running":
+					WaterfallTable.setFilter("status", "=", "running");
+					break;
+				case "paused":
+					WaterfallTable.setFilter("status", "=", "paused");
+					break;
+				case "archived":
+					WaterfallTable.setFilter("status", "=", "archived");
+					break;
+				default:
+					WaterfallTable.clearFilter(true);
+					break;
 			}
 		}
 	});
@@ -62,10 +101,19 @@ $(document).ready(function() {
 
 	$('#status-filter-lineitem').dropdown({
 		onChange: function(value, text, element) {
-			if (value == "all") {
-				LineItemTable.clearFilter(true);
-			} else {
-				LineItemTable.setFilter("status", "=", "running");
+			switch (value) {
+				case "running":
+					LineItemTable.setFilter("status", "=", "running");
+					break;
+				case "paused":
+					LineItemTable.setFilter("status", "=", "paused");
+					break;
+				case "archived":
+					LineItemTable.setFilter("status", "=", "archived");
+					break;
+				default:
+					LineItemTable.clearFilter(true);
+					break;
 			}
 		}
 	});
@@ -73,10 +121,19 @@ $(document).ready(function() {
 
 	$('#status-filter-order').dropdown({
 		onChange: function(value, text, element) {
-			if (value == "all") {
-				OrderTable.clearFilter(true);
-			} else {
-				OrderTable.setFilter("status", "=", "running");
+			switch (value) {
+				case "running":
+					OrderTable.setFilter("status", "=", "running");
+					break;
+				case "paused":
+					OrderTable.setFilter("status", "=", "paused");
+					break;
+				case "archived":
+					OrderTable.setFilter("status", "=", "archived");
+					break;
+				default:
+					OrderTable.clearFilter(true);
+					break;
 			}
 		}
 	});

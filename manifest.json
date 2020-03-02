@@ -1,7 +1,7 @@
 {
-  "name": "WaterfallBuilder",
+  "name": "Waterfall Builder for MoPub Twitter",
   "version": "0.0.1",
-  "description": "Brandnew WaterfallBuilder",
+  "description": "Helper tool for managing line items in MoPub UI",
   "manifest_version": 2,
   "background": {
     "persistent": true,
@@ -9,15 +9,23 @@
       "lib/jquery-3.4.1.min.js",
       "lib/lodash-core.js",
       "lib/http.js",
-      "js/sessionHandler.js",
-      "js/background.js"
+			"js/utils.js",
+      "js/backgrounds/backgroundStatic.js",
+      "js/backgrounds/badgeManager.js",
+      "js/backgrounds/loginHandler.js",
+      "js/backgrounds/logoutHandler.js",
+      "js/backgrounds/sessionHandler.js",
+      "js/backgrounds/background.js"
     ]
   },
   "browser_action": {
-    // "default_popup": "popup.html",
-    "default_title": "WaterfallBuilder"
+    "default_icon": "img/default-logo.png",
+    "default_title": "Waterfall Builder for MoPub Twitter"
   },
   "icons": {
+		"16": "img/logo-16.png",
+		"48": "img/logo-48.png",
+		"128": "img/logo-128.png"
   },
   "permissions": [
     "activeTab",
@@ -26,6 +34,7 @@
     "webRequest",
     "webNavigation",
     "webRequestBlocking",
-    "*://*.mopub.com/"
+    "*://*.mopub.com/",
+		"notifications"
   ]
 }
