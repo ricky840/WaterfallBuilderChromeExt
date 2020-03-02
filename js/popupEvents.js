@@ -212,33 +212,32 @@ $("#edit-submit").click(function() {
 // 	}, 200);
 // });
 
-// Copy Waterfall - destroy when close
-$('.ui.modal.copy-waterfall-modal').modal({
-	onHidden: function() {
-		AdUnitTagify.destroy();	
-	}
-});
-
 $("#copy-waterfall").click(function() {
 	$('.ui.modal.copy-waterfall-modal').modal('show');
 	let input = $("#tagify-adunits")[0];
 	adUnitManager.loadAdUnits("list-name-id", function(adUnitList) {
 		if (adUnitList) {
-			AdUnitTagify = new Tagify(input, {
-				mode: "select",
-				enforceWhitelist: true,
-				whitelist: adUnitList,
-				keepInvalidTags: false,
-				placeholder: "Select or search ad unit",
-				skipInvalid: true,
-				dropdown: {
-					position: "manual",
-					maxItems: Infinity,
-					classname: "customSuggestionsList",
-				},
-			});
-			AdUnitTagify.dropdown.show.call(AdUnitTagify); // load the list
-			AdUnitTagify.DOM.scope.parentNode.appendChild(AdUnitTagify.DOM.dropdown);
+			if (AdUnitTagify == undefined) {
+				// Initialize Tagify
+				AdUnitTagify = new Tagify(input, {
+					mode: "select",
+					enforceWhitelist: true,
+					whitelist: adUnitList,
+					keepInvalidTags: false,
+					placeholder: "Select or search ad unit",
+					skipInvalid: true,
+					dropdown: {
+						position: "manual",
+						maxItems: Infinity,
+						classname: "customSuggestionsList"
+					},
+				});
+				AdUnitTagify.dropdown.show.call(AdUnitTagify); // load the list
+				AdUnitTagify.DOM.scope.parentNode.appendChild(AdUnitTagify.DOM.dropdown);
+			} else {
+				// If already initialized, just remove previous tag.
+				AdUnitTagify.removeAllTags();
+			}
 		} else {
 			console.log("Error loading adunits");
 			$('.ui.modal.copy-waterfall-modal').modal('hide');
@@ -250,7 +249,7 @@ $("#copy-submit").click(function() {
 	let copyMode = $('#copy-mode').val();
 	let copyOnlyFiltered = $('#copy-only-filtered').is(':checked');
 	let selectedValues = $("#tagify-adunits").val();
-	let lineItems = (copyOnlyFiltered) ? WaterfallTable.getData() : WaterfallTable.getData("active");
+	let lineItems = (copyOnlyFiltered) ? WaterfallTable.getData("active") : WaterfallTable.getData();
 	
 	try {
 		selectedValues = JSON.parse(selectedValues);
