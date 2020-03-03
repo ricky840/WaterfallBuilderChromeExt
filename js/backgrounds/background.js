@@ -29,16 +29,12 @@ var initStorage = function() {
 // Popup Window, open only when the badge is up
 chrome.browserAction.onClicked.addListener(function(tab) {
 
-	// See if popup is already open. Only allow one window
+	// See if popup is already open. Only allow one window. Focuse existing window.
   let views = chrome.extension.getViews({type: "tab"});
 	if (views.length >= 1) {
-		let options = {
-			type: "basic",
-			title: "Waterfall Builder for MoPub",
-			message: "Waterfall Builder is open already",
-			iconUrl: LogoImageUrl
-		};
-		chrome.notifications.create(getCurrentDatetimeUTC(), options);
+		chrome.windows.update(WindowId, { focused: true }, function() {
+			console.log("Window focused");
+		});
 		return false;
 	}
 
@@ -47,14 +43,16 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 			url: chrome.runtime.getURL("popup.html"),
 			type: "popup"
 		}, function(window) {
+			console.log(window);
+			WindowId = window.id
 			// Do something after open window
 		});
 	} else {
 		// Notification
 		let options = {
 			type: "basic",
-			title: "Waterfall Builder for MoPub",
-			message: "Please login to MoPub UI",
+			title: "Login to MoPub Dashboard",
+			message: "If you are already logged in, open MoPub UI and hit refresh.",
 			iconUrl: LogoImageUrl
 		};
 		chrome.notifications.create(getCurrentDatetimeUTC(), options);

@@ -548,17 +548,24 @@ function loadWaterfall(adunitId, callback) {
 		// Convert AdSource to LineItem
 		let tableData = adSourceManager.convertToLineItem(responseObj.adSources);
 
+    WaterfallTable.blockRedraw();
     WaterfallTable.replaceData(tableData).then(function() {
-			sortByBidPriority(WaterfallTable);
+			// sortByBidPriority(WaterfallTable);
+      WaterfallTable.restoreRedraw();
     }).catch(function(error) {
 			console.log(error.responseText);
+      WaterfallTable.restoreRedraw();
 		});
 
 		// Cache original line item values
 		lineItemManager.cacheLineItem(tableData);
 
 		// Load Orders
-		loadOrderList(function() { $(".loader-order-table").dimmer("hide"); });
+		OrderTable.blockRedraw();
+		loadOrderList(function() { 
+			OrderTable.restoreRedraw();
+			$(".loader-order-table").dimmer("hide"); 
+		});
 		$(".loader-waterfall-table").dimmer("hide");
 		$(".loader-adunit-info").dimmer("hide");
 

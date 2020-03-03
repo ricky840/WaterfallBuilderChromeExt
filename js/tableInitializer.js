@@ -44,6 +44,7 @@ var tableInitializer = (function(global) {
 
 	function initAdUnitWaterfallTable() {
     WaterfallTable = new Tabulator("#waterfall-adunit", {
+			height: WATERFALL_TABLE_HEIGHT,
 			data: [],
 			layout: "fitColumns",
 			index: "key", // To avoid duplicates in the table
@@ -135,6 +136,7 @@ var tableInitializer = (function(global) {
 
 	function initLineItemListTable() {
 		LineItemTable = new Tabulator("#lineitem-list", {
+			height: LINEITEM_TABLE_HEIGHT,
 			data: [],
 			layout: "fitColumns",
 			selectable: true,
@@ -149,7 +151,7 @@ var tableInitializer = (function(global) {
 
 			// Pagination
 			pagination: "local",
-			paginationSize: 10,
+			paginationSize: LINEITEM_PAGINATION_SIZE,
 
 			rowAdded: function(row) {
 				let html = `<span class="count-lineitems">${LineItemTable.getDataCount()} Items</span>`;
@@ -176,6 +178,7 @@ var tableInitializer = (function(global) {
 
 	function initOrderListTable() {
 		OrderTable = new Tabulator("#order-list", {
+			height: ORDER_TABLE_HEIGHT,
 			data: [],
 			layout: "fitColumns",
 			selectable: true,
@@ -184,7 +187,7 @@ var tableInitializer = (function(global) {
 
 			// Pagination
 			pagination: "local",
-			paginationSize: 10,
+			paginationSize: ORDER_PAGINATION_SIZE,
 
 			// selectable Check for Status
 			selectableCheck: function(row) {

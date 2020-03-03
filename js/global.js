@@ -32,6 +32,13 @@ const NEW_ORDER_NAME_POSTFIX = " (Created by WBExt)";
 const NEW_ORDER_ADVERTISER = "Advertiser";
 const NEW_ORDER_DESC = "Created by WaterfallBuilder Chrome Ext";
 
+// Table Heights and P
+const WATERFALL_TABLE_HEIGHT = 1065;
+const LINEITEM_TABLE_HEIGHT = 504;
+const ORDER_TABLE_HEIGHT = 504; 
+const LINEITEM_PAGINATION_SIZE = 7;
+const ORDER_PAGINATION_SIZE = 7;
+
 // Line Item Type Name
 const TYPE_NAME = {
 	gtee: "Guaranteed",
