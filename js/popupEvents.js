@@ -15,14 +15,14 @@ $("#add-adsource").click(function() {
 	if($("#adsource-section").is(":hidden")) {
 		$('#waterfall-adunit').parents('#waterfall-section').removeClass().addClass('nine wide column');
 		$('#adsource-section').show();
-		$(this).html(`<i class="chevron right icon"></i>Hide LineItems`);
+		$(this).find("i").removeClass("left right").addClass("right");
 		WaterfallTable.redraw();
 		LineItemTable.redraw();
 		OrderTable.redraw();
 	} else {
 		$('#waterfall-adunit').parents('#waterfall-section').removeClass().addClass('sixteen wide column');	
 		$('#adsource-section').hide();
-		$(this).html(`<i class="chevron left icon"></i>Show LineItems`);
+		$(this).find("i").removeClass("left right").addClass("left");
 		WaterfallTable.redraw();
 		LineItemTable.redraw();
 		OrderTable.redraw();
@@ -550,7 +550,6 @@ function loadWaterfall(adunitId, callback) {
 
     WaterfallTable.blockRedraw();
     WaterfallTable.replaceData(tableData).then(function() {
-			// sortByBidPriority(WaterfallTable);
       WaterfallTable.restoreRedraw();
     }).catch(function(error) {
 			console.log(error.responseText);

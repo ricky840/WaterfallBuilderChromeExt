@@ -8,9 +8,18 @@ var tableColumnDef = (function(global) {
 			}
 		},
 		{ field: 'name', title: 'Name', visible: true, download: true, editor: "input", editable: editCheck, minWidth: 80, formatter: nameFormatter },
+		{ field: 'key', title: 'Key', visible: false, download: true, sorter: 'string' },
 		{ field: 'orderName', title: 'Order', visible: true, download: true, minWidth: 80 },
 		{ field: 'type', title: 'Item Type', visible: true, download: true, minWidth: 110, width: 110, formatter: typeNameFormatter },
 		{ field: 'networkType', title: 'Network Type', visible: true, download: true, minWidth: 150, width: 150, formatter: networkTypeNameFormatter },
+		{ field: 'network', title: 'Network', visible: false, download: true, formatter: jsonArrayFormatter, sorter: 'string' },
+		{ field: 'overrideFields', title: 'Override Fields', download: true, formatter: jsonArrayFormatter, visible: false, sorter: 'string' },
+		{ field: 'includeGeoTargeting', title: 'Geo Targeting Mode', visible: false, download: true },
+		{ field: 'targetedCountries', title: 'Countries', visible: false, download: true, formatter: jsonArrayFormatter, sorter: 'string' },
+		{ field: 'targetedRegions', title: 'Regions', visible: false, download: true, formatter: jsonArrayFormatter, sorter: 'string' },
+		{ field: 'targetedCities', title: 'Cities', visible: false, download: true, formatter: jsonArrayFormatter, sorter: 'string' },
+		{ field: 'targetedZipCodes', title: 'ZipCodes', visible: false, download: true, formatter: jsonArrayFormatter, sorter: 'string' },
+		{ field: 'keywords', title: 'Keywords', visible: false, download: true, formatter: jsonArrayFormatter, sorter: 'string' },
 		{ field: 'bid', title: 'CPM', sorter: "number", visible: true, download: true, editor: "number", editable: editCheck, 
 			editorParams: {
 				min: 0,
@@ -50,6 +59,15 @@ var tableColumnDef = (function(global) {
 			width: 90,
 			formatter: priorityFormatter
 		},
+		{ field: 'start', title: 'Start', visible: false, download: true, sorter: 'string' },
+		{ field: 'end', title: 'End', visible: false, download: true, sorter: 'string' },
+		{ field: 'active', title: 'Active', visible: false, download: true, sorter: 'string' },
+		{ field: 'disabled', title: 'Disabled', visible: false, download: true, sorter: 'string' },
+		{ field: 'autoCpm', title: 'AutoCpm', visible: false, download: true, sorter: 'string' },
+		{ field: 'budget', title: 'Budget', visible: false, download: true, sorter: 'string' },
+		{ field: 'budgetType', title: 'Budget Type', visible: false, download: true, sorter: 'string' },
+		{ field: 'frequencyCaps', title: 'Frequency Caps', visible: false, download: true, sorter: 'string' },
+		{ field: 'bidStrategy', title: 'Bid Strategy', visible: false, download: true, sorter: 'string' },
 		{ field: 'status', title: 'Status', visible: true, download: true, editor: "select", editable: editCheck, editorParams: {
 				elementAttributes: { class: "capitalize" },
 				values:	[{ label: "Running", value: "running" }, { label: "Paused", value: "paused" }, {label: "Archived", value: "archived"}]
@@ -58,24 +76,6 @@ var tableColumnDef = (function(global) {
 			width: 90,
 			minWidth: 90
 		},
-		{ field: 'network', title: 'Network', visible: false, download: true, formatter: jsonArrayFormatter, sorter: 'string' },
-		{ field: 'overrideFields', title: 'Override Fields', download: true, formatter: jsonArrayFormatter, visible: false, sorter: 'string' },
-		{ field: 'start', title: 'Start', visible: false, download: true, sorter: 'string' },
-		{ field: 'end', title: 'End', visible: false, download: true, sorter: 'string' },
-		{ field: 'active', title: 'Active', visible: false, download: true, sorter: 'string' },
-		{ field: 'disabled', title: 'Disabled', visible: false, download: true, sorter: 'string' },
-		{ field: 'keywords', title: 'Keywords', visible: false, download: true, formatter: jsonArrayFormatter, sorter: 'string' },
-		{ field: 'includeGeoTargeting', title: 'Geo Targeting Mode', visible: false, download: true },
-		{ field: 'targetedCountries', title: 'Countries', visible: false, download: true, formatter: jsonArrayFormatter, sorter: 'string' },
-		{ field: 'targetedRegions', title: 'Regions', visible: false, download: true, formatter: jsonArrayFormatter, sorter: 'string' },
-		{ field: 'targetedCities', title: 'Cities', visible: false, download: true, formatter: jsonArrayFormatter, sorter: 'string' },
-		{ field: 'targetedZipCodes', title: 'ZipCodes', visible: false, download: true, formatter: jsonArrayFormatter, sorter: 'string' },
-		{ field: 'autoCpm', title: 'AutoCpm', visible: false, download: true, sorter: 'string' },
-		{ field: 'key', title: 'Key', visible: false, download: true, sorter: 'string' },
-		{ field: 'budget', title: 'Budget', visible: false, download: true, sorter: 'string' },
-		{ field: 'budgetType', title: 'Budget Type', visible: false, download: true, sorter: 'string' },
-		{ field: 'frequencyCaps', title: 'Frequency Caps', visible: false, download: true, sorter: 'string' },
-		{ field: 'bidStrategy', title: 'Bid Strategy', visible: false, download: true, sorter: 'string' },
 	];
 
 	let lineitemColumns = [

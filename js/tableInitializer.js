@@ -1,7 +1,7 @@
 var tableInitializer = (function(global) {
   "use strict";
 
-	let placeHolder = `<br><h4 class="ui header grey">No Data Available</h4><br><br><br>`;
+	let placeHolder = `<h4 class="ui header grey">No Data Available</h4>`;
 	let lineItemSearchInputHtml = `<span class="count-lineitems-wrapper"></span>
 																 <div class="ui icon input small search-table-wrapper">
 																 	 <input type="text" placeholder="Search line item name" id="line-item-search" class="mopub-input-search">

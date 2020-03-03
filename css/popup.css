@@ -338,6 +338,7 @@
 /* Logged in as label */
 .logged-in-label {
   margin-right: 1em !important;
+  margin-left: 0px !important;
 	padding: 0.4em !important;
 	padding-top: 0.2em !important;
 	padding-bottom: 0.2em !important;
@@ -345,12 +346,22 @@
 .logged-in-account {
 	font-weight: bold;
 	font-size: 1.1em !important;
+	word-break: break-all;
+	width: 238px;
 }
 .logged-in-account-desc {
 	font-weight: normal;
 	font-size: 0.8em !important;
 	color: gray;
 	margin-top: 5px;
+}
+
+/* Show/Hide line item button */
+.toggle-line-item-bar {
+	font-size: 1.5em !important;
+}
+.toggle-line-item-bar:hover {
+	color: #1da1f2;
 }
 
 /* For version label */
@@ -436,15 +447,18 @@ unitformat {
 	color: #fff!important;
 }
 appname {
+	font-size: 0.9em !important;
 	margin-right: 5px !important;
+  color: gray !important;
 }
 unitname {
-	color: #1da1f2 !important;
+	/* color: #1da1f2 !important; */
+	font-size: 0.9em !important;
 	font-weight: bold !important;
 	margin-right: 5px !important;
 }
 unitkey {
-	display: none;
+	display: none !important;
 }
 unitstatusactive {
 	margin-right: 5px !important;
@@ -468,7 +482,7 @@ unitstatusactive {
   overflow: hidden;
   width: .5em;
   height: .5em;
-  vertical-align: baseline;
+  vertical-align: baseline !important;
 }
 unitstatusinactive {
 	margin-right: 5px !important;
@@ -492,5 +506,22 @@ unitstatusinactive {
   overflow: hidden;
   width: .5em;
   height: .5em;
-  vertical-align: baseline;
+  vertical-align: baseline !important;
+}
+
+/* Footer */
+.page-footer {
+	text-align: center;
+	color: #657786; 
+	margin-top: 50px;
+	padding: .6rem;
+	width: 100%;
+	font-size: 1em;
+}
+
+/* Version number */
+.wb-version {
+	/* background-color: #1da1f2 !important; */
+	/* border-color: #1da1f2 !important; */
+	color: #1da1f2;
 }

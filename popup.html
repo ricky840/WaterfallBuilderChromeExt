@@ -16,7 +16,7 @@
 				<h4 style="margin-bottom: 0px;">Waterfall Builder for</h4>
 				<div class="mopub-logo-menu"></div>
 			</a>
-			<div class="item" style="width: 55%;">
+			<div class="horizontally fitted item" style="width: 50%;">
 				<div style="background: white; color: black; width: 100%;">
 					<input id="adunit-selector" class='selectMode'>
 				</div>
@@ -27,11 +27,14 @@
 					<div id="logged-in-account" class="logged-in-account"></div>
 				</a>
 				<a class="item">
-					<div class="ui label mopub-color-label wb-version small"></div>
+					<div id="add-adsource" class="toggle-line-item-bar">
+						<i class="chevron right icon"></i>
+					</div>
 				</a>
 			</div>
 		</div>
 
+		<!-- Loading Bar -->
 		<div class="ui grid">
 			<div class="one column row no-padding">
 				<div class="column">
@@ -64,11 +67,8 @@
 							</h2>
 						</div>
 					</div>
-					<div class="four wide column">
-						<button id="add-adsource" class="ui labeled icon button tiny right floated mopub-button-color mopub-button-radius">
-							<i class="chevron right icon"></i>
-							Hide Line Items
-						</button>
+					<div class="four wide column right floated">
+						<button id="copy-waterfall" class="ui button tiny mopub-button-color mopub-button-radius right floated">Copy Waterfall</button>
 					</div>
 				</div>
 				<!-- Second Row -->
@@ -187,11 +187,9 @@
 							</div>
 							<div id="waterfall-adunit"></div>
 						</div>
-						<button id="edit-selected" class="ui button tiny mopub-button-color mopub-button-radius">Edit Line Item</button>
 						<!-- <button id="delete&#45;selected" class="ui button tiny mopub&#45;button&#45;color mopub&#45;button&#45;radius">Deassign</button> -->
 						<button id="apply-waterfall" class="ui button right floated tiny mopub-button-color mopub-button-radius">Apply to MoPub UI</button>
-						<button id="copy-waterfall" class="ui button right floated tiny mopub-button-color mopub-button-radius">Copy Waterfall</button>
-
+						<button id="edit-selected" class="ui button right floated tiny mopub-button-color mopub-button-radius">Edit Selected</button>
 					</div> <!-- Waterfall section end -->
 
 					<!-- Lineitem section -->
@@ -259,6 +257,11 @@
 			</div> <!-- End of Grid -->
 		</div> <!-- End of content wrapper -->
 
+		<footer class="page-footer">
+			<span class="wb-version"></span>
+			<span>@ricky840@gmail.com</span>
+		</footer>
+
 		<!-- Modals -->
 		<!-- Copy Waterfall -->
 		<div class="ui modal copy-waterfall-modal">
@@ -270,13 +273,18 @@
 						<div id="copy-form-notification"></div>
 					</div>
 					<div class="field">
+						<div class="ui info message">
+							<p>This will not duplicate <b>Private Marketplace, Marketplace Tab(default), Segment, Advanced Bidding</b> line items.</p>
+						</div>
+					</div>
+					<div class="field">
 						<label>Duplicate Mode</label>
 						<select id="copy-mode" class="ui dropdown selection">
 							<option value="in_same_order" selected>Duplicate line items within the current order</option>
 							<option value="in_one_new_order">Duplicate line items and merge into a new order</option>
 							<option value="in_new_order_with_neighbour">Duplicate line items with the same order structure</option>
 						</select>
-						<div class="ui message small">
+						<div class="ui message">
 							<ul class="list">
 								<li>Duplicated line items will have suffix of "(new)" in the name.</li>
 								<li>Newly created order will have suffix of "(Created by WBExt)" in the name.</li>
@@ -287,7 +295,7 @@
 						<label>Target Line Items</label>
 						<div class="ui checkbox">
 							<input id="copy-only-filtered" type="checkbox">
-							<label>Duplicate only filtered line items (status filtered, not selected items)</label>
+							<label>Duplicate only filtered line items (<b>Status</b> filtered, <b>NOT</b> selected items)</label>
 						</div>
 					</div>
 					<div class="field">

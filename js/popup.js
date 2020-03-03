@@ -59,7 +59,7 @@ $(document).ready(function() {
 	$("#column-selector").dropdown({
 		action: function(text, value, element) {
 			WaterfallTable.toggleColumn(value);
-			WaterfallTable.redraw();
+			WaterfallTable.redraw(true);
 		}
 	});
 
