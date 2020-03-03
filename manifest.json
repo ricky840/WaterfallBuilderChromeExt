@@ -1,5 +1,5 @@
 {
-  "name": "Waterfall Builder for MoPub Twitter",
+  "name": "Waterfall Builder for MoPub",
   "version": "0.0.6",
   "description": "Helper tool for managing line items in MoPub UI",
   "manifest_version": 2,
@@ -20,7 +20,7 @@
   },
   "browser_action": {
     "default_icon": "img/default-logo.png",
-    "default_title": "Waterfall Builder for MoPub Twitter"
+    "default_title": "Waterfall Builder for MoPub"
   },
   "icons": {
 		"16": "img/logo-16.png",
