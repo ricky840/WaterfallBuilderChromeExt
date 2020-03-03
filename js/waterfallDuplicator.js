@@ -86,7 +86,13 @@ var waterfallDuplicator = (function(global) {
 			let each = lineItems[i];
 
 			// Do not copy Marketplace Tab and advanced bidding items. Remove from the list, do not put in the changes.
-			if (each.type == "marketplace" || each.type == "advanced_bidding_mpx" || each.type == "advanced_bidding_network" ) continue;
+			if (each.type == "marketplace" 
+          || each.type == "advanced_bidding_mpx" 
+          || each.type == "advanced_bidding_network" 
+          || each.type == "pmp_line_item"
+          || each.type == "segment") {
+        continue;
+      }
 
 			// Assign Adunit Keys
 			each["adUnitKeys"] = adUnitIds;

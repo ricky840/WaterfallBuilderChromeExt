@@ -44,12 +44,14 @@ const TYPE_NAME = {
 	gtee: "Guaranteed",
 	non_gtee: "Non-guaranteed",
 	promo: "Promotional",
-	backfill_promo: "Backfill promotional",
+	backfill_promo: "Backfill Promotional",
 	mpx_line_item: "Marketplace",
 	network: "Network",
 	advanced_bidding_mpx: "AB MPX",
 	advanced_bidding_network: "AB Network",
-	marketplace: "Marketplace (Default)"
+	marketplace: "Marketplace (Default)",
+  pmp_line_item: "Private Marketplace",
+  segment: "Segment"
 }
 
 // Network Type Name

@@ -113,7 +113,7 @@ var tableInitializer = (function(global) {
 				let status = row.getData().status;
 				let type = row.getData().type;
 				let regex = /campaign\-|segment\-|scheduled/;
-				let regexType = /advanced\_/;
+				let regexType = /advanced\_|pmp\_|segment/;
 				if (status.match(regex) || type.match(regexType)) {
 					let rowElement = row.getElement();
 					$(rowElement).addClass('tabulator-unselectable');
@@ -161,6 +161,20 @@ var tableInitializer = (function(global) {
 			dataFiltered: function(filters, rows) {
 				let html = `<span class="count-lineitems">${rows.length} Items</span>`;
 				$(".count-lineitems-wrapper").html(html);
+			},
+
+			// Disable Rows that doesn't supported for now.
+			selectableCheck: function(row) {
+				let status = row.getData().status;
+				let type = row.getData().type;
+				let regex = /campaign\-|segment\-|scheduled/;
+				let regexType = /advanced\_|pmp\_|segment/;
+				if (status.match(regex) || type.match(regexType)) {
+					let rowElement = row.getElement();
+					$(rowElement).addClass('tabulator-unselectable');
+					return false;	
+				}
+				return true;
 			},
 
 			// Column Definition

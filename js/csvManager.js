@@ -35,7 +35,7 @@ var csvManager = (function(global) {
 
 				// Skip marketplace, advanced_bidding, custom JS network(custom_html) and status that is NOT running/paused/archived from exporting
 				let statusRegex = /^running$|^paused$|^archived$/;
-				let typeRegex = /^marketplace$|^advanced_bidding_mpx$|^advanced_bidding_network$/;
+				let typeRegex = /^marketplace$|^advanced_bidding_mpx$|^advanced_bidding_network$|^pmp_line_item$|^segment$/;
 				if (!statusRegex.test(eachLineItem.status)) continue;
 				if (typeRegex.test(eachLineItem.type)) continue;
 				if (eachLineItem.networkType == "custom_html") continue;
