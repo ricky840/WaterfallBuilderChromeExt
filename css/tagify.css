@@ -424,9 +424,13 @@
     outline:0
 }
 .tagify__dropdown__item--active{
-    background:#3595f6;
-    background:var(--tagify-dd-color-primary);
-    color:#fff
+	/* Ricky */
+    /* background: #f5f8fa; */
+    /* background:#3595f6; */
+    background: lightgray;
+    /* background:var(--tagify-dd-color-primary); */
+    /* color:#fff; */
+		/* font-weight: bold; */
 }
 .tagify__dropdown__item:active{
     filter:brightness(105%)

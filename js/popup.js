@@ -15,7 +15,7 @@ $(document).ready(function() {
 				enforceWhitelist: true,
 				whitelist: adUnitList,
 				keepInvalidTags: false,
-				placeholder: "Select or search ad unit",
+				placeholder: "Select or search ad unit or id",
 				skipInvalid: true,
 				dropdown: {
 					position: "all",
@@ -25,7 +25,7 @@ $(document).ready(function() {
 			});
 			menuAdUnitTagify.on('add', function(e) {
 				let selectedValue = e.detail.data.value;
-				let adUnitId = selectedValue.match(/.*\(([0-9|a-z]{32})\)$/)[1];
+				let adUnitId = selectedValue.match(/.*\(([0-9|a-z]{32})\).*/)[1];
 				console.log(`Loading waterfall for ad unit ${selectedValue}`);
 				loadWaterfall(adUnitId, function() {
 					$(".button, .search-table-wrapper").removeClass('disabled');

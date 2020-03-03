@@ -224,7 +224,7 @@ $("#copy-waterfall").click(function() {
 					enforceWhitelist: true,
 					whitelist: adUnitList,
 					keepInvalidTags: false,
-					placeholder: "Select or search ad unit",
+					placeholder: "Select or search ad unit or id",
 					skipInvalid: true,
 					dropdown: {
 						position: "manual",
@@ -262,7 +262,7 @@ $("#copy-submit").click(function() {
 	let adUnitIds = [];
 	for (let i=0; i < selectedValues.length; i++) {
 		let eachAdUnitNameAndKey = selectedValues[i].value;
-		adUnitIds.push(eachAdUnitNameAndKey.match(/.*\(([0-9|a-z]{32})\)$/)[1]);
+		adUnitIds.push(eachAdUnitNameAndKey.match(/.*\(([0-9|a-z]{32})\).*/)[1]);
 	}
 
 	$('.ui.modal.copy-waterfall-modal').modal({

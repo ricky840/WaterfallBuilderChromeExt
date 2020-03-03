@@ -6,7 +6,18 @@ var adUnitManager = (function(global) {
 	function listFormat(adUnits) {
 		let formatted = [];
 		for (let i=0; i < adUnits.length; i++) {
-			formatted.push(`${adUnits[i].name} (${adUnits[i].key})`);
+			let os = (adUnits[i].appType == "iphone") ? "iOS" : "AOS";
+			let ostag = (os == "iOS") ? "ios" : "aos";
+			let appName = adUnits[i].appName.capitalize();
+			let adUnitName = adUnits[i].name.capitalize();
+			let format = adUnits[i].format.capitalize();
+			let key = adUnits[i].key;
+			let value = `<${ostag}>${os}</${ostag}><unitformat>${format}</unitformat><unitname>${adUnitName}</unitname><appname>${appName}</appname><unitkey>(${key})</unitkey>`;
+			let searchBy = `${os} ${appName} ${adUnitName} ${format} ${key}`;
+			formatted.push({
+				value: value,
+				searchBy: searchBy
+			});
 		}
 		return formatted;
 	}
@@ -35,7 +46,7 @@ var adUnitManager = (function(global) {
 					message: `Please login to MoPub UI. If you keep seeing this error, try to refresh this page or logout and login in MoPub UI. ${error.responseText}`,
 					type: "negative"
 				});
-				console.log(error.responseText);
+				console.log(error);
 			});
 		}
 	}

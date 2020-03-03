@@ -360,6 +360,89 @@
 	margin: 0px !important;
 }
 
+/* for adunit list in tagify */
+ios {
+	width: 30px !important;
+	padding: 4px !important;
+	font-size: 0.7rem !important;
+	text-align: center !important;
+	/* margin-right: 5px !important; */
+	background-color: #1da1f2 !important;
+	border-color: #1da1f2 !important;
 
+	background-color: #e8e8e8;
+	display: inline-block;
+	line-height: 1;
+	vertical-align: baseline;
+	margin: 0.14285714em;
+	background-image: none;
+	padding: .5833em .833em;
+	color: rgba(0,0,0,.6);
+	text-transform: none;
+	font-weight: 700;
+	border: 0 solid transparent;
+	border-radius: .28571429rem;
+	-webkit-transition: background .1s ease;
+	transition: background .1s ease;
+	color: #fff!important;
+}
+aos {
+	width: 30px !important;
+	padding: 4px !important;
+	font-size: 0.7rem !important;
+	text-align: center !important;
+	/* margin-right: 5px !important; */
+	background-color: #f2711c !important;
+	border-color: #f2711c !important;
 
+	background-color: #e8e8e8;
+	display: inline-block;
+	line-height: 1;
+	vertical-align: baseline;
+	margin: 0.14285714em;
+	background-image: none;
+	padding: .5833em .833em;
+	color: rgba(0,0,0,.6);
+	text-transform: none;
+	font-weight: 700;
+	border: 0 solid transparent;
+	border-radius: .28571429rem;
+	-webkit-transition: background .1s ease;
+	transition: background .1s ease;
+	color: #fff!important;
+}
+unitformat {
+	padding: 4px !important;
+	font-size: 0.7rem !important;
+	text-align: center !important;
+	margin-right: 5px !important;
+	background-color: #767676 !important;
+	border-color: #767676 !important;
 
+	background-color: #e8e8e8;
+	display: inline-block;
+	line-height: 1;
+	vertical-align: baseline;
+	margin: 0.14285714em;
+	background-image: none;
+	padding: .5833em .833em;
+	color: rgba(0,0,0,.6);
+	text-transform: none;
+	font-weight: 700;
+	border: 0 solid transparent;
+	border-radius: .28571429rem;
+	-webkit-transition: background .1s ease;
+	transition: background .1s ease;
+	color: #fff!important;
+}
+appname {
+	margin-right: 5px !important;
+}
+unitname {
+	color: #1da1f2 !important;
+	font-weight: bold !important;
+	margin-right: 5px !important;
+}
+unitkey {
+	display: none;
+}
