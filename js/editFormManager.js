@@ -7,27 +7,14 @@ var editFormManager = (function(global) {
 		cpmId: "edit-cpm",
 		priorityId: "edit-priority-select",
 		statusId: "edit-status-select",
-		networkId: "edit-network-select",
 		targetModeId: "target-mode",
 		targetCountryId: "target-country",
-		networkFieldsId: "network-fields",
 		tagifyKeywords: "tagify-keywords"
 	};
 
 	function initForm(notification) {
 		$(`#${DOM_ID.priorityId}`).dropdown({ clearable: true });	
 		$(`#${DOM_ID.statusId}`).dropdown({ clearable: true });	
-		$(`#${DOM_ID.networkId}`).dropdown({
-			clearable: true,
-			onChange: function(value, text, element) {
-				if (value == "") {
-					$(`#${DOM_ID.networkFieldsId}`).html("");
-				} else {
-					let html = createNetworkFieldForm(value);
-					$(`#${DOM_ID.networkFieldsId}`).html(html);
-				}
-			}
-		});	
 		$(`#${DOM_ID.targetCountryId} .menu`).html(createCountryMenuListHtml());
 		$(`#${DOM_ID.targetCountryId}`).dropdown({
 			onChange: function(value, text, element) {
@@ -48,10 +35,28 @@ var editFormManager = (function(global) {
 		let input = $(`#${DOM_ID.tagifyKeywords}`)[0];
 		keywordTagify = new Tagify(input);
 	}
+
+	function updateNetworkInput(rowData) {
+		let formData = $('#edit-override-form').serializeArray();
+		let parsedInput = {};	
+		for (let i=0; i < formData.length; i++) {
+			parsedInput[formData[i].name] = formData[i].value.trim();
+		}
+		try {
+			let overrideFields = overrideFieldValidator.validate(rowData.networkType, parsedInput);
+			console.log(`Updated network info ${overrideFields}`);
+			rowData.overrideFields = overrideFields;
+			WaterfallTable.updateData([rowData]);
+			return true;
+		} catch(error) {
+			notifier.editNetworkFormShow({message: error, type: "negative"});
+			console.log(error);
+			return false;
+		}
+	}
 		
 	function parseInput(formData) {
-		let cpm, priority, status, networkType, networkAdUnitId, networkAppId, appSignature, location, 
-			customEventClassName, customEventClassData, targetMode, targetCountries, keywords; 
+		let cpm, priority, status, targetMode, targetCountries, keywords; 
 		// Parse data
 		for (let i=0; i < formData.length; i++) {
 			switch (formData[i].name) {
@@ -63,27 +68,6 @@ var editFormManager = (function(global) {
 					break;
 				case "status":
 					status = formData[i].value.trim();
-					break;
-				case "network_type":
-					networkType = formData[i].value.trim();
-					break;
-				case "network_app_id":
-					networkAppId = formData[i].value.trim();
-					break;
-				case "network_adunit_id":
-					networkAdUnitId = formData[i].value.trim();
-					break;
-				case "app_signature":
-					appSignature = formData[i].value.trim();
-					break;
-				case "location":
-					location = formData[i].value.trim();
-					break;
-				case "custom_event_class_name":
-					customEventClassName = formData[i].value.trim();
-					break;
-				case "custom_event_class_data":
-					customEventClassData = formData[i].value.trim();
 					break;
 				case "target_mode":
 					targetMode = formData[i].value.trim();
@@ -112,13 +96,6 @@ var editFormManager = (function(global) {
 			"cpm": cpm,
 			"priority": priority,
 			"status": status,
-			"networkType": networkType,
-			"networkAdUnitId": networkAdUnitId,
-			"networkAppId": networkAppId,
-			"appSignature": appSignature,
-			"location": location,
-			"customEventClassName": customEventClassName,
-			"customEventClassData": customEventClassData,
 			"targetMode": targetMode,
 			"targetCountries": targetCountries,
 			"keywords": keywords
@@ -129,8 +106,6 @@ var editFormManager = (function(global) {
 		$(`#${DOM_ID.cpmId}`).val('');	
 		$(`#${DOM_ID.priorityId}`).dropdown('clear');	
 		$(`#${DOM_ID.statusId}`).dropdown('clear');	
-		$(`#${DOM_ID.networkId}`).dropdown('clear');
-		$(`#${DOM_ID.networkFieldsId}`).html('');
 		$(`#${DOM_ID.targetModeId}`).dropdown('clear');
 		$(`#${DOM_ID.targetCountryId}`).dropdown('clear');
 		keywordTagify.removeAllTags();
@@ -145,103 +120,112 @@ var editFormManager = (function(global) {
 		return html;
 	};
 
-	function createNetworkFieldForm(network) {
+	function createNetworkFieldForm(network, overrideFields) {
 		let html;
+
+		// Load existing values
+		let network_account_id = (_.isEmpty(overrideFields.network_account_id)) ? "" : overrideFields.network_account_id; 
+		let network_app_id = (_.isEmpty(overrideFields.network_app_id)) ? "" : overrideFields.network_app_id;
+		let network_adunit_id = (_.isEmpty(overrideFields.network_adunit_id)) ? "" : overrideFields.network_adunit_id;
+		let app_signature = (_.isEmpty(overrideFields.app_signature)) ? "" : overrideFields.app_signature;
+		let location = (_.isEmpty(overrideFields.location)) ? "" : overrideFields.location;
+		let custom_event_class_name = (_.isEmpty(overrideFields.custom_event_class_name)) ? "" : overrideFields.custom_event_class_name;
+		let custom_event_class_data = (_.isEmpty(overrideFields.custom_event_class_data)) ? "" : overrideFields.custom_event_class_data;
 
 		switch (network) {
 			case "admob_native":
 				html = `
 					<div class="field required">
 						<label>Ad Unit Id</label>
-						<input type="text" name="network_adunit_id">
+						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
 					</div>`;
 				break;
 			case "applovin_sdk":
 				html = `
-					<div class="field">
-						<label>Zone Id (Optional)</label>
-						<input type="text" name="network_adunit_id">
-					</div>
 					<div class="field required">
 						<label>App Id</label>
-						<input type="text" name="network_app_id">
+						<input type="text" name="network_app_id" value="${network_app_id}">
+					</div>
+					<div class="field">
+						<label>Zone Id (Optional)</label>
+						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
 					</div>`;
 				break;
 			case "adcolony":
 				html = `
 					<div class="field required">
 						<label>Zone Id</label>
-						<input type="text" name="network_adunit_id">
+						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
 					</div>
 					<div class="field required">
 						<label>App Id</label>
-						<input type="text" name="network_app_id">
+						<input type="text" name="network_app_id" value="${network_app_id}">
 					</div>`;
 				break;
 			case "chartboost":
 				html = `
 					<div class="field required">
 						<label>App Id</label>
-						<input type="text" name="network_app_id">
+						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
 					</div>
 					<div class="field required">
 						<label>App Signature</label>
-						<input type="text" name="app_signature">
+						<input type="text" name="app_signature" value="${app_signature}">
 					</div>
 					<div class="field">
 						<label>Location (Optional)</label>
-						<input type="text" name="location">
+						<input type="text" name="location" value="${location}">
 					</div>`;
 				break;
 			case "facebook":
 				html = `
 					<div class="field required">
 						<label>Placement Id</label>
-						<input type="text" name="network_adunit_id">
+						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
 					</div>`;
 				break;
 			case "ironsource":
 				html = `
 					<div class="field required">
 						<label>AdUnit Id</label>
-						<input type="text" name="network_adunit_id">
+						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
 					</div>
 					<div class="field required">
 						<label>App Key</label>
-						<input type="text" name="network_app_id">
+						<input type="text" name="network_app_id" value="${network_app_id}">
 					</div>`;
 				break;
 			case "tapjoy":
 				html = `
 					<div class="field required">
 						<label>Placement Name</label>
-						<input type="text" name="network_adunit_id">
+						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
 					</div>
 					<div class="field required">
 						<label>SDK Key</label>
-						<input type="text" name="network_app_id">
+						<input type="text" name="network_app_id" value="${network_app_id}">
 					</div>`;
 				break;
 			case "vungle":
 				html = `
 					<div class="field required">
 						<label>Placement Id</label>
-						<input type="text" name="network_adunit_id">
+						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
 					</div>
 					<div class="field required">
 						<label>App Id</label>
-						<input type="text" name="network_app_id">
+						<input type="text" name="network_app_id" value="${network_app_id}">
 					</div>`;
 				break;
 			case "custom_native":
 				html = `
 					<div class="field required">
 						<label>Custom Event Class Name</label>
-						<input type="text" name="custom_event_class_name">
+						<input type="text" name="custom_event_class_name" value="${custom_event_class_name}">
 					</div>
 					<div class="field required">
 						<label>Custom Event Class Data</label>
-						<input type="text" name="custom_event_class_data">
+						<input type="text" name="custom_event_class_data" value="${custom_event_class_data}">
 					</div>`;
 				break;
 			default:
@@ -251,11 +235,12 @@ var editFormManager = (function(global) {
 
 		return html;
 	}
-
  
   return {
 		initForm: initForm,
 		resetForm: resetForm,
-		parseInput: parseInput
+		parseInput: parseInput,
+		createNetworkFieldForm: createNetworkFieldForm,
+		updateNetworkInput: updateNetworkInput
   }
 })(this);

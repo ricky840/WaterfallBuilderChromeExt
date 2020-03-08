@@ -20,14 +20,27 @@ var tableInitializer = (function(global) {
 		initLineItemListTable();
 	}
 
+	function getWaterfallTable() {
+		return WaterfallTable;
+	}
+
+	function updateNumberOfChangeButton() {
+		let changes = moPubUI.refineChanges(lineItemManager.getLineItemChanges());
+		let num = _.keys(changes).length;
+		if (num > 0) {
+			$("#copy-waterfall").hide();
+			$("#apply-waterfall").show();
+			$("#changes-waterfall").html(`${num} changed items`).show();
+		}
+	}
+
   function flashRow(row, status) {
-		loadingIndicator.increaseBar(); // Hmm..
     let rowElement = row.getElement();
 		if (status == 'new') {
 			$(rowElement).addClass("flash");
 			notifier.show({
-				header: `LineItems Added (${loadingIndicator.getBarLength()} Items)`,
-				message: `${row.getData().name}: <b>${row.getData().key}</b>`, 
+				header: `New line item was added`,
+				message: `Name: <b>${row.getData().name}</b> Key: <b>${row.getData().key}</b>`, 
 				type: "success", 
 				append: true
 			});
@@ -50,36 +63,54 @@ var tableInitializer = (function(global) {
 			index: "key", // To avoid duplicates in the table
 			tooltips: true,
 			placeholder: placeHolder,
+			// movableColumns: true,
 
 			// Row Change callbacks
       rowAdded: function(row) { 
 				flashRow(row, 'new');
 				updateWaterfallItemCount(WaterfallTable.getDataCount("active"));
-
-				// let rowData = row.getData();
-				// if (!_.has(rowData, "origin")) rowData.origin = "new";
-				// WaterfallTable.updateData([rowData]);
+				$(row.getElement()).addClass("add-new");
 			},
+
       rowUpdated: function(row) { 
 				flashRow(row, 'updated');
+				updateNumberOfChangeButton();
 			},
+
+			dataEdited: function(data) {
+				updateNumberOfChangeButton();
+			},
+
 			rowMoved: function(row) {
-				// flashRow(row, 'moved');
-				// this.setSort([
-				// 	{ column: "bid", dir:"desc" },
-				// 	{ column: 'priority', dir:"asc" }
-				// ]);
+				//
 			},
+
 			rowDeleted: function(row) { 
+				console.log(`Line item ${row.getData().name} (${row.getData().key}) Removed`);
 				updateWaterfallItemCount(WaterfallTable.getDataCount("active"));
-				// Need to track deleted items
-				// loadingIndicator.increaseBar(); 
-				// notifier.show({
-				// 	header: "Removed LineItems",
-				// 	message: `${row.getData().name} - ${row.getData().key}`, 
-				// 	type: "info", 
-				// 	append: true
-				// });
+			},
+
+			rowSelectionChanged: function(data, rows) {
+				// Only show edit button when it is not in adding line item mode
+				if ($(".network-add-buttons").attr("status") == "hidden") {
+					if (rows.length > 0) {
+						$("#edit-selected").html(`Edit Selected (${rows.length})`).show();
+						$("#delete-selected").html(`Delete Selected (${rows.length})`).show();
+						$(".waterfall-filter").hide();
+					} else {
+						$("#edit-selected").hide();
+						$("#delete-selected").hide();
+						$(".waterfall-filter").show();
+					} 
+				}
+			},
+
+			rowSelected: function(row) {
+				row.reformat();				
+			},
+
+			rowDeselected: function(row) {
+				row.reformat();				
 			},
 
 			dataFiltered: function(filters, rows) {
@@ -90,9 +121,18 @@ var tableInitializer = (function(global) {
 			movableRows: true,
 			movableRowsReceiver: function(fromRow, toRow, fromTable) {
 				let insertData = fromRow.getData();
+				let searhResult = WaterfallTable.searchRows("key", "=", insertData.key);
+				if (searhResult.length > 0) {
+					notifier.clear();
+					notifier.show({
+						header: "Existing line item",
+						type: "info",
+						message: `<b>${insertData.name}</b> <b>${insertData.key}</b> already exists.`
+					});
+					return false;
+				}
 				if (!insertData.adUnitKeys.includes(AdUnitId)) {
 					insertData.adUnitKeys.push(AdUnitId); // Connect to New AdUnit #Important! AdUnitId is global variable
-					// insertData.origin = "assigned";
 					console.log(`Assigning adunit ${AdUnitId} for ${insertData.key}`);
 				}
 				WaterfallTable.updateOrAddData([insertData]);
@@ -139,7 +179,6 @@ var tableInitializer = (function(global) {
 			height: LINEITEM_TABLE_HEIGHT,
 			data: [],
 			layout: "fitColumns",
-			selectable: true,
 			tooltips: true,
 			placeholder: placeHolder,
 			index: "key", // To avoid dup in the table
@@ -156,6 +195,25 @@ var tableInitializer = (function(global) {
 			rowAdded: function(row) {
 				let html = `<span class="count-lineitems">${LineItemTable.getDataCount()} Items</span>`;
 				$(".count-lineitems-wrapper").html(html);
+			},
+
+			rowSelectionChanged:function(data, rows){
+				if (rows.length > 0) {
+					$(".lineitem-action-buttons[action='duplicate']").html(`Duplicate (${rows.length}) items`).show();
+					$(".lineitem-action-buttons[action='assign']").html(`Assign (${rows.length}) items`).show();
+					$(".lineitem-filter").hide();
+				} else {
+					$(".lineitem-action-buttons").hide();
+					$(".lineitem-filter").show();
+				} 
+			},
+
+			rowSelected: function(row) {
+				row.reformat();				
+			},
+
+			rowDeselected: function(row) {
+				row.reformat();				
 			},
 
 			dataFiltered: function(filters, rows) {
@@ -195,13 +253,30 @@ var tableInitializer = (function(global) {
 			height: ORDER_TABLE_HEIGHT,
 			data: [],
 			layout: "fitColumns",
-			selectable: true,
 			tooltips: true,
 			placeholder: placeHolder,
 
 			// Pagination
 			pagination: "local",
 			paginationSize: ORDER_PAGINATION_SIZE,
+
+			rowSelectionChanged:function(data, rows){
+				if (rows.length > 0) {
+					$("#load-lineitem-btn").html(`Load (${rows.length}) orders`).show();
+					$(".order-filter").hide();
+				} else {
+					$("#load-lineitem-btn").hide();
+					$(".order-filter").show();
+				} 
+			},
+
+			rowSelected: function(row) {
+				row.reformat();				
+			},
+
+			rowDeselected: function(row) {
+				row.reformat();				
+			},
 
 			// selectable Check for Status
 			selectableCheck: function(row) {

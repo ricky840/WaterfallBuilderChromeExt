@@ -17,6 +17,8 @@ var lineItemManager = (function(global) {
 	function cacheLineItem(dataList) {
 		for(let i=0; i < dataList.length; i++) {
 			try {
+				// Clean up overrideFields before saving in order to make the change accurate
+				dataList[i].overrideFields = clearEmpties(dataList[i].overrideFields); 
 				orgLineItems[dataList[i].key] = JSON.parse(JSON.stringify(dataList[i]));
 				console.log(`Original LineItem Cache Updated`);
 			} catch(err) {
@@ -25,12 +27,15 @@ var lineItemManager = (function(global) {
 		}
 	}
 
+	// This is not being used
 	function cacheLineItemByOrder(orderResponseText) {
 		let orderObj = {};
 		try {
 			orderObj = JSON.parse(orderResponseText);
 			let list = orderObj.lineItems;
 			for (let i=0; i < list.length; i++) {
+				// Clean up overrideFields before saving in order to make the change accurate
+				list[i].overrideFields = clearEmpties(list[i].overrideFields);
 				let lineItemKey = list[i].key;
 				orgLineItems[lineItemKey] = list[i];
 				console.log(`Original LineItem Cache Updated`);
@@ -85,37 +90,32 @@ var lineItemManager = (function(global) {
 				}
 			}
 		}
-
-		// [To-do] Find lineitems that has been removed(deassigned) from the waterfall
-		// This is for deassign lineitems. Let's do it later
-		//
-		// let deletedKeys = [];
-		// for (let key in orgLineItems) {
-		// 	let keyExist = false;
-		// 	for (let i=0; i < currentLineItemList.length; i++) {
-		// 		if(key == currentLineItemList[i].key) {
-		// 			keyExist = true;
-		// 		}
-		// 	}
-		// 	if (keyExist == false) {
-		// 		let type = ("adUnitKeys" in orgLineItems[key]) ? "LineItem" : "AdSource";
-		// 		let networkType = orgLineItems[key].type;
-		// 		let adUnitKeyList = orgLineItems[key].
-    //
-		// 		_.pull(array, 'a', 'c');
-    //
-    //
-		// 		lineItemChanges[key] = {
-		// 			type: type,
-		// 			networkType: networkType,
-		// 			updatedFields: { adUnitKeys: eachLineItem[fieldKey] }
-		// 		}
-    //
-    //
-    //
-		// 	}
-		// }
 		
+		// Find deleted line items (deassigned)
+		for (let orgKey in orgLineItems) {
+			let deleted = true;
+			for (let i=0; i < currentLineItemList.length; i++) {
+				// See if key from orgLineItems exists in currentLineItemList. If it doesn't then it was removed.
+				if (orgKey == currentLineItemList[i].key) {
+					deleted = false;
+					break;
+				}
+			}
+			if (deleted) {
+				// line item was removed! remove the key from adUnitKeys and update.
+				if (orgLineItems[orgKey].adUnitKeys) {
+					let removedAdUnitKeys = _.without(orgLineItems[orgKey].adUnitKeys, AdUnitId);
+					lineItemChanges[orgKey] = {
+						action: "delete (deassigned)",
+						type: orgLineItems[orgKey].type,
+						networkType: orgLineItems[orgKey].networkType,
+						lineItemName : orgLineItems[orgKey].name,
+						updatedFields: { adUnitKeys: removedAdUnitKeys }
+					}
+				}
+			}
+		}
+
 		return lineItemChanges;
 	}
 
@@ -123,12 +123,17 @@ var lineItemManager = (function(global) {
 		orgLineItems = {};
 		return true;
 	}
+
+	function getOrgLineItems() {
+		return orgLineItems;
+	}
  
   return {
 		cacheLineItem: cacheLineItem,
 		cacheLineItemByOrder: cacheLineItemByOrder,
 		getLineItemChanges : getLineItemChanges,
 		removeCache: removeCache,
+		getOrgLineItems: getOrgLineItems,
 		getLineItemFromMoPub: getLineItemFromMoPub
   }
 })(this);

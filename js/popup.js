@@ -5,17 +5,20 @@ $(document).ready(function() {
 	// Init Loading Indicator Bar
 	loadingIndicator.init($("#loader-bar"));
 
+	// Hide line item bar first
+	$("#add-adsource").trigger('click');
+
 	// Load AdUnits
 	adUnitManager.loadAdUnits("list-name-id", function(adUnitList) {
 		if (adUnitList) {
-			$("#info-adunit-name").html("Please Select Ad Unit Id");
+			$("#info-adunit-name").html("Please select ad unit");
 			let input = $("#adunit-selector")[0];
 			let menuAdUnitTagify = new Tagify(input, {
 				mode: "select",
 				enforceWhitelist: true,
 				whitelist: adUnitList,
 				keepInvalidTags: false,
-				placeholder: "Select or search ad unit or id",
+				placeholder: "Search ad unit..",
 				skipInvalid: true,
 				dropdown: {
 					position: "all",
@@ -26,6 +29,7 @@ $(document).ready(function() {
 			menuAdUnitTagify.on('add', function(e) {
 				let selectedValue = e.detail.data.value;
 				let adUnitId = selectedValue.match(/.*\(([0-9|a-z]{32})\).*/)[1];
+				AdUnitName = selectedValue.match(/.*<unitname>(.*)<\/unitname>.*/)[1];
 				console.log(`Loading waterfall for ad unit ${selectedValue}`);
 				loadWaterfall(adUnitId, function() {
 					$(".button, .search-table-wrapper").removeClass('disabled');
@@ -63,6 +67,9 @@ $(document).ready(function() {
 		}
 	});
 
+	// Init entire screen loader
+	$(".all-content-wrapper").dimmer({duration: 200});
+
 	// Init Checkboxes
 	$('.ui.checkbox').checkbox();
 
@@ -71,6 +78,25 @@ $(document).ready(function() {
 	
 	// Copy Mode (Copy waterfall form)
 	$("#copy-mode").dropdown({ showOnFocus: false	});
+
+	// Add line item direct button
+	$("#add-direct").dropdown({
+		onChange: function (value, text, choice) {
+			let orderKey = $(".add-item-order-list.dropdown").dropdown('get value');
+			if (_.isEmpty(orderKey.trim())) {
+				notifier.show({
+					header: "Order Required",
+					type: "negative",
+					message: "New line item requires order. Please select order."
+				});
+				return false;
+			}
+			let orderName = $(".add-item-order-list.dropdown").dropdown('get text');
+			// Clear notifiation
+			notifier.clear();
+			addNewLineItem.add(value, {orderName: orderName, orderKey: orderKey});
+		}
+	});
 
 	// Disable all buttons
 	if (AdUnitId == undefined) {

@@ -2,12 +2,12 @@
 
 .flash {
 	animation: blink ease-in-out 0.7s;
-	animation-iteration-count: 3;
+	animation-iteration-count: 1;
 }
 
 ::-webkit-scrollbar {
-  width: 3px !important;
-  height: 5px !important;
+  width: 7px !important;
+  height: 7px !important;
 }
 
 .no-padding {
@@ -83,8 +83,10 @@
 /* Button Color Override */
 .mopub-button-color {
 	background-color: #1da1f2 !important;
-	border-color: #1da1f2 !important;
-	color: #FFFFFF !important;
+	color: #FFFFFF !important;	
+	font-weight: bold !important;
+	box-shadow: none !important;
+	border: 1px solid #1da1f2 !important;
 }
 
 .mopub-button-color:hover {
@@ -129,6 +131,21 @@
 	color: #657786 !important;
 }
 
+/* Mopub basic Button Color Override */
+.mopub-basic-button-color {
+	background-color: #fff !important;
+	border: 1px solid #1da1f2 !important;
+	color: #1da1f2 !important;
+	font-weight: bold !important;
+	box-shadow: none !important;
+}
+
+.mopub-basic-button-color:hover {
+	background-color: #f0f1f3 !important;
+	border-color: #1da1f2 !important;
+	color: #1da1f2 !important;
+}
+
 /* Tabulator */
 .tabulator {
 	font-size: 12px;
@@ -146,6 +163,12 @@
 	border-width: 1px;
 	border-color: #e4e5e5;
 	border-right-style: solid;
+}
+
+/* Row Handle Bar */
+.tabulator-row .tabulator-cell.tabulator-row-handle {
+	height: 100% !important;
+	vertical-align: top !important;
 }
 
 .tabulator-unselectable {
@@ -338,7 +361,7 @@
 /* Logged in as label */
 .logged-in-label {
   margin-right: 1em !important;
-  margin-left: 0px !important;
+  margin-left: 0.5em !important;
 	padding: 0.4em !important;
 	padding-top: 0.2em !important;
 	padding-bottom: 0.2em !important;
@@ -513,15 +536,62 @@ unitstatusinactive {
 .page-footer {
 	text-align: center;
 	color: #657786; 
-	margin-top: 50px;
-	padding: .6rem;
+	padding: 0.6em;
 	width: 100%;
 	font-size: 1em;
 }
 
 /* Version number */
 .wb-version {
-	/* background-color: #1da1f2 !important; */
-	/* border-color: #1da1f2 !important; */
 	color: #1da1f2;
+}
+
+/* For footer */
+.body-wrapper {
+  min-height: calc(100vh - 30px);
+}
+
+/* no-margin-row */
+.no-margin {
+	margin: 0px !important;
+}
+
+/* overrideFied edit popup title */
+.title-override-label {
+	margin: 0px !important;
+	background-color: #1da1f2 !important;
+	border-color: #1da1f2 !important;
+	margin-right: 10px !important;
+	color: #FFFFFF !important;
+}
+
+/* add-network */
+.add-network.mopub-basic-button-color {
+	margin-top: 10px !important;
+}
+
+/* New line item badge */
+.add-new:before {
+	content: 'NEW';
+	margin-top: 2.7em;
+	margin-left: 0.1em;
+	color: red;
+	position: absolute;
+	font-weight: bold;
+	font-size: 0.8em;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 2px;
+	padding-right: 2px;
+	opacity: 0.8;
+}
+
+/* number of changes */
+.number-of-change {
+	border: none !important;
+	cursor: auto !important;
+	background-color: white !important;
+	/* color: black !important; */
+	/* font-weight: normal !important; */
+	font-size: 0.9em;
 }

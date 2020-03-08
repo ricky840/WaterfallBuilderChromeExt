@@ -28,11 +28,8 @@
 		"128": "img/logo-128.png"
   },
   "permissions": [
-    "activeTab",
     "storage",
-    "tabs",
     "webRequest",
-    "webNavigation",
     "webRequestBlocking",
     "*://*.mopub.com/",
 		"notifications"

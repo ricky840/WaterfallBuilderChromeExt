@@ -1,8 +1,4 @@
-/*
-
-overrideFieldValidator validates required field and removes unnecessary fields. It returns related fields only.
-
-*/
+/* overrideFieldValidator validates required field and removes unnecessary fields. It returns related fields only. */
 
 var overrideFieldValidator = (function(global) {
   "use strict";

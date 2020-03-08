@@ -9,7 +9,7 @@
 		<link rel="stylesheet" type="text/css" href="css/popup.css">
 	</head>
 	<body>
-
+  <div class="body-wrapper">
 		<!-- Menu -->
 		<div class="ui tiny menu inverted no-radius mopub-menu borderless">
 			<a class="header item" href="">
@@ -17,18 +17,18 @@
 				<div class="mopub-logo-menu"></div>
 			</a>
 			<div class="horizontally fitted item" style="width: 50%;">
-				<div style="background: white; color: black; width: 100%;">
+				<div style="background: white; color: black; width: 100%; font-size: 1.2em;">
 					<input id="adunit-selector" class='selectMode'>
 				</div>
 			</div>
+			<a class="item" href="https://app.mopub.com/account" target="_blank">
+				<div class="ui orange label logged-in-label">Logged in as</div>
+				<div id="logged-in-account" class="logged-in-account"></div>
+			</a>
 			<div class="right menu">
-				<a class="item" href="https://app.mopub.com/account" target="_blank">
-					<div class="ui orange label logged-in-label">Logged in as</div>
-					<div id="logged-in-account" class="logged-in-account"></div>
-				</a>
 				<a class="item">
 					<div id="add-adsource" class="toggle-line-item-bar">
-						<i class="chevron right icon"></i>
+						<i class="bars icon"></i>
 					</div>
 				</a>
 			</div>
@@ -51,14 +51,9 @@
 				<div class="ui text large loader updating-message update-loader"></div>
 			</div>
 			<!-- Grid -->
-			<div class="ui grid container loader-wrapper loader-adunit-info" style="width: 99% !important;">
-				<!-- Loader -->
-				<div class="ui top inverted aligned dimmer">
-					<div class="ui loader"></div>
-				</div>
-				<!-- First Row -->	
+			<div class="ui grid container" style="width: 99% !important;">
 				<div class="row">
-					<div class="twelve wide column">
+					<div class="six wide column">
 						<div class="adunit-header">
 							<h2 class="ui header">
 								<span id="info-adunit-name"><div class="ui active inline loader small"></div> Loading..</span>
@@ -67,75 +62,71 @@
 							</h2>
 						</div>
 					</div>
-					<div class="four wide column right floated">
-						<button id="copy-waterfall" class="ui button tiny mopub-button-color mopub-button-radius right floated">Copy Waterfall</button>
-					</div>
-				</div>
-				<!-- Second Row -->
-				<div class="three column row">
-					<div class="column">
-						<div class="ui divided selection list tiny">
-							<a class="item">
-								<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">App Name</div>
-								<span id="info-app-name" class="mopub-label-value"></span>
-							</a>
-							<a class="item">
-								<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">App Key</div>
-								<span id="info-app-key" class="mopub-label-value"></span>
-							</a>
-							<a class="item">
-								<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">OS Type</div>
-								<span id="info-app-os" class="mopub-label-value"></span>
-							</a>
-						</div>
-					</div>
-					<div class="column">
-						<div class="ui divided selection list tiny">
-							<a class="item">
-								<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">Format</div>
-								<span id="info-adunit-format" class="mopub-label-value"></span>
-							</a>
-							<a class="item">
-								<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">Unified</div>
-								<span id="info-adunit-unified" class="mopub-label-value"></span>
-							</a>
-							<a class="item">
-								<div class="ui horizontal label mopub-label-title mopub-label-color mopub-label-radius">Landscape</div>
-								<span id="info-adunit-landscape" class="mopub-label-value"></span>
-							</a>
-						</div>
-					</div>
-					<div class="column">
-						<div class="ui divided selection list tiny">
-							<a class="item">
-								<div class="ui horizontal label mopub-label-title-longer mopub-label-color mopub-label-radius">Device Format</div>
-								<span id="info-adunit-device-format" class="mopub-label-value"></span>
-							</a>
-							<a class="item">
-								<div class="ui horizontal label mopub-label-title-longer mopub-label-color mopub-label-radius">Refresh Interval</div>
-								<span id="info-adunit-refresh-interval" class="mopub-label-value"></span>
-							</a>
-						</div>
+					<div class="six wide column right floated">
+						<span class="waterfall-level-buttons">
+							<button id="apply-waterfall" class="ui button tiny mopub-button-color mopub-button-radius right floated" style="display: none;">Apply to MoPub UI</button>
+							<button id="copy-waterfall" class="ui button tiny mopub-button-color mopub-button-radius right floated">Duplicate Waterfall</button>
+							<button id="changes-waterfall" class="ui button tiny mopub-basic-button-color mopub-button-radius right floated number-of-change" style="display: none;"></button>
+						</span>
+						<span class="add-network-done-buttons" style="display: none;">
+							<button id="close-add-network" class="ui button tiny mopub-button-color mopub-button-radius add-network" style="float: right;">Done</button>
+						</span>
 					</div>
 				</div>
 			</div> <!-- grid end -->
-
+				
 			<!-- Grid -->
 			<div class="ui grid container" style="width: 99% !important;">
-
+				<div class="ui divider" style="width: 100%; margin: 0px;"></div>
 				<!-- Notification -->
-				<div class="one column row">
+				<div class="one column row no-margin">
 					<div class="column">
 						<div id="notification"></div>
 					</div>
 				</div>
-
+				
 				<div class="row">
 					<!-- Waterfall section -->
 					<div class="nine wide column" id="waterfall-section">
 
+						<!-- Network templete add btn -->
+						<span class="network-add-buttons" style="display: none;" status="hidden">
+							<div class="ui search small selection dropdown add-item-order-list" style="width: 100%;">
+								<div class="text"></div>
+								<i class="dropdown icon"></i>
+							</div>
+							<div>
+								<button id="add-mpx" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>MPX</button>
+								<button id="add-admob" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>AdMob</button>
+								<button id="add-applovin" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>AppLovin</button>
+								<button id="add-chartboost" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Chartboost</button>
+								<button id="add-facebook" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Facebook</button>
+								<button id="add-ironsource" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>IronSource</button>
+								<button id="add-tapjoy" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>TapJoy</button>
+								<button id="add-vungle" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Vungle</button>
+								<button id="add-customsdk" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Custom SDK</button>
+								<div id="add-direct" class="ui labeled icon dropdown button tiny mopub-basic-button-color mopub-button-radius">
+									<i class="plus icon"></i>
+									<span class="text">Direct</span>
+									<div class="menu">
+										<div class="item" data-value="gtee">Guaranteed</div>
+										<div class="item" data-value="non_gtee">Non-guaranteed</div>
+										<div class="item" data-value="promo">Promotional</div>
+										<div class="item" data-value="backfill_promo">Backfill promotional</div>
+									</div>
+								</div>
+							</div>
+						</span>
+
+						<span class="edit-delete-item">
+							<!-- Edit selected -->
+							<button id="edit-selected" class="ui button tiny mopub-button-color mopub-button-radius" style="display: none;"></button>
+							<!-- Delete selected -->
+							<button id="delete-selected" class="ui button tiny mopub-button-color mopub-button-radius" style="display: none;"></button>
+						</span>
+
 						<!-- Status Filter -->
-						<div id="status-filter" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius">
+						<div id="status-filter" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius waterfall-filter">
 							<i class="filter icon"></i>
 							<div class="default text">Filter Status</div>
 							<div class="menu">
@@ -155,7 +146,7 @@
 						</div>
 
 						<!-- Column Selector -->
-						<div id="column-selector" class="ui labeled dropdown icon button tiny mopub-ops-button-color mopub-button-radius">
+						<div id="column-selector" class="ui labeled dropdown icon button tiny mopub-ops-button-color mopub-button-radius waterfall-filter">
 							<i class="dropdown icon"></i>
 							<span class="ui">Columns</span>
 							<div class="menu">
@@ -167,18 +158,18 @@
 							</div>
 						</div>
 
-						<!-- Select All -->
-						<button class="ui button tiny mopub-ops-button-color mopub-button-radius select-all" table="waterfall">Select All</button>
-
-						<!-- Grouping -->
-						<button id="disable-grouping-waterfall" class="ui button tiny mopub-ops-button-color mopub-button-radius">Grouping</button>
+						<!-- Sort Reset -->
+						<!-- <button id="sort&#45;reset" class="ui button tiny mopub&#45;ops&#45;button&#45;color  mopub&#45;button&#45;radius">Reset Sort</button> -->
 
 						<!-- Download / Upload -->
 						<input type="file" id="upload-file" accept=".csv" style="display: none;">
-						<div class="ui icon buttons right floated tiny basic">
-							<button id="waterfall-upload-csv" class="ui button"><i class="upload icon"></i></button>
-							<button id="waterfall-download-csv" class="ui button"><i class="download icon"></i></button>
-						</div>
+
+						
+						<button id="waterfall-upload-csv" class="ui button tiny right floated mopub-ops-button-color mopub-button-radius waterfall-filter">Import</button>
+						<button id="waterfall-download-csv" class="ui button tiny right floated mopub-ops-button-color mopub-button-radius waterfall-filter">Export</button>
+
+						<!-- Add line items -->
+						<button id="add-line-item-btn" class="ui button tiny right floated mopub-button-color mopub-button-radius waterfall-filter">Add New</button>
 
 						<!-- Waterfall Table -->
 						<div class="loader-wrapper loader-waterfall-table">
@@ -188,14 +179,12 @@
 							<div id="waterfall-adunit"></div>
 						</div>
 						<!-- <button id="delete&#45;selected" class="ui button tiny mopub&#45;button&#45;color mopub&#45;button&#45;radius">Deassign</button> -->
-						<button id="apply-waterfall" class="ui button right floated tiny mopub-button-color mopub-button-radius">Apply to MoPub UI</button>
-						<button id="edit-selected" class="ui button right floated tiny mopub-button-color mopub-button-radius">Edit Selected</button>
 					</div> <!-- Waterfall section end -->
 
 					<!-- Lineitem section -->
 					<div class="seven wide column" id="adsource-section">
 						<!-- Status Filter -->
-						<div id="status-filter-lineitem" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius">
+						<div id="status-filter-lineitem" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius lineitem-filter">
 							<i class="filter icon"></i>
 							<div class="default text">Filter Status</div>
 							<div class="menu">
@@ -213,9 +202,8 @@
 								</div>
 							</div>
 						</div>
-						<button class="lineitem-action-buttons ui button tiny right floated mopub-button-color mopub-button-radius" action="duplicate">Duplicate</button>	
-						<button class="lineitem-action-buttons ui button tiny right floated mopub-button-color mopub-button-radius" action="assign">Assign</button>	
-						<button class="ui button tiny mopub-ops-button-color mopub-button-radius select-all" table="lineitem">Select All</button>	
+						<button class="lineitem-action-buttons ui button tiny mopub-button-color mopub-button-radius" action="duplicate" style="display: none;">Duplicate</button>	
+						<button class="lineitem-action-buttons ui button tiny mopub-button-color mopub-button-radius" action="assign" style="display: none;">Assign</button>	
 						<div id="loader-lineitem-table">
 							<div class="ui top aligned inverted dimmer">
 								<div class="ui loader"></div>
@@ -225,7 +213,7 @@
 
 						<!-- Order -->
 						<!-- Status Filter -->
-						<div id="status-filter-order" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius">
+						<div id="status-filter-order" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius order-filter">
 							<i class="filter icon"></i>
 							<div class="default text">Filter Status</div>
 							<div class="menu">
@@ -243,8 +231,7 @@
 								</div>
 							</div>
 						</div>
-						<button class="ui button tiny mopub-ops-button-color mopub-button-radius select-all" table="order">Select All</button>	
-						<button id="load-lineitem-btn" class="ui button blue right floated tiny mopub-button-color mopub-button-radius">Load Line Items</button>
+						<button id="load-lineitem-btn" class="ui button blue tiny mopub-button-color mopub-button-radius" style="display: none;"></button>
 						<div class="loader-wrapper loader-order-table">
 							<div class="ui top aligned inverted dimmer">
 								<div class="ui loader"></div>
@@ -256,11 +243,12 @@
 				</div> <!-- Row end -->
 			</div> <!-- End of Grid -->
 		</div> <!-- End of content wrapper -->
+	</div> <!-- End of body wrapper -->
 
-		<footer class="page-footer">
-			<span class="wb-version"></span>
-			<span>@ricky840@gmail.com</span>
-		</footer>
+	<footer class="page-footer">
+		<span class="wb-version"></span>
+		<span>@ricky840@gmail.com</span>
+	</footer>
 
 		<!-- Modals -->
 		<!-- Copy Waterfall -->
@@ -353,7 +341,25 @@
 			</div>
 			<div class="actions">
 				<div id="review-cancel" class="ui tiny deny button mopub-ops-button-color mopub-button-radius">Cancel</div>
-				<div id="review-submit" class="ui right tiny button mopub-button-color mopub-button-radius">Apply</div>
+				<div id="review-submit" class="ui tiny ok button mopub-button-color mopub-button-radius">Apply</div>
+			</div>
+		</div>
+
+		<!-- Edit overrideFields Modal -->
+		<div class="ui small modal edit-overridefields-modal">
+			<i class="close icon"></i>
+			<div id="network-type-title" class="ui header small"></div>
+			<!-- Body (form) -->
+			<div class="scrolling content">
+				<div id="edit-network-form-notification" style="margin-bottom: 10px;"></div>
+				<form id="edit-override-form" class="ui form small">
+					<div id="network-fields"></div>	
+				</form>
+			</div>
+			<!-- buttons -->
+			<div class="actions">
+				<div class="ui deny tiny button mopub-ops-button-color mopub-button-radius">Cancel</div>
+				<div class="ui ok right tiny button mopub-button-color mopub-button-radius">Edit</div>
 			</div>
 		</div>
 
@@ -402,23 +408,6 @@
 							<option value="archived">Archived</option>
 						</select>
 					</div>
-					<h4 class="ui dividing header blue">Network Override Field (Only applied to the matching network)</h4>
-					<div class="field">
-						<label>Select Network</label>
-						<select id="edit-network-select" class="ui dropdown" name="network_type">
-							<option value="">Network</option>
-							<option value="admob_native">AdMob</option>
-							<option value="applovin_sdk">AppLovin</option>
-							<option value="adcolony">Adcolony</option>
-							<option value="chartboost">Chartboost</option>
-							<option value="facebook">Facebook</option>
-							<option value="ironsource">IronSource</option>
-							<option value="tapjoy">Tapjoy</option>
-							<option value="vungle">Vungle</option>
-							<option value="custom_native">Custom SDK Network</option>
-						</select>
-					</div>
-					<div id="network-fields"></div>
 					<h4 class="ui dividing header blue">Geo Targeting</h4>
 					<div class="field">
 						<label>Geo Targeting Mode</label>
@@ -463,16 +452,17 @@
 
     <script type="text/javascript" src="js/global.js"></script>
     <script type="text/javascript" src="js/notifier.js"></script>
-    <script type="text/javascript" src="js/customHtmlStore.js"></script>
+    <script type="text/javascript" src="js/editFormManager.js"></script>
+		<script type="text/javascript" src="js/tableFormatters.js"></script> <!-- -->
     <script type="text/javascript" src="js/tableColumnDef.js"></script>
     <script type="text/javascript" src="js/adSourceManager.js"></script>
     <script type="text/javascript" src="js/adUnitManager.js"></script>
     <script type="text/javascript" src="js/overrideFieldValidator.js"></script>
     <script type="text/javascript" src="js/csvManager.js"></script>
-    <script type="text/javascript" src="js/editFormManager.js"></script>
     <script type="text/javascript" src="js/waterfallDuplicator.js"></script>
     <script type="text/javascript" src="js/reviewChange.js"></script>
     <script type="text/javascript" src="js/accountManager.js"></script>
+    <script type="text/javascript" src="js/addNewLineItem.js"></script>
 
     <script type="text/javascript" src="js/tableInitializer.js"></script>
     <script type="text/javascript" src="js/orderManager.js"></script>
@@ -483,5 +473,4 @@
     <script type="text/javascript" src="js/popupEvents.js"></script>
     <script type="text/javascript" src="js/popup.js"></script>
 	</body>
-
 </html>

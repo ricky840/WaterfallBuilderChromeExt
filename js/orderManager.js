@@ -1,6 +1,7 @@
 var orderManager = (function(global) {
   "use strict";
 
+	// This stores line items under each order
 	let orders = {};
 
 	function isCached(orderKey) {

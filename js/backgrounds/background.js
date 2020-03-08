@@ -18,12 +18,6 @@ var initStorage = function() {
       initSession();
     }
   });
-	// Init customHtmlStore
-  chrome.storage.local.get("customHtmls", function(result) {
-    if(_.isUndefined(result["customHtmls"])) {
-      chrome.storage.local.set({ customHtmls: {} });
-    }
-	});
 }
 
 // Popup Window, open only when the badge is up

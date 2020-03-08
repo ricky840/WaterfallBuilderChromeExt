@@ -6,20 +6,21 @@ var moPubUI = (function(global) {
 
   function updateWaterfall(lineItemChanges, callback) {
 
-		let changes = refineChanges(lineItemChanges);	
+		let changes = refineChanges(lineItemChanges);
+
+		// Debug Temp
+		// console.log("All changes");
+		// console.log(changes)
+		// return false;
 
 		// Get number of change objects
 		numberOfChangesToUpdate = (_.keys(changes)).length;
 		
 		// Show loaders
+		loadingIndicator.setTotalBarLoader(numberOfChangesToUpdate);
+		loadingIndicator.showBarLoader();
 		$(".updating-message").html(`Updating MoPub UI, remaining ${numberOfChangesToUpdate}`);
-		$(".all-content-wrapper").dimmer("show", function() {
-			loadingIndicator.setTotalBarLoader(numberOfChangesToUpdate);
-			loadingIndicator.showBarLoader();
-		});
-
-		// console.log("All changes");
-		// console.log(changes)
+		$(".all-content-wrapper").dimmer("show");
 
     for (let lineItemKey in changes) {
       let action = changes[lineItemKey].action;
@@ -87,7 +88,7 @@ var moPubUI = (function(global) {
 				updatedFields = convertResToReqBody(updatedFields);
 				// Assign current ad unit key for new line item, only when there is nothing specified. (Default)
 				// Otherwise, Change object should have it already.
-				if (!"adUnitKeys" in updatedFields) {
+				if (!("adUnitKeys" in updatedFields)) {
 					updatedFields["adUnitKeys"] = [AdUnitId];
 				}
 			}
@@ -133,6 +134,12 @@ var moPubUI = (function(global) {
           updatedFields.cpm = updatedFields.bid;
           delete updatedFields.bid;
         }
+			}
+
+			// For updating line item, it should not update orderName and orderKey
+			if (action != "new") {
+				delete updatedFields.orderName;
+				delete updatedFields.orderKey;
 			}
 
 			// If OverrideFields exist, update enableOverrides to true

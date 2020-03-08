@@ -48,6 +48,16 @@ var notifier = (function(global) {
 		$("#copy-form-notification").html(html);
 	}
 
+	function editNetworkFormShow(notification) {
+		let header = (_.has(notification, "header")) ? notification.header : "";
+		let message = (_.has(notification, "message")) ? notification.message : "";
+		let type = (_.has(notification, "type")) ? notification.type : "";
+		let append = (_.has(notification, "append")) ? notification.append : false;
+		let html = createHtml(header, message, type);
+		clearEditNetworkForm();
+		$("#edit-network-form-notification").html(html);
+	}
+
 	function clear() {
 		$("#notification").html('');
 	}
@@ -59,6 +69,10 @@ var notifier = (function(global) {
 	function clearCopyForm() {
 		$("#copy-form-notification").html("");
 	}
+
+	function clearEditNetworkForm() {
+		$("#edit-network-form-notification").html("");
+	}
  
   return {
 		show: show,
@@ -66,6 +80,8 @@ var notifier = (function(global) {
 		editFormShow: editFormShow,
 		clearEditForm: clearEditForm,
 		copyFormShow: copyFormShow,
-		clearCopyForm: clearCopyForm
+		clearCopyForm: clearCopyForm,
+		editNetworkFormShow: editNetworkFormShow,
+		clearEditNetworkForm: clearEditNetworkForm	
   }
 })(this);

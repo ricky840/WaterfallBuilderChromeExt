@@ -27,13 +27,16 @@ WaterfallGrouping = true;
 // Adunit Tagify (Copy Form, need to fix this later)
 var AdUnitTagify;
 
+// Number of changed line items
+var NumberOfUpdatedLineItems = 0;
+
 // When Create New Order
 const NEW_ORDER_NAME_POSTFIX = " (Created by WBExt)";
 const NEW_ORDER_ADVERTISER = "Advertiser";
 const NEW_ORDER_DESC = "Created by WaterfallBuilder Chrome Ext";
 
 // Table Heights and P
-const WATERFALL_TABLE_HEIGHT = 1025;
+const WATERFALL_TABLE_HEIGHT = 700;
 const LINEITEM_TABLE_HEIGHT = 504;
 const ORDER_TABLE_HEIGHT = 504; 
 const LINEITEM_PAGINATION_SIZE = 7;
@@ -49,7 +52,7 @@ const TYPE_NAME = {
 	network: "Network",
 	advanced_bidding_mpx: "AB MPX",
 	advanced_bidding_network: "AB Network",
-	marketplace: "Marketplace (Default)",
+	marketplace: "Default MPX",
   pmp_line_item: "Private Marketplace",
   segment: "Segment"
 }

@@ -29,7 +29,7 @@ var reviewChange = (function(global) {
 			<tr>
 				<td>${change.lineItemName}</td>
 				<td><pre>${lineItemKey}</pre></td>
-				<td>${change.action.capitalize()}</td>
+				<td style="font-weight: bold;">${change.action.capitalize()}</td>
 				<td><div>${type}</div><div class="lineitem-networktype">${network}</div></td>
 				<td><pre class="change-pre">${formatter(change.updatedFields)}</pre></td>
 			</tr>`;
