@@ -64,9 +64,12 @@
 					</div>
 					<div class="six wide column right floated">
 						<span class="waterfall-level-buttons">
-							<button id="apply-waterfall" class="ui button tiny mopub-button-color mopub-button-radius right floated" style="display: none;">Apply to MoPub UI</button>
+							<button id="apply-waterfall" class="ui button tiny mopub-button-color mopub-button-radius right floated" style="display: none;"></button>
 							<button id="copy-waterfall" class="ui button tiny mopub-button-color mopub-button-radius right floated">Duplicate Waterfall</button>
-							<button id="changes-waterfall" class="ui button tiny mopub-basic-button-color mopub-button-radius right floated number-of-change" style="display: none;"></button>
+							<!-- Download / Upload -->
+							<input type="file" id="upload-file" accept=".csv" style="display: none;">
+							<button id="waterfall-download-csv" class="ui button tiny right floated mopub-ops-button-color mopub-button-radius waterfall-filter import-export">Export</button>
+							<button id="waterfall-upload-csv" class="ui button tiny right floated mopub-ops-button-color mopub-button-radius waterfall-filter import-export">Import</button>
 						</span>
 						<span class="add-network-done-buttons" style="display: none;">
 							<button id="close-add-network" class="ui button tiny mopub-button-color mopub-button-radius add-network" style="float: right;">Done</button>
@@ -91,7 +94,7 @@
 
 						<!-- Network templete add btn -->
 						<span class="network-add-buttons" style="display: none;" status="hidden">
-							<div class="ui search small selection dropdown add-item-order-list" style="width: 100%;">
+							<div class="ui search small selection dropdown error add-item-order-list" style="width: 100%;">
 								<div class="text"></div>
 								<i class="dropdown icon"></i>
 							</div>
@@ -120,9 +123,9 @@
 
 						<span class="edit-delete-item">
 							<!-- Edit selected -->
-							<button id="edit-selected" class="ui button tiny mopub-button-color mopub-button-radius" style="display: none;"></button>
+							<button id="edit-selected" class="ui button tiny right floated mopub-button-color mopub-button-radius" style="display: none;"></button>
 							<!-- Delete selected -->
-							<button id="delete-selected" class="ui button tiny mopub-button-color mopub-button-radius" style="display: none;"></button>
+							<button id="delete-selected" class="ui button tiny right floated mopub-button-color mopub-button-radius" style="display: none;"></button>
 						</span>
 
 						<!-- Status Filter -->
@@ -159,14 +162,7 @@
 						</div>
 
 						<!-- Sort Reset -->
-						<!-- <button id="sort&#45;reset" class="ui button tiny mopub&#45;ops&#45;button&#45;color  mopub&#45;button&#45;radius">Reset Sort</button> -->
-
-						<!-- Download / Upload -->
-						<input type="file" id="upload-file" accept=".csv" style="display: none;">
-
-						
-						<button id="waterfall-upload-csv" class="ui button tiny right floated mopub-ops-button-color mopub-button-radius waterfall-filter">Import</button>
-						<button id="waterfall-download-csv" class="ui button tiny right floated mopub-ops-button-color mopub-button-radius waterfall-filter">Export</button>
+						<button id="sort-reset" class="ui button tiny mopub-ops-button-color mopub-button-radius waterfall-filter">Reset Sorting</button>
 
 						<!-- Add line items -->
 						<button id="add-line-item-btn" class="ui button tiny right floated mopub-button-color mopub-button-radius waterfall-filter">Add New</button>
@@ -251,10 +247,11 @@
 	</footer>
 
 		<!-- Modals -->
+
 		<!-- Copy Waterfall -->
 		<div class="ui modal copy-waterfall-modal">
 			<i class="close icon"></i>
-			<div class="ui header small">Copy Waterfall</div>
+			<div class="ui header small">Duplicate Waterfall</div>
 			<div class="scrolling content">
 				<form id="copy-waterfall-form" class="ui small form">
 					<div class="field">
@@ -263,6 +260,13 @@
 					<div class="field">
 						<div class="ui info message">
 							<p>This will not duplicate <b>Private Marketplace, Marketplace Tab(default), Segment, Advanced Bidding</b> line items.</p>
+						</div>
+					</div>
+					<div class="field">
+						<label>Target Line Items</label>
+						<div class="ui checkbox">
+							<input id="copy-only-selected" type="checkbox">
+							<label>Duplicate only selected line items</label>
 						</div>
 					</div>
 					<div class="field">
@@ -280,13 +284,6 @@
 						</div>
 					</div>
 					<div class="field">
-						<label>Target Line Items</label>
-						<div class="ui checkbox">
-							<input id="copy-only-filtered" type="checkbox">
-							<label>Duplicate only filtered line items (<b>Status</b> filtered, <b>NOT</b> selected items)</label>
-						</div>
-					</div>
-					<div class="field">
 						<label>Select Target Ad Unit</label>
 						<input id="tagify-adunits">
 					</div>
@@ -294,7 +291,7 @@
 			</div>
 			<div class="actions">
 				<div id="copy-cancel" class="ui tiny deny button mopub-ops-button-color mopub-button-radius">Cancel</div>
-				<div id="copy-submit" class="ui right tiny button mopub-button-color mopub-button-radius">Copy Waterfall</div>
+				<div id="copy-submit" class="ui right tiny button mopub-button-color mopub-button-radius">Duplicate</div>
 			</div>
 		</div>
 

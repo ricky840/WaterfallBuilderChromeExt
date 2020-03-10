@@ -10,7 +10,7 @@ var tableColumnDef = (function(global) {
 
 	// Waterfall Table Def
 	let waterfallColumns = [
-		{ rowHandle: true, formatter: "handle", headerSort: false, resizable: false, width: 30, minWidth: 30 },
+		{ rowHandle: true, formatter: "handle", headerSort: false, resizable: false, width: 42, minWidth: 42 },
 		{ title: titleCheckBoxWB, resizable: false, headerSort: false, width: 30, formatter: f.checkBoxFormatter, cellClick: checkBoxClick },
 		{ field: 'name', title: 'Name', visible: true, download: true, editor: "input", editable: editCheck, minWidth: 80, formatter: f.nameFormatter },
 		{ field: 'key', title: 'Key', visible: false, download: true, sorter: 'string' },

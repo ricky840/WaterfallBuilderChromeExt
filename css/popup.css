@@ -572,7 +572,7 @@ unitstatusinactive {
 
 /* New line item badge */
 .add-new:before {
-	content: 'NEW';
+	content: 'New';
 	margin-top: 2.7em;
 	margin-left: 0.1em;
 	color: red;
@@ -581,9 +581,22 @@ unitstatusinactive {
 	font-size: 0.8em;
 	padding-top: 0px;
 	padding-bottom: 0px;
-	padding-left: 2px;
+	padding-left: 8px;
 	padding-right: 2px;
 	opacity: 0.8;
+}
+.updated-row:before {
+	content: 'Update';
+	margin-top: 2.7em;
+	margin-left: 0.1em;
+	color: #1da1f2;
+	position: absolute;
+	font-weight: bold;
+	font-size: 0.8em;
+	padding-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 1px;
+	padding-right: 0px;
 }
 
 /* number of changes */
@@ -594,4 +607,9 @@ unitstatusinactive {
 	/* color: black !important; */
 	/* font-weight: normal !important; */
 	font-size: 0.9em;
+}
+
+/* import export button */
+.import-export {
+	margin-right: 3px !important;
 }

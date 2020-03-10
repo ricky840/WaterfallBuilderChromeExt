@@ -211,6 +211,10 @@ $("#edit-submit").click(function() {
 });
 
 $("#copy-waterfall").click(function() {
+	// If there was selected line items, check selected checkbox
+	let selectedRows = WaterfallTable.getSelectedRows();
+	if (selectedRows.length > 0) $("#copy-only-selected").prop('checked', true);
+	
 	$('.ui.modal.copy-waterfall-modal').modal('show');
 	let input = $("#tagify-adunits")[0];
 	adUnitManager.loadAdUnits("list-name-id", function(adUnitList) {
@@ -245,10 +249,10 @@ $("#copy-waterfall").click(function() {
 
 $("#copy-submit").click(function() {
 	let copyMode = $('#copy-mode').val();
-	let copyOnlyFiltered = $('#copy-only-filtered').is(':checked');
+	let copyOnlySelected = $('#copy-only-selected').is(':checked');
 	let selectedValues = $("#tagify-adunits").val();
-	let lineItems = (copyOnlyFiltered) ? WaterfallTable.getData("active") : WaterfallTable.getData();
-	
+	let lineItems = (copyOnlySelected) ? WaterfallTable.getSelectedData() : WaterfallTable.getData();
+	let selectedRows = WaterfallTable.getSelectedRows();
 	try {
 		selectedValues = JSON.parse(selectedValues);
 	} catch (error) {
@@ -268,6 +272,10 @@ $("#copy-submit").click(function() {
 			scrollToTop();
 			waterfallDuplicator.duplicate(adUnitIds, lineItems, copyMode, function() {
 				$(".all-content-wrapper").dimmer("hide");
+				loadWaterfall(AdUnitId, function() {
+					// Hmm.. do nothing for now
+					// Should I just release checkboxes..
+				});
 			});
 		}
 	}).modal('hide');
@@ -465,6 +473,13 @@ $("#close-add-network").click(function() {
 
 	$(".network-add-buttons").hide().attr("status", "hidden");
 	$(".add-network-done-buttons").hide();
+
+	// If there was selected line items in the add mode, show edit mode (trigger row selectionchanged event)
+	let selectedRows = WaterfallTable.getSelectedRows();
+	if (selectedRows.length > 0) {
+		selectedRows[0].toggleSelect();
+		selectedRows[0].toggleSelect();
+	}
 });
 
 // Add Line Item buttons
@@ -494,6 +509,11 @@ $(".add-network.add-item").click(function() {
 	// Clear notifiation
 	notifier.clear();
 	addNewLineItem.add(type, {orderName: orderName, orderKey: orderKey});	
+});
+
+// Reset sorting
+$("#sort-reset").click(function() {
+	sortByBidPriority(WaterfallTable);
 });
 
 // Non Events -------------------------------------------------;
@@ -660,6 +680,7 @@ function sortByBidPriority(table) {
 }
 
 function releaseCheckBox(rows) {
+	console.log(rows);
 	for (let i=0; i < rows.length; i++) {
 		rows[i].reformat(); // trigger render event
 	}
@@ -699,7 +720,12 @@ function initOrderDropDown(responseText) {
 	}
 	$(".add-item-order-list").dropdown({
 		clearable: false,
-		placeholder: "Select Order",
-		values: dropdownData
+		placeholder: "Select Order or Search",
+		values: dropdownData,
+		onChange: function (value, text, element) {
+			if (value) {
+				$(".add-item-order-list").removeClass('error');
+			}
+		}
 	});
 }

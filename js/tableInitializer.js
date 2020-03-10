@@ -2,6 +2,7 @@ var tableInitializer = (function(global) {
   "use strict";
 
 	let placeHolder = `<h4 class="ui header grey">No Data Available</h4>`;
+	let lineItemPlaceHolder = `<h4 class="ui header grey">Select order and load line items</h4>`;
 	let lineItemSearchInputHtml = `<span class="count-lineitems-wrapper"></span>
 																 <div class="ui icon input small search-table-wrapper">
 																 	 <input type="text" placeholder="Search line item name" id="line-item-search" class="mopub-input-search">
@@ -29,9 +30,21 @@ var tableInitializer = (function(global) {
 		let num = _.keys(changes).length;
 		if (num > 0) {
 			$("#copy-waterfall").hide();
-			$("#apply-waterfall").show();
-			$("#changes-waterfall").html(`${num} changed items`).show();
+			$("#apply-waterfall").html(`Apply ${num} Changed Items`).show();
 		}
+	}
+
+	function addNewBadge(row) {
+		$(row.getElement()).addClass("add-new");
+		return true;
+	}
+
+	function addUpdateBadge(row) {
+		let rowElement = row.getElement();
+		if (!$(rowElement).hasClass("add-new")) {
+			$(rowElement).addClass("updated-row");
+		}
+		return true;
 	}
 
   function flashRow(row, status) {
@@ -69,12 +82,17 @@ var tableInitializer = (function(global) {
       rowAdded: function(row) { 
 				flashRow(row, 'new');
 				updateWaterfallItemCount(WaterfallTable.getDataCount("active"));
-				$(row.getElement()).addClass("add-new");
+				addNewBadge(row);
 			},
 
       rowUpdated: function(row) { 
 				flashRow(row, 'updated');
 				updateNumberOfChangeButton();
+				addUpdateBadge(row);
+			},
+
+			cellEdited: function(cell) {
+				addUpdateBadge(cell.getRow());
 			},
 
 			dataEdited: function(data) {
@@ -91,16 +109,18 @@ var tableInitializer = (function(global) {
 			},
 
 			rowSelectionChanged: function(data, rows) {
-				// Only show edit button when it is not in adding line item mode
+				// Only show edit buttons when it is not in adding line item mode.
 				if ($(".network-add-buttons").attr("status") == "hidden") {
 					if (rows.length > 0) {
 						$("#edit-selected").html(`Edit Selected (${rows.length})`).show();
 						$("#delete-selected").html(`Delete Selected (${rows.length})`).show();
-						$(".waterfall-filter").hide();
+						$("#copy-waterfall").html(`Duplicate ${rows.length} items`);
+						$("#add-line-item-btn").hide();
 					} else {
+						$("#copy-waterfall").html(`Duplicate Waterfall`);
 						$("#edit-selected").hide();
 						$("#delete-selected").hide();
-						$(".waterfall-filter").show();
+						$("#add-line-item-btn").show();
 					} 
 				}
 			},
@@ -180,7 +200,7 @@ var tableInitializer = (function(global) {
 			data: [],
 			layout: "fitColumns",
 			tooltips: true,
-			placeholder: placeHolder,
+			placeholder: lineItemPlaceHolder,
 			index: "key", // To avoid dup in the table
 
 			// Movable Row Config

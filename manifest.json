@@ -1,6 +1,6 @@
 {
   "name": "Waterfall Builder for MoPub",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Helper tool for managing line items in MoPub UI",
   "manifest_version": 2,
   "background": {
