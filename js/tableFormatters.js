@@ -165,9 +165,9 @@ var tableFormatters = (function(global) {
 			html += '<div>';
 			if (key == "html_data") {
 				// html += `<span class="cell-header">${key}</span>: <a class="customHtml" key="${lineItemKey}">click</a>`;
-				html += `<span class="cell-header">${key}</span>: <a href="https://app.mopub.com/edit-line-item?key=${lineItemKey}" target="_blank">click</a>`;
+				html += `<span class="cell-header">${key}</span><span class="cell-format-value"><a href="https://app.mopub.com/edit-line-item?key=${lineItemKey}" target="_blank">click</a></span>`;
 			} else {
-				html += `<span class="cell-header">${key}</span>: ${object[key]}`;
+				html += `<span class="cell-header">${key}</span><span class="cell-format-value">${object[key]}</span>`;
 			}
 			html += '</div>';
 		}

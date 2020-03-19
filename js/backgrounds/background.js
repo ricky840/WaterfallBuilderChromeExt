@@ -43,13 +43,11 @@ chrome.browserAction.onClicked.addListener(function(tab) {
 		});
 	} else {
 		// Notification
-		let options = {
-			type: "basic",
+		notificationManager.show({
+			id: "take_me_to_mopub_ui-" + getCurrentDatetimeUTC(),
 			title: "Login to MoPub Dashboard",
-			message: "If you are already logged in, open MoPub UI and hit refresh.",
-			iconUrl: LogoImageUrl
-		};
-		chrome.notifications.create(getCurrentDatetimeUTC(), options);
+			message: "If you are already logged in, click here to open MoPub UI",
+		});
 	}
 });
 
@@ -71,13 +69,7 @@ chrome.runtime.onInstalled.addListener(function(event) {
 
 // When click notification
 chrome.notifications.onClicked.addListener(function(notificationId) {
-  chrome.tabs.create(
-  {
-    url: "https://app.mopub.com",
-    active: true
-  }, function(tab) {
-    // do something
-  });
+	notificationManager.onClicked(notificationId);
 });
 
 // Fires when the ext starts(very first time) or when user clicks refresh button in extension page
@@ -249,3 +241,9 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
   },
   ["requestHeaders", "extraHeaders", "blocking"]
 );
+
+// Notification listener
+chrome.runtime.onMessage.addListener(function(message, sender, sendResponse) {
+	if (message.type !== "chromeNotification") return;
+	notificationManager.show(message);
+});

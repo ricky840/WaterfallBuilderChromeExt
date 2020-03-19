@@ -78,7 +78,7 @@ var waterfallDuplicator = (function(global) {
 		}
 	}
 
-	function duplicate(adUnitIds, lineItems, option, postDuplicate) {
+	function duplicate(adUnitIds, lineItems, option, selectedOrderInfo, postDuplicate) {
 		let lineItemChanges = {};
 		let lineItemsKeysNeedOrderKey = [];
 		
@@ -104,6 +104,8 @@ var waterfallDuplicator = (function(global) {
 				lineItemName : each.name + " (New)",
 				updatedFields: each
 			}
+
+			// If order key doesn't exist, find the current order key
 			if (!("orderKey" in each)) {
 				lineItemsKeysNeedOrderKey.push(each.key);
 			}
@@ -134,6 +136,16 @@ var waterfallDuplicator = (function(global) {
 							console.log("Error creating new order");
 						}
 					});
+					break;
+				case "in_one_existing_order":
+					// Go through change objects and override orderKey and orderName (name will be removed in mopubUI since it is "new")
+					for (let i=0; i < lineItems.length; i++) {
+						let change = lineItemChanges[lineItems[i].key];
+						change.updatedFields["orderKey"] = selectedOrderInfo.orderKey;
+						change.updatedFields["orderName"] = selectedOrderInfo.orderName;
+					}
+					console.log(`Creating line items in existing order ${selectedOrderInfo.orderName} - ${selectedOrderInfo.orderKey}`);
+					moPubUI.updateWaterfall(lineItemChanges, postDuplicate);
 					break;
 				case "in_new_order_with_neighbour":
 					console.log("Creating lineitems in new order with neighbours");

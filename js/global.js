@@ -71,6 +71,11 @@ const NETWORK_TYPE_NAME = {
 	custom_native: "Custom SDK"
 }
 
+// New Line Item Name
+const NEW_NETWORK_LINEITEM_NAME = "New Network Line Item";
+const NEW_DIRECT_LINEITEM_NAME = "New Direct Line Item";
+const NEW_MPX_LINEITEM_NAME = "New MPX Line Item";
+
 // Country List
 const COUNTRY_LIST = [
 	{ country_code: "AF", country: "Afghanistan" }, 

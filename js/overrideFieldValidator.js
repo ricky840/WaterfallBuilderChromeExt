@@ -114,7 +114,7 @@ var overrideFieldValidator = (function(global) {
 				break;
 		}
 
-		return overrideFields;
+		return clearEmpties(overrideFields);
 	}
 
   return {

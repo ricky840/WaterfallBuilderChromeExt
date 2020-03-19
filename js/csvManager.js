@@ -225,7 +225,7 @@ var csvManager = (function(global) {
 					'bid': csvFieldValidator('bid', bid),
 					'type': csvFieldValidator('type', type),
 					'networkType': (type == "network") ? csvFieldValidator('networkType', networkType) : null,
-					'overrideFields': (type == "network") ? overrideFieldValidator.validate(networkType, overrideFields) : undefined,
+					'overrideFields': (type == "network") ? overrideFieldValidator.validate(networkType, overrideFields) : {}, // unified overridesfield form
 					'status': csvFieldValidator('status', status),
 					'keywords': csvFieldValidator('keywords', keywords),
 					'includeGeoTargeting': csvFieldValidator('includeGeoTargeting', geoMode),

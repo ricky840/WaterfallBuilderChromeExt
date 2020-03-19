@@ -58,6 +58,7 @@
 							<h2 class="ui header">
 								<span id="info-adunit-name"><div class="ui active inline loader small"></div> Loading..</span>
 								<a id="info-adunit-status" class="ui gray empty circular label"></a>
+								<button id="reload-ad-unit" class="ui button tiny reload-adunit-button">Reload Waterfall</button>
 								<div id="info-adunit-id" class="sub header"></div>
 							</h2>
 						</div>
@@ -94,13 +95,15 @@
 
 						<!-- Network templete add btn -->
 						<span class="network-add-buttons" style="display: none;" status="hidden">
-							<div class="ui search small selection dropdown error add-item-order-list" style="width: 100%;">
+							<h4 style="margin-bottom: 0.4em;">Select Order</h4>
+							<div class="ui search small selection error dropdown add-item-order-list" style="width: 100%;">
 								<div class="text"></div>
 								<i class="dropdown icon"></i>
 							</div>
 							<div>
 								<button id="add-mpx" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>MPX</button>
 								<button id="add-admob" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>AdMob</button>
+								<button id="add-adcolony" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>AdColony</button>
 								<button id="add-applovin" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>AppLovin</button>
 								<button id="add-chartboost" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Chartboost</button>
 								<button id="add-facebook" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Facebook</button>
@@ -253,7 +256,7 @@
 			<i class="close icon"></i>
 			<div class="ui header small">Duplicate Waterfall</div>
 			<div class="scrolling content">
-				<form id="copy-waterfall-form" class="ui small form">
+				<form id="copy-waterfall-form" class="ui form">
 					<div class="field">
 						<div id="copy-form-notification"></div>
 					</div>
@@ -266,16 +269,26 @@
 						<label>Target Line Items</label>
 						<div class="ui checkbox">
 							<input id="copy-only-selected" type="checkbox">
-							<label>Duplicate only selected line items</label>
+							<label>Duplicate only selected line items<span id="copy-only-selected-count" class="copy-only-selected-count"></span></label>
 						</div>
 					</div>
 					<div class="field">
 						<label>Duplicate Mode</label>
-						<select id="copy-mode" class="ui dropdown selection">
+						<select id="copy-mode" class="ui dropdown selection copy-mode-dropdown">
 							<option value="in_same_order" selected>Duplicate line items within the current order</option>
 							<option value="in_one_new_order">Duplicate line items and merge into a new order</option>
+							<option value="in_one_existing_order">Duplicate line items and merge into an existing order</option>
 							<option value="in_new_order_with_neighbour">Duplicate line items with the same order structure</option>
 						</select>
+					</div>
+					<div id="copy-form-order-list-field" class="field" style="display: none;">
+						<label>Select Order</label>
+						<div class="ui search small selection error dropdown copy-form-order-list">
+							<div class="text"></div>
+							<i class="dropdown icon"></i>
+						</div>
+					</div>
+					<div class="field">
 						<div class="ui message">
 							<ul class="list">
 								<li>Duplicated line items will have suffix of "(new)" in the name.</li>

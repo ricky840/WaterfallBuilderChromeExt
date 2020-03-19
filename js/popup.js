@@ -77,7 +77,16 @@ $(document).ready(function() {
 	editFormManager.initForm();
 	
 	// Copy Mode (Copy waterfall form)
-	$("#copy-mode").dropdown({ showOnFocus: false	});
+	$("#copy-mode").dropdown({ 
+		showOnFocus: false,
+		onChange: function(value, text, selectedItem) {
+			if (value == "in_one_existing_order") {
+				$("#copy-form-order-list-field").show();
+			} else {
+				$("#copy-form-order-list-field").hide();
+			}
+    }
+	});
 
 	// Add line item direct button
 	$("#add-direct").dropdown({

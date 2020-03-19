@@ -27,6 +27,13 @@ $("#add-adsource").click(function() {
 	}
 });	
 
+$("#reload-ad-unit").click(function() {
+	notifier.clear();
+	loadWaterfall(AdUnitId, function() {
+		// Hmm.. do nothing for now
+	});
+});
+
 /* Select all checkbox */
 $(".all-content-wrapper").on("change", ".select-all", function() {
 	let selected = $(this).is(":checked");
@@ -111,12 +118,13 @@ $("#delete-selected").click(function() {
 
 				if (lineItem) {
 					lineItemManager.cacheLineItem([lineItem]);	
-					// See if the current ad unit is only one assigned which can't be deassigned.
+					// See if the current ad unit is only one assigned which can't be deassigned. archive instead
 					if (lineItem.adUnitKeys.length == 1) {
+						rows[i].update({status: "archived"});
 						notifier.show({
-							header: "Cannot deassign line items",
-							message: `<b>${lineItem.name}</b> <b>(${lineItem.key})</b> cannot be deassigned. Line item requires at least one ad unit assigned. Use archive or pause instead.`,
-							type: "negative",
+							header: "Line item requires at least on ad unit assigned",
+							message: `<b>${lineItem.name}</b> <b>(${lineItem.key})</b> cannot be deleted. It requires at least one ad unit assigned. Archived the line item instead.`,
+							type: "info",
 							append: true
 						});
 					} else {
@@ -211,9 +219,19 @@ $("#edit-submit").click(function() {
 });
 
 $("#copy-waterfall").click(function() {
+	// Reset form first
+	$("#copy-only-selected").prop('checked', false);
+	$("#copy-only-selected-count").html("");
+	$(".copy-mode-dropdown").dropdown('restore default value');
+	$(".copy-form-order-list").dropdown('clear');
+	notifier.clearCopyForm();
+	
 	// If there was selected line items, check selected checkbox
 	let selectedRows = WaterfallTable.getSelectedRows();
-	if (selectedRows.length > 0) $("#copy-only-selected").prop('checked', true);
+	if (selectedRows.length > 0) {
+		$("#copy-only-selected").prop('checked', true);
+		$("#copy-only-selected-count").html(`(${selectedRows.length} items selected)`);
+	}
 	
 	$('.ui.modal.copy-waterfall-modal').modal('show');
 	let input = $("#tagify-adunits")[0];
@@ -226,16 +244,17 @@ $("#copy-waterfall").click(function() {
 					enforceWhitelist: true,
 					whitelist: adUnitList,
 					keepInvalidTags: false,
-					placeholder: "Select or search ad unit or id",
+					placeholder: "Search ad unit..",
 					skipInvalid: true,
 					dropdown: {
-						position: "manual",
+						position: "all",
 						maxItems: Infinity,
-						classname: "customSuggestionsList"
+						// classname: "customSuggestionsList",
+						closeOnSelect: true
 					},
 				});
-				AdUnitTagify.dropdown.show.call(AdUnitTagify); // load the list
-				AdUnitTagify.DOM.scope.parentNode.appendChild(AdUnitTagify.DOM.dropdown);
+				// AdUnitTagify.dropdown.show.call(AdUnitTagify); // load the list
+				// AdUnitTagify.DOM.scope.parentNode.appendChild(AdUnitTagify.DOM.dropdown);
 			} else {
 				// If already initialized, just remove previous tag.
 				AdUnitTagify.removeAllTags();
@@ -252,12 +271,26 @@ $("#copy-submit").click(function() {
 	let copyOnlySelected = $('#copy-only-selected').is(':checked');
 	let selectedValues = $("#tagify-adunits").val();
 	let lineItems = (copyOnlySelected) ? WaterfallTable.getSelectedData() : WaterfallTable.getData();
+	let selectedOrderKey = $(".copy-form-order-list").dropdown("get value");
+	let selectedOrderName = $(".copy-form-order-list").dropdown("get text");
 	let selectedRows = WaterfallTable.getSelectedRows();
+
+	// Validate Inputs
+	if (copyOnlySelected && selectedRows.length <= 0) {
+		notifier.copyFormShow({header: "Input Validation Error", message: "There are no selected line items. Select line items first or uncheck duplicate only selected line items.", type: "negative"});
+		console.log("No selected line items but duplicate only selected line items option was on");
+		return false;
+	}
 	try {
 		selectedValues = JSON.parse(selectedValues);
 	} catch (error) {
-		notifier.copyFormShow({message: "Please select ad unit", type: "negative"});
-		console.log("No Adunit was selected");
+		notifier.copyFormShow({header: "Input Validation Error", message: "Target ad unit was not selected. Please select target ad unit.", type: "negative"});
+		console.log("No ad unit was selected");
+		return false;
+	}
+	if (copyMode == "in_one_existing_order" && _.isEmpty(selectedOrderKey.trim())) {
+		notifier.copyFormShow({header: "Input Validation Error", message: "Please select Order for line items", type: "negative"});
+		console.log("Order is not selected");
 		return false;
 	}
 
@@ -269,12 +302,18 @@ $("#copy-submit").click(function() {
 
 	$('.ui.modal.copy-waterfall-modal').modal({
 		onHide: function() {
-			scrollToTop();
-			waterfallDuplicator.duplicate(adUnitIds, lineItems, copyMode, function() {
+			let selectedOrderInfo = { orderKey: selectedOrderKey, orderName: selectedOrderName };
+			waterfallDuplicator.duplicate(adUnitIds, lineItems, copyMode, selectedOrderInfo, function() {
 				$(".all-content-wrapper").dimmer("hide");
+				chrome.runtime.sendMessage({
+					type: "chromeNotification", 
+					title: "Duplicate Completed", 
+					message: "Click here to load the duplicated ad unit in MoPub UI",
+					id: "adUnitId-" + adUnitIds[0]
+				});
 				loadWaterfall(AdUnitId, function() {
 					// Hmm.. do nothing for now
-					// Should I just release checkboxes..
+					// Should I just release checkboxes. (once copy object then should update)
 				});
 			});
 		}
@@ -308,14 +347,19 @@ $("#review-submit").click(function() {
 			let lineItemChanges = lineItemManager.getLineItemChanges();
 			moPubUI.updateWaterfall(lineItemChanges, function(result) {
 				$(".all-content-wrapper").dimmer("hide");
+				chrome.runtime.sendMessage({
+					type: "chromeNotification", 
+					title: "Update Completed", 
+					message: "Click here to load the ad unit in MoPub UI",
+					id: "adUnitId-" + AdUnitId
+				});
 				loadWaterfall(AdUnitId, function() {
-					// Hmm.. do nothing for now
+					// do something
 				});
 			});	
 		}
 	}).modal('hide');
 });
-
 
 // Assign or Duplicate LineItems
 $(".lineitem-action-buttons").click(function() {
@@ -464,6 +508,9 @@ $("#add-line-item-btn").click(function() {
 
 	$(".network-add-buttons").show().attr("status", "shown");
 	$(".add-network-done-buttons").show();
+
+	// Disable Grouping for temporary
+	WaterfallTable.setGroupBy(false);
 });
 
 // Done button!
@@ -473,6 +520,9 @@ $("#close-add-network").click(function() {
 
 	$(".network-add-buttons").hide().attr("status", "hidden");
 	$(".add-network-done-buttons").hide();
+
+	// Enable grouping
+	WaterfallTable.setGroupBy("priority");
 
 	// If there was selected line items in the add mode, show edit mode (trigger row selectionchanged event)
 	let selectedRows = WaterfallTable.getSelectedRows();
@@ -489,7 +539,7 @@ $(".add-network.add-item").click(function() {
 		notifier.show({
 			header: "Order Required",
 			type: "negative",
-			message: "New line item requires order. Please select order."
+			message: "New line item requires Order. Please select Order first."
 		});
 		return false;
 	}
@@ -680,7 +730,6 @@ function sortByBidPriority(table) {
 }
 
 function releaseCheckBox(rows) {
-	console.log(rows);
 	for (let i=0; i < rows.length; i++) {
 		rows[i].reformat(); // trigger render event
 	}
@@ -718,13 +767,25 @@ function initOrderDropDown(responseText) {
 			});
 		}
 	}
+	// order list in new line item add
 	$(".add-item-order-list").dropdown({
 		clearable: false,
-		placeholder: "Select Order or Search",
+		placeholder: "Search..",
 		values: dropdownData,
 		onChange: function (value, text, element) {
 			if (value) {
 				$(".add-item-order-list").removeClass('error');
+			}
+		}
+	});
+	// order list in copy form
+	$(".copy-form-order-list").dropdown({
+		clearable: false,
+		placeholder: "Search..",
+		values: dropdownData,
+		onChange: function (value, text, element) {
+			if (value) {
+				$(".copy-form-order-list").removeClass('error');
 			}
 		}
 	});

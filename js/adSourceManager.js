@@ -36,10 +36,17 @@ var adSourceManager = (function(global) {
 			delete lineItem.pacing;
 			delete lineItem.percentDelivered;
 
-			// If overrideFields is undefined, replace with {network_account_id: "", network_adunit_id: "", network_app_id: ""}
-			// Which is what AdSource sends initially when there is no value! why? why not just undefined like lineitem fuck!
-			if (lineItem.overrideFields == undefined) {
-				lineItem.overrideFields = {network_account_id: "", network_adunit_id: "", network_app_id: ""};
+			// Empty overrideFields can have 3 different forms.
+			// 1) {network_account_id: "", network_adunit_id: "", network_app_id: ""}
+			// 2) undefined
+			// 3) {}
+			// adsource api returns {} or undefined
+			// lineitem get api {network_account_id: "", network_adunit_id: "", network_app_id: ""}
+			// get order api {network_account_id: "", network_adunit_id: "", network_app_id: ""}
+			// all should be treated as same. unified form is {}
+			
+			if (lineItem.overrideFields == undefined || lineItem.overrideFields == null || _.isEmpty(clearEmpties(lineItem.overrideFields))) {
+				lineItem.overrideFields = {};
 			}
 
 			convertedLineItems.push(lineItem);

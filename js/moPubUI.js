@@ -237,7 +237,7 @@ var moPubUI = (function(global) {
 		if (numberOfChangesToUpdate == 0) {
 			notifier.clear();
 			notifier.show({
-				header: `Update Complete. ${loadingIndicator.getBarLength()} Item(s)`,
+				header: `Update Completed. ${loadingIndicator.getBarLength()} Item(s)`,
 				message: updateResultMessage,
 				append: true
 			});

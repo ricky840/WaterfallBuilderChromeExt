@@ -4,8 +4,8 @@ var addNewLineItem = (function(global) {
 	let templateNetwork = {
 		adUnitKeys: [],
 		bid: 1,
-		name: "New Network Line Item",
-		priority: 1,
+		name: NEW_NETWORK_LINEITEM_NAME,
+		priority: 12,
 		startImmediately: true,
 		type: "network",
 		status: "running",
@@ -16,8 +16,8 @@ var addNewLineItem = (function(global) {
 	let templateDirect = {
 		adUnitKeys: [],
 		bid: 1,
-		name: "New Direct Line Item",
-		priority: 1,
+		name: NEW_DIRECT_LINEITEM_NAME,
+		priority: 12,
 		startImmediately: true,
 		type: "gtee",
 		status: "running",
@@ -27,8 +27,8 @@ var addNewLineItem = (function(global) {
 	let templateMPX = {
 		adUnitKeys: [],
 		bid: 1,
-		name: "New MPX Line Item",
-		priority: 1,
+		name: NEW_MPX_LINEITEM_NAME,
+		priority: 12,
 		startImmediately: true,
 		type: "mpx_line_item",
 		status: "running",
@@ -36,7 +36,7 @@ var addNewLineItem = (function(global) {
 	};
 
 	let overrideFieldsTemplate = {
-		network_account_id: "Network account Id",
+		network_account_id: "Network account id",
 		network_app_id: "Network app id",
 		network_adunit_id: "Network ad unit id",
 		app_signature: "App signature",
@@ -55,6 +55,11 @@ var addNewLineItem = (function(global) {
 			case "add-admob":
 				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
 				newLineItem.networkType = "admob_native";
+				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
+				break;
+			case "add-adcolony":
+				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
+				newLineItem.networkType = "adcolony";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
 				break;
 			case "add-applovin":
@@ -111,7 +116,7 @@ var addNewLineItem = (function(global) {
 			default:
 				break;
 		}
-		// Add order Info (Name will be moved in the api call)
+		// Add order Info (Name will be removed in the api call)
 		newLineItem.orderKey = order.orderKey;
 		newLineItem.orderName = order.orderName;
 

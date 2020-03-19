@@ -262,10 +262,14 @@
 	top: 300px !important;
 }
 
-/* header inside the table */
+/* header inside the table, json formatter */
 .cell-header {
-	color: #657786 !important;
+	color: #657786;
 	text-transform: capitalize !important;
+	margin-right: 0.4em;
+}
+.cell-format-value {
+	font-weight: 500;
 }
 
 .less-padding-label {
@@ -585,11 +589,14 @@ unitstatusinactive {
 	padding-right: 2px;
 	opacity: 0.8;
 }
+.add-new {
+	background-color: #fff3f2;
+}
 .updated-row:before {
 	content: 'Update';
 	margin-top: 2.7em;
 	margin-left: 0.1em;
-	color: #1da1f2;
+	color: green;
 	position: absolute;
 	font-weight: bold;
 	font-size: 0.8em;
@@ -597,6 +604,9 @@ unitstatusinactive {
 	padding-bottom: 0px;
 	padding-left: 1px;
 	padding-right: 0px;
+}
+.updated-row {
+	background-color: #f3fff2;
 }
 
 /* number of changes */
@@ -613,3 +623,22 @@ unitstatusinactive {
 .import-export {
 	margin-right: 3px !important;
 }
+
+/* copy-only-selected-count */
+.copy-only-selected-count {
+	margin-left: 10px;
+	color: #1da1f2;
+	font-weight: bold;
+}
+
+/* reload ad unit button */
+.reload-adunit-button {
+	padding: 0.4em !important;
+	background: none !important;
+	color: #1da1f2 !important;
+	font-weight: normal !important;
+} 
+.reload-adunit-button:hover {
+	text-decoration: underline !important;
+} 
+

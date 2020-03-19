@@ -31,6 +31,9 @@ var tableInitializer = (function(global) {
 		if (num > 0) {
 			$("#copy-waterfall").hide();
 			$("#apply-waterfall").html(`Apply ${num} Changed Items`).show();
+		} else if (num == 0) {
+			$("#copy-waterfall").show();
+			$("#apply-waterfall").hide();
 		}
 	}
 
@@ -40,11 +43,22 @@ var tableInitializer = (function(global) {
 	}
 
 	function addUpdateBadge(row) {
+		// event triggers even if the value is edited back to original value.
+		// Compare with original row and see if it was really changed.
 		let rowElement = row.getElement();
-		if (!$(rowElement).hasClass("add-new")) {
-			$(rowElement).addClass("updated-row");
+		let orgLineItem = lineItemManager.getOrgLineItems();
+		if (!_.isEqual(orgLineItem[row.getData().key], row.getData())) { 
+			// Value changed, put update badge
+			if (!$(rowElement).hasClass("add-new")) {
+				$(rowElement).addClass("updated-row");
+				console.log("different");
+				console.log(orgLineItem[row.getData().key]);
+				console.log(row.getData());
+			}
+		} else {
+			// Value unchanged, remove update badge
+			$(rowElement).removeClass("updated-row");
 		}
-		return true;
 	}
 
   function flashRow(row, status) {
@@ -78,6 +92,9 @@ var tableInitializer = (function(global) {
 			placeholder: placeHolder,
 			// movableColumns: true,
 
+			// Add new line item at the top
+			addRowPos: top,
+
 			// Row Change callbacks
       rowAdded: function(row) { 
 				flashRow(row, 'new');
@@ -89,14 +106,17 @@ var tableInitializer = (function(global) {
 				flashRow(row, 'updated');
 				updateNumberOfChangeButton();
 				addUpdateBadge(row);
+				console.log("row updated");
 			},
 
 			cellEdited: function(cell) {
 				addUpdateBadge(cell.getRow());
+				console.log("cell edited");
 			},
 
 			dataEdited: function(data) {
 				updateNumberOfChangeButton();
+				console.log("date edited");
 			},
 
 			rowMoved: function(row) {
@@ -168,13 +188,15 @@ var tableInitializer = (function(global) {
 				return html;
 			},
 
-			// Disable Rows that doesn't supported for now.
+			// Disable line items that doesn't supported for now.
 			selectableCheck: function(row) {
 				let status = row.getData().status;
 				let type = row.getData().type;
-				let regex = /campaign\-|segment\-|scheduled/;
+
+				// let regexStatus = /campaign\-|segment\-|scheduled/;
+				let regexStatus = /^running$|^paused$|^archived$/;
 				let regexType = /advanced\_|pmp\_|segment/;
-				if (status.match(regex) || type.match(regexType)) {
+				if (!regexStatus.test(status) || regexType.test(type)) {
 					let rowElement = row.getElement();
 					$(rowElement).addClass('tabulator-unselectable');
 					return false;	
@@ -241,13 +263,15 @@ var tableInitializer = (function(global) {
 				$(".count-lineitems-wrapper").html(html);
 			},
 
-			// Disable Rows that doesn't supported for now.
+			// Disable line items that doesn't supported for now.
 			selectableCheck: function(row) {
 				let status = row.getData().status;
 				let type = row.getData().type;
-				let regex = /campaign\-|segment\-|scheduled/;
+
+				// let regex = /campaign\-|segment\-|scheduled/;
+				let regexStatus = /^running$|^paused$|^archived$/;
 				let regexType = /advanced\_|pmp\_|segment/;
-				if (status.match(regex) || type.match(regexType)) {
+				if (!regexStatus.test(status) || regexType.test(type)) {
 					let rowElement = row.getElement();
 					$(rowElement).addClass('tabulator-unselectable');
 					return false;	

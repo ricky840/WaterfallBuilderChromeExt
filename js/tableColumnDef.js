@@ -12,7 +12,7 @@ var tableColumnDef = (function(global) {
 	let waterfallColumns = [
 		{ rowHandle: true, formatter: "handle", headerSort: false, resizable: false, width: 42, minWidth: 42 },
 		{ title: titleCheckBoxWB, resizable: false, headerSort: false, width: 30, formatter: f.checkBoxFormatter, cellClick: checkBoxClick },
-		{ field: 'name', title: 'Name', visible: true, download: true, editor: "input", editable: editCheck, minWidth: 80, formatter: f.nameFormatter },
+		{ field: 'name', title: 'Name', visible: true, download: true, editor: "input", editable: editCheck, minWidth: 80, cellEdited: nameValidator, formatter: f.nameFormatter },
 		{ field: 'key', title: 'Key', visible: false, download: true, sorter: 'string' },
 		{ field: 'orderName', title: 'Order', visible: false, download: true, minWidth: 80 },
 		// { field: 'orderKey', title: 'Order Key', visible: false, download: true },
@@ -69,7 +69,7 @@ var tableColumnDef = (function(global) {
 		{ field: 'end', title: 'End', visible: false, download: true, sorter: 'string' },
 		{ field: 'active', title: 'Active', visible: false, download: true, sorter: 'string' },
 		{ field: 'disabled', title: 'Disabled', visible: false, download: true, sorter: 'string' },
-		{ field: 'autoCpm', title: 'AutoCpm', visible: false, download: true, sorter: 'string' },
+		{ field: 'autoCpm', title: 'AutoCpm', visible: false, download: true, sorter: 'string', formatter: f.jsonArrayFormatter },
 		{ field: 'budget', title: 'Budget', visible: false, download: true, sorter: 'string' },
 		{ field: 'budgetType', title: 'Budget Type', visible: false, download: true, sorter: 'string' },
 		{ field: 'frequencyCaps', title: 'Frequency Caps', visible: false, download: true, sorter: 'string' },
@@ -107,19 +107,6 @@ var tableColumnDef = (function(global) {
 		{ field: 'description', title: 'Description', visible: false }
 	];
 
-	function editCheck(cell) {
-		let rowData = cell.getRow().getData();
-		let field = cell.getColumn().getField();
-		// For default "marketplace", users only should be able to change CPM and status field.
-		if (rowData.type == "marketplace") {
-			if (field != "bid" && field != "status") {
-				console.log("Marketplace line item - the field is not editable");
-				return false;
-			}
-		}
-		return true;
-	}
-
 	function getColumnDef(table) {
 		switch(table) {
 			case "WaterfallTable":
@@ -133,6 +120,29 @@ var tableColumnDef = (function(global) {
 				break;
 			default:
 				break;
+		}
+	}
+
+	function editCheck(cell) {
+		let rowData = cell.getRow().getData();
+		let field = cell.getColumn().getField();
+		// For default "marketplace", users only should be able to change CPM and status field.
+		if (rowData.type == "marketplace") {
+			if (field != "bid" && field != "status") {
+				console.log("Marketplace line item - the field is not editable");
+				chrome.runtime.sendMessage({type: "chromeNotification", title: "Field not editable", message: "Only cpm and status is editable for the default Marketplace line item"});
+				return false;
+			}
+		}
+		return true;
+	}
+
+	function nameValidator(cell) {
+		// if no name was entered, restore the previous value
+		let value = cell.getValue().trim();
+		if (_.isEmpty(value)) {
+			cell.restoreOldValue();
+			return true;
 		}
 	}
 

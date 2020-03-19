@@ -1,6 +1,7 @@
 var lineItemManager = (function(global) {
 	"use strict";
-	
+
+	// Only saves items in the waterfall. Not saving all line items from orders
 	let orgLineItems = {};
 
 	function getLineItemFromMoPub(key, callback) {
@@ -17,8 +18,9 @@ var lineItemManager = (function(global) {
 	function cacheLineItem(dataList) {
 		for(let i=0; i < dataList.length; i++) {
 			try {
-				// Clean up overrideFields before saving in order to make the change accurate
+				// Clean up overrideFields before saving in order to make the change accurate!
 				dataList[i].overrideFields = clearEmpties(dataList[i].overrideFields); 
+
 				orgLineItems[dataList[i].key] = JSON.parse(JSON.stringify(dataList[i]));
 				console.log(`Original LineItem Cache Updated`);
 			} catch(err) {
