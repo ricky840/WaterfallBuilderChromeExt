@@ -129,8 +129,8 @@ var editFormManager = (function(global) {
 		let network_adunit_id = (_.isEmpty(overrideFields.network_adunit_id)) ? "" : overrideFields.network_adunit_id;
 		let app_signature = (_.isEmpty(overrideFields.app_signature)) ? "" : overrideFields.app_signature;
 		let location = (_.isEmpty(overrideFields.location)) ? "" : overrideFields.location;
-		let custom_event_class_name = (_.isEmpty(overrideFields.custom_event_class_name)) ? "" : overrideFields.custom_event_class_name;
-		let custom_event_class_data = (_.isEmpty(overrideFields.custom_event_class_data)) ? "" : overrideFields.custom_event_class_data;
+		let custom_event_class_name = (_.isEmpty(overrideFields.custom_event_class_name)) ? "" : overrideFields.custom_event_class_name.replace(/"/g, '&quot;');
+		let custom_event_class_data = (_.isEmpty(overrideFields.custom_event_class_data)) ? "" : overrideFields.custom_event_class_data.replace(/"/g, '&quot;');
 
 		switch (network) {
 			case "admob_native":

@@ -642,3 +642,18 @@ unitstatusinactive {
 	text-decoration: underline !important;
 } 
 
+/* line item key link */
+.lineitem-key-link {
+	color: #657786 !important;
+	text-decoration: none !important;
+}
+.lineitem-key-link:hover {
+	color: #1da1f2 !important;
+	text-decoration: underline !important;
+}
+
+/* ad unit id link in main page */
+#info-adunit-id:hover {
+	color: #1da1f2 !important;
+	text-decoration: underline !important;
+}

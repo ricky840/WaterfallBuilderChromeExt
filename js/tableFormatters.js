@@ -12,6 +12,11 @@ var tableFormatters = (function(global) {
 		return html;
 	}
 
+	function lineItemKeyFormatter(cell, formatterParams, onRendered) {
+		let html = `<a class="lineitem-key-link" href="https://app.mopub.com/line-item?key=${cell.getValue()}" target="_blank">${cell.getValue()}</a>`;
+		return html;
+	}
+
 	// line item type name formatter
 	function typeNameFormatter(cell, formatterParams, onRendered) {
 		return (TYPE_NAME[cell.getValue()] == undefined) ? cell.getValue() : TYPE_NAME[cell.getValue()];
@@ -187,6 +192,7 @@ var tableFormatters = (function(global) {
   return {
 		nameFormatter: nameFormatter,
 		typeNameFormatter: typeNameFormatter,
+		lineItemKeyFormatter: lineItemKeyFormatter,
 		networkTypeNameFormatter: networkTypeNameFormatter,
 		cpmFormatter: cpmFormatter,
 		priorityFormatter: priorityFormatter,

@@ -13,7 +13,7 @@ var tableColumnDef = (function(global) {
 		{ rowHandle: true, formatter: "handle", headerSort: false, resizable: false, width: 42, minWidth: 42 },
 		{ title: titleCheckBoxWB, resizable: false, headerSort: false, width: 30, formatter: f.checkBoxFormatter, cellClick: checkBoxClick },
 		{ field: 'name', title: 'Name', visible: true, download: true, editor: "input", editable: editCheck, minWidth: 80, cellEdited: nameValidator, formatter: f.nameFormatter },
-		{ field: 'key', title: 'Key', visible: false, download: true, sorter: 'string' },
+		{ field: 'key', title: 'Key', visible: false, download: true, sorter: 'string', formatter: f.lineItemKeyFormatter },
 		{ field: 'orderName', title: 'Order', visible: false, download: true, minWidth: 80 },
 		// { field: 'orderKey', title: 'Order Key', visible: false, download: true },
 		{ field: 'type', title: 'Item Type', visible: true, download: true, minWidth: 110, width: 110, formatter: f.lineItemTypeFormatter },
@@ -44,6 +44,14 @@ var tableColumnDef = (function(global) {
 			minWidth: 100,
 			width: 100
 		},
+		{ field: 'status', title: 'Status', visible: true, download: true, editor: "select", editable: editCheck, editorParams: {
+				elementAttributes: { class: "capitalize" },
+				values:	[{ label: "Running", value: "running" }, { label: "Paused", value: "paused" }, {label: "Archived", value: "archived"}]
+			},
+			formatter: f.statusFormatter,
+			width: 150,
+			minWidth: 150
+		},
 		{ field: 'priority', title: 'Priority', visible: true, download: true, editor: "number", editable: editCheck, editorParams: {
 				min: 1,
 				max: 16,
@@ -73,15 +81,7 @@ var tableColumnDef = (function(global) {
 		{ field: 'budget', title: 'Budget', visible: false, download: true, sorter: 'string' },
 		{ field: 'budgetType', title: 'Budget Type', visible: false, download: true, sorter: 'string' },
 		{ field: 'frequencyCaps', title: 'Frequency Caps', visible: false, download: true, sorter: 'string' },
-		{ field: 'bidStrategy', title: 'Bid Strategy', visible: false, download: true, sorter: 'string' },
-		{ field: 'status', title: 'Status', visible: true, download: true, editor: "select", editable: editCheck, editorParams: {
-				elementAttributes: { class: "capitalize" },
-				values:	[{ label: "Running", value: "running" }, { label: "Paused", value: "paused" }, {label: "Archived", value: "archived"}]
-			},
-			formatter: f.statusFormatter,
-			width: 90,
-			minWidth: 90
-		},
+		{ field: 'bidStrategy', title: 'Bid Strategy', visible: false, download: true, sorter: 'string' }
 	];
 
 	let lineitemColumns = [
