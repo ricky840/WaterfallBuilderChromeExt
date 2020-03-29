@@ -3,7 +3,7 @@ var reviewChange = (function(global) {
 
 	function formatter(updatedFields) {
 		let json = JSON.stringify(updatedFields, null, 2);
-		return json;
+		return _.escape(json);
 	}
 
 	function createHtml(changes) {

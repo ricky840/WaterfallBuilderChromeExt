@@ -124,13 +124,13 @@ var editFormManager = (function(global) {
 		let html;
 
 		// Load existing values
-		let network_account_id = (_.isEmpty(overrideFields.network_account_id)) ? "" : overrideFields.network_account_id; 
-		let network_app_id = (_.isEmpty(overrideFields.network_app_id)) ? "" : overrideFields.network_app_id;
-		let network_adunit_id = (_.isEmpty(overrideFields.network_adunit_id)) ? "" : overrideFields.network_adunit_id;
-		let app_signature = (_.isEmpty(overrideFields.app_signature)) ? "" : overrideFields.app_signature;
-		let location = (_.isEmpty(overrideFields.location)) ? "" : overrideFields.location;
-		let custom_event_class_name = (_.isEmpty(overrideFields.custom_event_class_name)) ? "" : overrideFields.custom_event_class_name.replace(/"/g, '&quot;');
-		let custom_event_class_data = (_.isEmpty(overrideFields.custom_event_class_data)) ? "" : overrideFields.custom_event_class_data.replace(/"/g, '&quot;');
+		let network_account_id = (_.isEmpty(overrideFields.network_account_id)) ? "" : escapeDoubleQuote(overrideFields.network_account_id); 
+		let network_app_id = (_.isEmpty(overrideFields.network_app_id)) ? "" : escapeDoubleQuote(overrideFields.network_app_id);
+		let network_adunit_id = (_.isEmpty(overrideFields.network_adunit_id)) ? "" : escapeDoubleQuote(overrideFields.network_adunit_id);
+		let app_signature = (_.isEmpty(overrideFields.app_signature)) ? "" : escapeDoubleQuote(overrideFields.app_signature);
+		let location = (_.isEmpty(overrideFields.location)) ? "" : escapeDoubleQuote(overrideFields.location);
+		let custom_event_class_name = (_.isEmpty(overrideFields.custom_event_class_name)) ? "" : escapeDoubleQuote(overrideFields.custom_event_class_name);
+		let custom_event_class_data = (_.isEmpty(overrideFields.custom_event_class_data)) ? "" : escapeDoubleQuote(overrideFields.custom_event_class_data);
 
 		switch (network) {
 			case "admob_native":

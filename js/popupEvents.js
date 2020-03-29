@@ -361,6 +361,10 @@ $("#review-submit").click(function() {
 	}).modal('hide');
 });
 
+$("review-cancel").click(function() {
+	$('.ui.modal.review-change-modal').modal('hide');
+});
+
 // Assign or Duplicate LineItems
 $(".lineitem-action-buttons").click(function() {
 	let rowDatas = LineItemTable.getSelectedData();
@@ -388,8 +392,16 @@ $(".lineitem-action-buttons").click(function() {
 				continue;
 			}	
 			if (!data.adUnitKeys.includes(AdUnitId)) { 
-				data.adUnitKeys.push(AdUnitId); // Assign AdUnit Id
+				// [Important] Update orgLineItems without new assigning ad unit id first
+				// so the assigned line item can be considered as updated item
+				lineItemManager.cacheLineItem([data]);
+
+			  // Assign new AdUnit Id - this should happen after updating the orgLineItem
+				data.adUnitKeys.push(AdUnitId);
+
+				// Add to the delete list (for line item table)
 				deleteRowIndex.push(data.key);
+
 				console.log(`Assigning adunit ${AdUnitId} for ${data.key}`);
 			}
 		} else if (action == "duplicate") {
@@ -527,7 +539,6 @@ $("#close-add-network").click(function() {
 	// If there was selected line items in the add mode, show edit mode (trigger row selectionchanged event)
 	let selectedRows = WaterfallTable.getSelectedRows();
 	if (selectedRows.length > 0) {
-		selectedRows[0].toggleSelect();
 		selectedRows[0].toggleSelect();
 	}
 });

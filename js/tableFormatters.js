@@ -128,7 +128,8 @@ var tableFormatters = (function(global) {
 	
 	function orderNameFormatter(cell, formatterParams, onRendered) {
 		let rowData = cell.getData();
-		let html = `<div class="lineitem-name">${cell.getValue()}</div><div class="lineitem-ordername">${rowData.key}</div>`; 
+		let html = `<div class="lineitem-name">${cell.getValue()} (${rowData.activeLineItemCount} / ${rowData.lineItemCount})</div>`;
+		html += `<div class="lineitem-ordername">${rowData.key}</div>`; 
 		return html;
 	}
 

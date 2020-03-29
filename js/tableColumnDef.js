@@ -20,7 +20,7 @@ var tableColumnDef = (function(global) {
 		{ field: 'networkType', title: 'Network Type', visible: false, download: true, minWidth: 150, width: 150, formatter: f.networkTypeNameFormatter },
 		{ field: 'network', title: 'Network', visible: false, download: true, formatter: f.jsonArrayFormatter, sorter: 'string' },
 		{ field: 'overrideFields', title: 'Override Fields', download: true, formatter: f.jsonArrayFormatter, visible: true, sorter: 'string', cellClick: editOverrideFields },
-		{ field: 'includeGeoTargeting', title: 'Geo Targeting Mode', visible: true, download: true, width: 165, formatter: f.geoTargetModeFormatter, cellClick: editForm },
+		{ field: 'includeGeoTargeting', title: 'GeoTarget Mode', visible: true, download: true, width: 140, formatter: f.geoTargetModeFormatter, cellClick: editForm },
 		{ field: 'targetedCountries', title: 'Countries', visible: true, download: true, formatter: f.jsonArrayFormatter, sorter: 'string', cellClick: editForm },
 		{ field: 'targetedRegions', title: 'Regions', visible: false, download: true, formatter: f.jsonArrayFormatter, sorter: 'string' },
 		{ field: 'targetedCities', title: 'Cities', visible: false, download: true, formatter: f.jsonArrayFormatter, sorter: 'string' },
@@ -89,22 +89,22 @@ var tableColumnDef = (function(global) {
 		{ title: titleCheckBoxLineItem, resizable: false, headerSort: false, width: 30, formatter: f.checkBoxFormatter,	cellClick: checkBoxClick },
 		{ field: 'name', title: 'Name', visible: true, minWidth: 100, formatter: f.lineItemNameFormatter },
 		{ field: 'type', title: 'Type', visible: true, minWidth: 110, width: 110, formatter: f.lineItemTypeFormatter },
-		{ field: 'priority', title: 'Priority', visible: true, width: 90, formatter: f.priorityFormatterNotEditable },
 		{ field: 'bid', title: 'CPM', sorter: "number", visible: true, minWidth: 100, width: 100, formatter: f.cpmFormatterNotEditable },
 		{ field: 'status', title: 'Status', visible: true, minWidth: 90, width: 90, formatter: f.statusFormatterNotEditable },
+		{ field: 'priority', title: 'Priority', visible: true, width: 90, formatter: f.priorityFormatterNotEditable },
 		{ field: 'networkType', title: 'Network Type', visible: false },
 		{ field: 'key', title: 'Key', visible: false },
-		{ field: 'orderName', title: 'orderName', visible: false }
+		{ field: 'orderName', title: 'orderName', visible: false },
 	];
 
   let orderColumns = [
 		{ title: titleCheckBoxOrder, resizable: false, headerSort: false, width: 30, formatter: f.checkBoxFormatter, cellClick: checkBoxClick},
-		{ field: 'name', title: 'Order', visible: true, formatter: f.orderNameFormatter },
-		{ field: 'lineItemCount', title: 'Total', visible: true, sorter: "number", minWidth: 90, width: 90 },
-		{ field: 'activeLineItemCount', title: 'Active', sorter: "number", visible: true, minWidth: 90, width: 90 },
-		{ field: 'status', title: 'Status', visible: true, minWidth: 90, width: 90, formatter: f.statusFormatterNotEditable },
+		{ field: 'name', title: 'Order (Active / Total)', visible: true, formatter: f.orderNameFormatter },
+		{ field: 'lineItemCount', title: 'Total', visible: false, sorter: "number", minWidth: 90, width: 90 },
+		{ field: 'activeLineItemCount', title: 'Active', sorter: "number", visible: false, minWidth: 90, width: 90 },
 		{ field: 'key', title: 'Key', visible: false },
-		{ field: 'description', title: 'Description', visible: false }
+		{ field: 'description', title: 'Description', visible: false },
+		{ field: 'status', title: 'Status', visible: true, minWidth: 90, width: 90, formatter: f.statusFormatterNotEditable },
 	];
 
 	function getColumnDef(table) {

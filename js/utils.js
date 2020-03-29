@@ -58,6 +58,10 @@ function scrollToTop() {
 	$(window).scrollTop(0, 0);
 }
 
+function escapeDoubleQuote(string) {
+	return string.replace(/"/g, '&quot;');
+}
+
 String.prototype.capitalize = function() {
 	return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
 };

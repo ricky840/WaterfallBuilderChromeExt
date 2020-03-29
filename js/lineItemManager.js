@@ -82,7 +82,7 @@ var lineItemManager = (function(global) {
 					}
 				}
 			} else {
-				// if the lineitem key does not exist in orgLineItems, this is new line item.
+				// if the lineitem key does not exist in orgLineItems, this is a new line item.
 				lineItemChanges[lineItemKey] = {
 					action: "new",
 					type: type,

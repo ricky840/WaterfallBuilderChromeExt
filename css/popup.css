@@ -348,7 +348,7 @@
 
 /* Changes Pre Tag */
 .change-pre {
-	width: 30em;
+	/* width: 30em; */
 	padding: 15px;
 	background: aliceblue;
 }

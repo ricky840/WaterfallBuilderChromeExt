@@ -44,7 +44,7 @@ var tableInitializer = (function(global) {
 
 	function addUpdateBadge(row) {
 		// event triggers even if the value is edited back to original value.
-		// Compare with original row and see if it was really changed.
+		// so had to compare with original row and see if it was really changed.
 		let rowElement = row.getElement();
 		let orgLineItem = lineItemManager.getOrgLineItems();
 		if (!_.isEqual(orgLineItem[row.getData().key], row.getData())) { 
@@ -116,7 +116,7 @@ var tableInitializer = (function(global) {
 
 			dataEdited: function(data) {
 				updateNumberOfChangeButton();
-				console.log("date edited");
+				console.log("data edited");
 			},
 
 			rowMoved: function(row) {
