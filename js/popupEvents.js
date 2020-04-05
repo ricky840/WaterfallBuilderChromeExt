@@ -79,6 +79,14 @@ $("#edit-selected").click(function() {
 	if (!rows.length > 0) return false;
 	editFormManager.resetForm();
 	$('.ui.modal.edit-modal').modal({
+		duration: 300,
+		onShow: function() {
+			// fill the form only when one line item selected
+			if (rows.length == 1) {
+				let rowData = rows[0].getData();
+				editFormManager.fillRowInfo(rowData);
+			}
+		},
 		onHide: function() {
 			for (let i=0; i < rows.length; i++) {
 				rows[i].deselect();
@@ -486,7 +494,7 @@ $("#load-lineitem-btn").click(function() {
 });
 
 // Search Inputs
-$("#adsource-section").on("keyup", "#order-search, #line-item-search", function() {
+$("#adsource-section, #waterfall-section").on("keyup", "#waterfall-search, #order-search, #line-item-search", function() {
 	let searchInPutId = $(this).attr('id');
 	let value = $(this).val().trim();
 
@@ -494,11 +502,37 @@ $("#adsource-section").on("keyup", "#order-search, #line-item-search", function(
 	let filterTargetColumns;
 
 	switch(searchInPutId) {
+		case "waterfall-search":
+			table = WaterfallTable;
+			filterTargetColumns = [
+				{ field: "name", type: "like", value },
+				{ field: "key", type: "like", value },
+				{ field: "type", type: "like", value },
+				{ field: "networkType", type: "like", value },
+				{ field: "status", type: "like", value },
+				{ field: "overrideFields", type: "like", value },
+				{ field: "includeGeoTargeting", type: "like", value },
+				{ field: "targetedCountries", type: "like", value },
+				{ field: "targetedRegions", type: "like", value },
+				{ field: "targetedCities", type: "like", value },
+				{ field: "targetedZipCodes", type: "like", value },
+				{ field: "keywords", type: "like", value },
+				{ field: "bid", type: "like", value },
+				{ field: "priority", type: "like", value },
+				{ field: "orderName", type: "like", value },
+			];
+			break;
 		case "line-item-search":
 			table = LineItemTable;
 			filterTargetColumns = [
 				{ field: "name", type: "like", value },
-				{ field: "key", type: "like", value }
+				{ field: "key", type: "like", value },
+				{ field: "type", type: "like", value },
+				{ field: "status", type: "like", value },
+				{ field: "networkType", type: "like", value },
+				{ field: "orderName", type: "like", value },
+				{ field: "priority", type: "like", value },
+				{ field: "bid", type: "like", value }
 			];
 			break;
 		case "order-search":
@@ -574,9 +608,10 @@ $("#close-add-network").click(function() {
 	// Enable grouping
 	WaterfallTable.setGroupBy("priority");
 
-	// If there was selected line items in the add mode, show edit mode (trigger row selectionchanged event)
+	// If there was selected line items in the add mode, show edit mode (manually trigger row selectionchanged event)
 	let selectedRows = WaterfallTable.getSelectedRows();
 	if (selectedRows.length > 0) {
+		selectedRows[0].toggleSelect();
 		selectedRows[0].toggleSelect();
 	}
 });

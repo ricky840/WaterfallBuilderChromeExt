@@ -199,14 +199,19 @@
 						<!-- Add line items -->
 						<button id="add-line-item-btn" class="ui button tiny right floated mopub-button-color mopub-button-radius waterfall-filter">Add New</button>
 
+						<!-- Search items -->
+					  <div class="ui icon input small waterfall-filter" style="float: right; margin-right: 5px;">
+					 	  <input type="text" placeholder="Search.." id="waterfall-search" class="mopub-input-search">
+					 	  <i class="search icon"></i>
+					  </div>
+
 						<!-- Waterfall Table -->
-						<div class="loader-wrapper loader-waterfall-table">
+						<div class="loader-wrapper loader-waterfall-table" style="width: 100%;">
 							<div class="ui top aligned inverted dimmer">
 								<div class="ui loader"></div>
 							</div>
 							<div id="waterfall-adunit"></div>
 						</div>
-						<!-- <button id="delete&#45;selected" class="ui button tiny mopub&#45;button&#45;color mopub&#45;button&#45;radius">Deassign</button> -->
 					</div> <!-- Waterfall section end -->
 
 					<!-- Lineitem section -->
@@ -254,9 +259,17 @@
 								</div>
 							</div>
 						</div>
+						<div class="ui checkbox show-key-checkbox lineitem-filter">
+							<input type="checkbox" name="show-key">
+							<label>Show Key</label>
+						</div>
+					  <div class="ui icon input small lineitem-filter" style="float: right;">
+					 	  <input type="text" placeholder="Search line item.." id="line-item-search" class="mopub-input-search">
+					 	  <i class="search icon"></i>
+					  </div>
 						<button class="lineitem-action-buttons ui button tiny mopub-button-color mopub-button-radius" action="duplicate" style="display: none;">Duplicate</button>	
 						<button class="lineitem-action-buttons ui button tiny mopub-button-color mopub-button-radius" action="assign" style="display: none;">Assign</button>	
-						<div id="loader-lineitem-table">
+						<div id="loader-lineitem-table" style="width: 100%;">
 							<div class="ui top aligned inverted dimmer">
 								<div class="ui loader"></div>
 							</div>
@@ -283,8 +296,12 @@
 								</div>
 							</div>
 						</div>
+						<div class="ui icon input small order-filter" style="float: right;">
+							<input type="text" placeholder="Search order.." id="order-search" class="mopub-input-search">
+							<i class="search icon"></i>
+						</div>
 						<button id="load-lineitem-btn" class="ui button blue tiny mopub-button-color mopub-button-radius" style="display: none;"></button>
-						<div class="loader-wrapper loader-order-table">
+						<div class="loader-wrapper loader-order-table" style="width: 100%;">
 							<div class="ui top aligned inverted dimmer">
 								<div class="ui loader"></div>
 							</div>
@@ -299,7 +316,7 @@
 
 	<footer class="page-footer">
 		<span class="wb-version"></span>
-		<span>@ricky840@gmail.com</span>
+		<span>ricky840@gmail.com</span>
 	</footer>
 
 		<!-- Modals -->

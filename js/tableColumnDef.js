@@ -25,7 +25,7 @@ var tableColumnDef = (function(global) {
 		{ field: 'targetedRegions', title: 'Regions', visible: false, download: true, formatter: f.jsonArrayFormatter, sorter: 'string' },
 		{ field: 'targetedCities', title: 'Cities', visible: false, download: true, formatter: f.jsonArrayFormatter, sorter: 'string' },
 		{ field: 'targetedZipCodes', title: 'ZipCodes', visible: false, download: true, formatter: f.jsonArrayFormatter, sorter: 'string' },
-		{ field: 'keywords', title: 'Keywords', visible: false, download: true, formatter: f.jsonArrayFormatter, sorter: 'string' },
+		{ field: 'keywords', title: 'Keywords', visible: false, download: true, formatter: f.jsonArrayFormatter, sorter: 'string', cellClick: editForm },
 		{ field: 'bid', title: 'CPM', sorter: "number", visible: true, download: true, editor: "number", editable: editCheck, 
 			editorParams: {
 				min: 0,
@@ -88,12 +88,12 @@ var tableColumnDef = (function(global) {
 		{ rowHandle: true, formatter: "handle", headerSort: false, width: 30, minWidth: 30 },
 		{ title: titleCheckBoxLineItem, resizable: false, headerSort: false, width: 30, formatter: f.checkBoxFormatter,	cellClick: checkBoxClick },
 		{ field: 'name', title: 'Name', visible: true, minWidth: 100, formatter: f.lineItemNameFormatter },
+		{ field: 'key', title: 'Key', visible: false },
 		{ field: 'type', title: 'Type', visible: true, minWidth: 110, width: 110, formatter: f.lineItemTypeFormatter },
 		{ field: 'bid', title: 'CPM', sorter: "number", visible: true, minWidth: 100, width: 100, formatter: f.cpmFormatterNotEditable },
 		{ field: 'status', title: 'Status', visible: true, minWidth: 90, width: 90, formatter: f.statusFormatterNotEditable },
 		{ field: 'priority', title: 'Priority', visible: true, width: 90, formatter: f.priorityFormatterNotEditable },
 		{ field: 'networkType', title: 'Network Type', visible: false },
-		{ field: 'key', title: 'Key', visible: false },
 		{ field: 'orderName', title: 'orderName', visible: false },
 	];
 
@@ -183,6 +183,9 @@ var tableColumnDef = (function(global) {
 		$('.ui.modal.edit-modal').modal({
 			duration: 300,
 			autofocus: false,
+			onShow: function() {
+				editFormManager.fillRowInfo(rowData);
+			},
 			onHide: function() {
 				row.deselect();
 				row.reformat();

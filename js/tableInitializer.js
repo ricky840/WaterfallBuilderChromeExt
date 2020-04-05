@@ -3,16 +3,8 @@ var tableInitializer = (function(global) {
 
 	let placeHolder = `<h4 class="ui header grey">No Data Available</h4>`;
 	let lineItemPlaceHolder = `<h4 class="ui header grey">Select order and load line items</h4>`;
-	let lineItemSearchInputHtml = `<span class="count-lineitems-wrapper"></span>
-																 <div class="ui icon input small search-table-wrapper">
-																 	 <input type="text" placeholder="Search line item.." id="line-item-search" class="mopub-input-search">
-																	 <i class="search icon"></i>
-																 </div>`;
-	let orderSearchInputHtml = `<span class="count-orders-wrapper"></span>
-															<div class="ui icon input small search-table-wrapper">
-																<input type="text" placeholder="Search order.." id="order-search" class="mopub-input-search">
-																<i class="search icon"></i>
-															</div>`;
+	let lineItemSearchInputHtml = `<span class="count-lineitems-wrapper"></span>`;
+	let orderSearchInputHtml = `<span class="count-orders-wrapper"></span>`;
 	let waterfallTableFooterHtml = `<span class="count-waterfall-wrapper"></span>`;
 
 	function init() {

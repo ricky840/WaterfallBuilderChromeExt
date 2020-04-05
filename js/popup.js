@@ -137,6 +137,16 @@ $(document).ready(function() {
 	// Init Checkboxes
 	$('.ui.checkbox').checkbox();
 
+	// Show Key Check Box (LineItem Table)
+	$(".ui.checkbox.show-key-checkbox").checkbox({
+    onChecked: function() {
+			LineItemTable.showColumn("key");
+    },
+    onUnchecked: function() {
+			LineItemTable.hideColumn("key");
+    }
+	});
+
 	// Init Edit Form
 	editFormManager.initForm();
 	

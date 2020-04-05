@@ -84,7 +84,7 @@ var tableFormatters = (function(global) {
 		let lineItemKey = cell.getData().key;
 		let value = cell.getValue();
 		let html = "";
-		if (cell.getField() == "overrideFields" || cell.getField() == "targetedCountries") {
+		if (cell.getField() == "overrideFields" || cell.getField() == "targetedCountries" || cell.getField() == "keywords") {
 			if (!_.isEmpty(clearEmpties(value)))	$(cell.getElement()).addClass("editable-cell");
 		}
 

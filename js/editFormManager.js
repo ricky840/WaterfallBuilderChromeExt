@@ -36,6 +36,17 @@ var editFormManager = (function(global) {
 		keywordTagify = new Tagify(input);
 	}
 
+	// load values for selected row (only when there is one row selected)
+	function fillRowInfo(rowData) {
+		$(`#${DOM_ID.cpmId}`).val(rowData.bid);	
+		$(`#${DOM_ID.priorityId}`).dropdown('set selected', rowData.priority);	
+		$(`#${DOM_ID.statusId}`).dropdown('set selected', rowData.status);
+		$(`#${DOM_ID.targetModeId}`).dropdown('set selected', rowData.includeGeoTargeting);
+		$(`#${DOM_ID.targetCountryId}`).dropdown('set exactly', rowData.targetedCountries);
+		keywordTagify.removeAllTags();
+		keywordTagify.addTags(rowData.keywords);
+	}
+
 	function updateNetworkInput(rowData) {
 		let formData = $('#edit-override-form').serializeArray();
 		let parsedInput = {};	
@@ -288,6 +299,7 @@ var editFormManager = (function(global) {
 		initForm: initForm,
 		resetForm: resetForm,
 		parseInput: parseInput,
+		fillRowInfo: fillRowInfo,
 		createNetworkFieldForm: createNetworkFieldForm,
 		updateNetworkInput: updateNetworkInput
   }

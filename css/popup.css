@@ -109,13 +109,6 @@
 	/* box-shadow: none !important; */
 }
 
-/* Search Input Wrapper */
-.search-table-wrapper {
-	width: 200px;
-	float: left;
-}
-
-
 /* Mopub Operation Button Color Override */
 .mopub-ops-button-color {
 	background-color: #fff !important;
