@@ -197,7 +197,7 @@ $("#edit-submit").click(function() {
 		// Update geo targeting
 		if (!_.isEmpty(input.targetMode) && lineItem.type != "marketplace") {
 			lineItem.includeGeoTargeting = input.targetMode;
-			lineItem.targetedCountries = (input.targetMode == "all") ? [] : (input.targetCountries).split(",");
+			lineItem.targetedCountries = (input.targetMode == "all") ? [] : (input.targetCountries).split(",").sort();
 		}
 		// Update keyword targeting
 		if (!_.isEmpty(input.keywords) && lineItem.type != "marketplace") {

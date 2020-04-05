@@ -72,7 +72,7 @@ var editFormManager = (function(global) {
 		for (let i=0; i < formData.length; i++) {
 			switch (formData[i].name) {
 				case "cpm":
-					cpm = formData[i].value.trim();
+					cpm = parseFloat(formData[i].value.trim());
 					break;
 				case "priority":
 					priority = formData[i].value.trim();
@@ -231,16 +231,16 @@ var editFormManager = (function(global) {
 			case "mintegral":
 				html = `
 					<div class="field required">
+						<label>App Key</label>
+						<input type="text" name="network_account_id" value="${network_account_id}">
+					</div>
+					<div class="field required">
 						<label>Ad Unit Id</label>
 						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
 					</div>
 					<div class="field required">
 						<label>App Id</label>
 						<input type="text" name="network_app_id" value="${network_app_id}">
-					</div>
-					<div class="field required">
-						<label>App Key</label>
-						<input type="text" name="network_account_id" value="${network_account_id}">
 					</div>`;
 				break;
 			case "unity":
