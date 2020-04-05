@@ -92,6 +92,26 @@ var addNewLineItem = (function(global) {
 				newLineItem.networkType = "vungle";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
 				break;
+			case "add-mintegral":
+				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
+				newLineItem.networkType = "mintegral";
+				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
+				break;
+			case "add-unity":
+				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
+				newLineItem.networkType = "unity";
+				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
+				break;
+			case "add-verizon":
+				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
+				newLineItem.networkType = "verizon";
+				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
+				break;
+			case "add-yahoo":
+				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
+				newLineItem.networkType = "yahoo";
+				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
+				break;
 			case "add-customsdk":
 				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
 				newLineItem.networkType = "custom_native";

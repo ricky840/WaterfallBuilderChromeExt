@@ -55,7 +55,7 @@ $(document).ready(function() {
         <input type="checkbox" name="${colDefs[i].field}" ${checked}>
         <label>${colDefs[i].title}</label>
       </div>`;
-			$(".scrolling.menu").append(html);
+			$(".column.scrolling.menu").append(html);
 		}
 	}
 
@@ -64,6 +64,70 @@ $(document).ready(function() {
 		action: function(text, value, element) {
 			WaterfallTable.toggleColumn(value);
 			WaterfallTable.redraw(true);
+		}
+	});
+
+	// Type Filter Init
+	for (let key in TYPE_NAME) {
+		let html = `<div class="item" data-value="${key}">${TYPE_NAME[key]}</div>`;
+		$(html).insertAfter($(".header.item-type"));
+	}
+	for (let key in NETWORK_TYPE_NAME) {
+		let html = `<div class="item" data-value="${key}">${NETWORK_TYPE_NAME[key]}</div>`;
+		$(html).insertBefore($(".divider.line-item-type"));
+	}
+
+	// Type Filter Action
+	$("#type-filter, #type-filter-lineitem").dropdown({
+		onChange: function(value, text, selectedItem) {	
+			let table;
+
+			let id = $(selectedItem).parents(".dropdown").attr("id");
+			switch (id) {
+				case "type-filter":
+					table = WaterfallTable;
+				break;
+				case "type-filter-lineitem":
+					table = LineItemTable;
+					break;
+				default:
+					return; // do nothing
+					break;
+			}
+
+			if (value in TYPE_NAME) {
+				filterType = "item-type";
+			} else if (value in NETWORK_TYPE_NAME) {
+				filterType = "network-type";
+			} else if (value == "clear-filter") {
+				filterType = value;
+			} else {
+				// do nothing
+				return false;
+			}
+
+			table.blockRedraw();
+			let filters = table.getFilters();
+
+			// Remove existing filters
+			for (let i=0; i < filters.length; i++) {
+				if (filters[i].field == "type" || filters[i].field == "networkType") {
+					_.pullAt(filters, i);
+				}
+			}
+			if (filterType == "item-type") {
+				filters.push({field: "type", type: "=", value: value});
+				table.setFilter(filters);
+			} else if (filterType == "network-type") {
+				filters.push({field: "networkType", type: "=", value: value});
+				table.setFilter(filters);
+			} else if (filterType == "clear-filter") {
+				table.setFilter(filters);
+				$(`#${id}`).dropdown('restore defaults');
+			} else {
+				// do nothing
+			}
+			table.restoreRedraw();
 		}
 	});
 

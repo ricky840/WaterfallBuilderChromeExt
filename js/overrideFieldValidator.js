@@ -90,6 +90,42 @@ var overrideFieldValidator = (function(global) {
 					delete overrideFields.network_account_id;
 				}
 				break;
+			case "mintegral":
+				if (_.isEmpty(value.network_account_id) || _.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
+					throw new Error(`${networkName} requires <b>network_adunit_id (unit id)</b>, <b>network_app_id (app id)</b>, <b>network_account_id (app key)</b>`);
+				} else {
+					overrideFields.network_account_id = value.network_account_id; // required
+					overrideFields.network_adunit_id = value.network_adunit_id; // required
+					overrideFields.network_app_id = value.network_app_id; // required
+				}
+				break;
+			case "unity":
+				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
+					throw new Error(`${networkName} requires <b>network_adunit_id (placement id)</b>, <b>network_app_id (game id)</b>`);
+				} else {
+					overrideFields.network_adunit_id = value.network_adunit_id; // required
+					overrideFields.network_app_id = value.network_app_id; // required
+					delete overrideFields.network_account_id;
+				}
+				break;
+			case "verizon":
+				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
+					throw new Error(`${networkName} requires <b>network_adunit_id (placement id)</b>, <b>network_app_id (site id)</b>`);
+				} else {
+					overrideFields.network_adunit_id = value.network_adunit_id; // required
+					overrideFields.network_app_id = value.network_app_id; // required
+					delete overrideFields.network_account_id;
+				}
+				break;
+			case "yahoo":
+				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
+					throw new Error(`${networkName} requires <b>network_adunit_id (adunit)</b>, <b>network_app_id (api key)</b>`);
+				} else {
+					overrideFields.network_adunit_id = value.network_adunit_id; // required
+					overrideFields.network_app_id = value.network_app_id; // required
+					delete overrideFields.network_account_id;
+				}
+				break;
 			case "custom_native":
 				if (_.isEmpty(value.custom_event_class_name) || _.isEmpty(value.custom_event_class_data)) {
 					throw new Error(`${networkName} requires <b>custom_event_class_name</b> and <b>custom_event_class_data</b>`);

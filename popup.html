@@ -101,17 +101,21 @@
 								<i class="dropdown icon"></i>
 							</div>
 							<div>
-								<button id="add-mpx" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>MPX</button>
-								<button id="add-admob" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>AdMob</button>
-								<button id="add-adcolony" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>AdColony</button>
-								<button id="add-applovin" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>AppLovin</button>
-								<button id="add-chartboost" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Chartboost</button>
-								<button id="add-facebook" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Facebook</button>
-								<button id="add-ironsource" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>IronSource</button>
-								<button id="add-tapjoy" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>TapJoy</button>
-								<button id="add-vungle" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Vungle</button>
-								<button id="add-customsdk" class="ui button tiny mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Custom SDK</button>
-								<div id="add-direct" class="ui labeled icon dropdown button tiny mopub-basic-button-color mopub-button-radius">
+								<button id="add-mpx" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>MPX</button>
+								<button id="add-admob" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>AdMob</button>
+								<button id="add-adcolony" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>AdColony</button>
+								<button id="add-applovin" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>AppLovin</button>
+								<button id="add-chartboost" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Chartboost</button>
+								<button id="add-facebook" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Facebook</button>
+								<button id="add-mintegral" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Mintegral</button>
+								<button id="add-ironsource" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>IronSource</button>
+								<button id="add-tapjoy" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>TapJoy</button>
+								<button id="add-unity" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Unity</button>
+								<button id="add-vungle" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Vungle</button>
+								<button id="add-verizon" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Verizon</button>
+								<button id="add-yahoo" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Yahoo</button>
+								<button id="add-customsdk" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Custom SDK</button>
+								<div id="add-direct" class="ui labeled icon dropdown button mini mopub-basic-button-color mopub-button-radius add-network">
 									<i class="plus icon"></i>
 									<span class="text">Direct</span>
 									<div class="menu">
@@ -151,6 +155,31 @@
 							</div>
 						</div>
 
+						<!-- Type Filter -->
+						<div id="type-filter" class="ui labeled dropdown icon button tiny mopub-ops-button-color mopub-button-radius waterfall-filter">
+							<i class="filter icon"></i>
+							<span class="text">Filter Type</span>
+							<div class="menu">
+								<div class="ui icon search input">
+									<i class="search icon"></i>
+									<input type="text" name="Search" placeholder="Search...">
+								</div>
+								<div class="item" data-value="clear-filter">
+									<i class="close icon"></i>
+									Clear Filter
+								</div>
+								<div class="type scrolling menu">
+									<div class="header network-type">
+										Filter by network
+									</div>
+									<div class="divider line-item-type"></div>
+									<div class="header item-type">
+										Filter by item type
+									</div>
+								</div>
+							</div>
+						</div>
+
 						<!-- Column Selector -->
 						<div id="column-selector" class="ui labeled dropdown icon button tiny mopub-ops-button-color mopub-button-radius waterfall-filter">
 							<i class="dropdown icon"></i>
@@ -160,7 +189,7 @@
 									<i class="search icon"></i>
 									<input type="text" name="Search" placeholder="Search&hellip;">
 								</div>
-								<div class="scrolling menu"></div>
+								<div class="column scrolling menu"></div>
 							</div>
 						</div>
 
@@ -198,6 +227,30 @@
 								</div>
 								<div class="item" data-value="archived">
 									<div class="ui gray empty circular label tiny"></div>Archived
+								</div>
+							</div>
+						</div>
+						<!-- Type Filter -->
+						<div id="type-filter-lineitem" class="ui labeled dropdown icon button tiny mopub-ops-button-color mopub-button-radius lineitem-filter">
+							<i class="filter icon"></i>
+							<span class="text">Filter Type</span>
+							<div class="menu">
+								<div class="ui icon search input">
+									<i class="search icon"></i>
+									<input type="text" name="Search" placeholder="Search...">
+								</div>
+								<div class="item" data-value="clear-filter">
+									<i class="close icon"></i>
+									Clear Filter
+								</div>
+								<div class="type scrolling menu">
+									<div class="header network-type">
+										Filter by network
+									</div>
+									<div class="divider line-item-type"></div>
+									<div class="header item-type">
+										Filter by item type
+									</div>
 								</div>
 							</div>
 						</div>
