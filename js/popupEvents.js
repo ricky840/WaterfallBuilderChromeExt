@@ -361,7 +361,7 @@ $("#review-submit").click(function() {
 	}).modal('hide');
 });
 
-$("review-cancel").click(function() {
+$("#review-cancel").click(function() {
 	$('.ui.modal.review-change-modal').modal('hide');
 });
 
@@ -487,12 +487,50 @@ $("#load-lineitem-btn").click(function() {
 
 // Search Inputs
 $("#adsource-section").on("keyup", "#order-search, #line-item-search", function() {
-	let table = ($(this).attr('id') == "line-item-search") ? LineItemTable : OrderTable;
+	let searchInPutId = $(this).attr('id');
 	let value = $(this).val().trim();
+
+	let table;
+	let filterTargetColumns;
+
+	switch(searchInPutId) {
+		case "line-item-search":
+			table = LineItemTable;
+			filterTargetColumns = [
+				{ field: "name", type: "like", value },
+				{ field: "key", type: "like", value }
+			];
+			break;
+		case "order-search":
+			table = OrderTable;
+			filterTargetColumns = [
+				{ field: "name", type: "like", value },
+				{ field: "key", type: "like", value }
+			];
+			break;
+		default:
+			// do nothing
+	}
+
+	// Apply filter
+	let currentFilters = table.getFilters();
+	let keepFilters = [];
 	if (!_.isEmpty(value)) {
-		table.setFilter("name", "like", value);
+		for (let i=0; i < currentFilters.length; i++) {
+			if(!_.isArray(currentFilters[i])) {
+				keepFilters.push(currentFilters[i]);
+			}
+		}
+		keepFilters.push(filterTargetColumns);
+		table.setFilter(keepFilters);
 	} else {
-		table.clearFilter(true);
+		for (let i=0; i < currentFilters.length; i++) {
+			if(!_.isArray(currentFilters[i])) {
+				// Remove OR filters and keep AND filters
+				keepFilters.push(currentFilters[i]);
+			}
+		}
+		(keepFilters.length == 0) ? table.clearFilter(true) : table.setFilter(keepFilters);
 	}
 });
 

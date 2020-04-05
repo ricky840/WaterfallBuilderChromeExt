@@ -657,3 +657,8 @@ unitstatusinactive {
 	color: #1da1f2 !important;
 	text-decoration: underline !important;
 }
+
+/* Column header height (give space at the bottom to adjust width easy) */
+.tabulator .tabulator-header .tabulator-col {
+	height: 55px;
+}

@@ -76,7 +76,7 @@ $(document).ready(function() {
 	// Init Edit Form
 	editFormManager.initForm();
 	
-	// Copy Mode (Copy waterfall form)
+	// Copy(Duplicate) Mode (In Copy waterfall form)
 	$("#copy-mode").dropdown({ 
 		showOnFocus: false,
 		onChange: function(value, text, selectedItem) {
@@ -114,66 +114,70 @@ $(document).ready(function() {
 	}
 
 	// Status Filter Init
-	$('#status-filter').dropdown({
+	$('#status-filter, #status-filter-lineitem, #status-filter-order').dropdown({
 		onChange: function(value, text, element) {
-			switch (value) {
-				case "running":
-					WaterfallTable.setFilter("status", "=", "running");
-					break;
-				case "paused":
-					WaterfallTable.setFilter("status", "=", "paused");
-					break;
-				case "archived":
-					WaterfallTable.setFilter("status", "=", "archived");
-					break;
-				default:
-					WaterfallTable.clearFilter(true);
-					break;
-			}
-		}
-	});
-	// $("#status-filter").dropdown('set selected', "running");
+			let table;
 
-	$('#status-filter-lineitem').dropdown({
-		onChange: function(value, text, element) {
-			switch (value) {
-				case "running":
-					LineItemTable.setFilter("status", "=", "running");
+			let id = $(element).parents(".dropdown").attr("id");
+			switch (id) {
+				case "status-filter":
+					table = WaterfallTable;
+				break;
+				case "status-filter-lineitem":
+					table = LineItemTable;
 					break;
-				case "paused":
-					LineItemTable.setFilter("status", "=", "paused");
-					break;
-				case "archived":
-					LineItemTable.setFilter("status", "=", "archived");
+				case "status-filter-order":
+					table = OrderTable;
 					break;
 				default:
-					LineItemTable.clearFilter(true);
+					return; // do nothing
 					break;
 			}
-		}
-	});
-	// $("#status-filter-lineitem").dropdown('set selected', "running");
 
-	$('#status-filter-order').dropdown({
-		onChange: function(value, text, element) {
+			table.blockRedraw();
+			let filters = table.getFilters();
+
+			// Remove existing status filter
+			for (let i=0; i < filters.length; i++) {
+				if (filters[i].field == "status") {
+					_.pullAt(filters, i);
+				}
+			}
+
+			// New status
+			let statusFilter = {};
 			switch (value) {
 				case "running":
-					OrderTable.setFilter("status", "=", "running");
+					statusFilter = {field: "status", type: "=", value: "running"};
 					break;
 				case "paused":
-					OrderTable.setFilter("status", "=", "paused");
+					statusFilter = {field: "status", type: "=", value: "paused"};
 					break;
 				case "archived":
-					OrderTable.setFilter("status", "=", "archived");
+					statusFilter = {field: "status", type: "=", value: "archived"};
 					break;
-				default:
-					OrderTable.clearFilter(true);
+				default: // all
+					statusFilter = {};
 					break;
 			}
+
+			if (!_.isEmpty(statusFilter)) {
+				filters.push(statusFilter);
+				table.setFilter(filters);
+			} else {
+				if (filters.length == 0) {
+					table.clearFilter(true);
+				} else {
+					table.setFilter(filters); // update with status filter removed.
+				}
+			}
+
+			table.restoreRedraw();
 		}
 	});
+
 	// $("#status-filter-order").dropdown('set selected', "running");
-
+	
 });
 
 
