@@ -188,7 +188,7 @@ $("#edit-submit").click(function() {
 	for (let i=0; i < selectedRowData.length; i++) {
 		let lineItem = selectedRowData[i];
 		// Update each lineItem
-		if (!_.isEmpty(input.cpm)) lineItem.bid = input.cpm;
+		if (!_.isEmpty(input.cpm.toString())) lineItem.bid = input.cpm;
 		if (!_.isEmpty(input.status)) lineItem.status = input.status;
 		// Do not update marketplace
 		if (!_.isEmpty(input.priority) && lineItem.type != "marketplace") {
