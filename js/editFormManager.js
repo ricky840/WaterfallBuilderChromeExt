@@ -198,12 +198,12 @@ var editFormManager = (function(global) {
 			case "ironsource":
 				html = `
 					<div class="field required">
-						<label>AdUnit Id</label>
-						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
-					</div>
-					<div class="field required">
 						<label>App Key</label>
 						<input type="text" name="network_app_id" value="${network_app_id}">
+					</div>
+					<div class="field">
+						<label>Instance Id (Optional)</label>
+						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
 					</div>`;
 				break;
 			case "tapjoy":
