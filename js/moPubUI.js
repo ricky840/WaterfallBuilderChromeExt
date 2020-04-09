@@ -20,7 +20,9 @@ var moPubUI = (function(global) {
 		loadingIndicator.setTotalBarLoader(numberOfChangesToUpdate);
 		loadingIndicator.showBarLoader();
 		$(".updating-message").html(`Updating MoPub UI, remaining ${numberOfChangesToUpdate}`);
-		$(".all-content-wrapper").dimmer("show");
+
+		// Only show when dimmer is not active
+		if (!$(".all-content-wrapper").dimmer("is active")) $(".all-content-wrapper").dimmer("show");
 
     for (let lineItemKey in changes) {
       let action = changes[lineItemKey].action;

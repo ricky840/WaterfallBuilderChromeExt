@@ -7,8 +7,14 @@ var waterfallDuplicator = (function(global) {
 		let forEachResponse = function(lineItem) {
 			if (lineItem) lineItems.push(lineItem);
 			numberOfRemainingLineItems--;
+			$(".updating-message").html(`Preparing.. remaining ${numberOfRemainingLineItems}`);
 			if (numberOfRemainingLineItems == 0) callback(lineItems);
 		}
+
+		// Show loaders
+		$(".updating-message").html(`Preparing.. remaining ${numberOfRemainingLineItems}`);
+		$(".all-content-wrapper").dimmer("show");
+
 		for (let i=0; i < lineItemKeys.length; i++) {
 			lineItemManager.getLineItemFromMoPub(lineItemKeys[i], forEachResponse);
 		}
