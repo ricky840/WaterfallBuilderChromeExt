@@ -549,9 +549,12 @@ $('input[type="file"]').on('change', function() {
 	$(this).val("");
 	$(".loader-waterfall-table").dimmer("show");
 
-	csvManager.processUpload(file, function() {
-		$(".loader-waterfall-table").dimmer("hide");
-	});
+	// Give it a short delay
+	setTimeout(function() { 
+		csvManager.processUpload(file, function() {
+			$(".loader-waterfall-table").dimmer("hide");
+		});
+	}, 200);
 });
 
 // Add new line item button
