@@ -118,6 +118,7 @@ $("#delete-selected").click(function() {
 		let rowData = rows[i].getData();
 		if (rowData.key in orgLineItems) {
 			// Existing line item, get line item details from MoPub UI and update orgLineItem.
+			// Existing line item doesn't have adunitkeys field
 			lineItemManager.getLineItemFromMoPub(rowData.key, function(lineItem) {
 
 				loadingIndicator.increaseBar();
@@ -125,7 +126,6 @@ $("#delete-selected").click(function() {
 				$(".updating-message").html(`Deleting(deassign) line items, remaining ${numberOfItemsToDelete}`);
 
 				if (lineItem) {
-					lineItemManager.cacheLineItem([lineItem]);	
 					// See if the current ad unit is only one assigned which can't be deassigned. archive instead
 					if (lineItem.adUnitKeys.length == 1) {
 						rows[i].update({status: "archived"});
@@ -137,6 +137,8 @@ $("#delete-selected").click(function() {
 						});
 					} else {
 						// line item has multiple ad unit assigned. remove from table for now. Later when submit, this will be show as deleted in changes.
+						// In order to show up as deleted, orgLineItems should be updated, especially adunitkeys field.
+						lineItemManager.cacheLineItem([lineItem]);
 						rows[i].delete();	
 					}
 				}
@@ -188,7 +190,9 @@ $("#edit-submit").click(function() {
 	for (let i=0; i < selectedRowData.length; i++) {
 		let lineItem = selectedRowData[i];
 		// Update each lineItem
-		if (!_.isEmpty(input.cpm.toString())) lineItem.bid = input.cpm;
+		if (input.cpm > 0) {
+			lineItem.bid = input.cpm;
+		}
 		if (!_.isEmpty(input.status)) lineItem.status = input.status;
 		// Do not update marketplace
 		if (!_.isEmpty(input.priority) && lineItem.type != "marketplace") {
@@ -232,6 +236,7 @@ $("#copy-waterfall").click(function() {
 	$("#copy-only-selected-count").html("");
 	$(".copy-mode-dropdown").dropdown('restore default value');
 	$(".copy-form-order-list").dropdown('clear');
+	$(".adunit-select-copy-form").dropdown('clear');
 	notifier.clearCopyForm();
 	
 	// If there was selected line items, check selected checkbox
@@ -240,44 +245,14 @@ $("#copy-waterfall").click(function() {
 		$("#copy-only-selected").prop('checked', true);
 		$("#copy-only-selected-count").html(`(${selectedRows.length} items selected)`);
 	}
-	
+
 	$('.ui.modal.copy-waterfall-modal').modal('show');
-	let input = $("#tagify-adunits")[0];
-	adUnitManager.loadAdUnits("list-name-id", function(adUnitList) {
-		if (adUnitList) {
-			if (AdUnitTagify == undefined) {
-				// Initialize Tagify
-				AdUnitTagify = new Tagify(input, {
-					mode: "select",
-					enforceWhitelist: true,
-					whitelist: adUnitList,
-					keepInvalidTags: false,
-					placeholder: "Search ad unit..",
-					skipInvalid: true,
-					dropdown: {
-						position: "all",
-						maxItems: Infinity,
-						// classname: "customSuggestionsList",
-						closeOnSelect: true
-					},
-				});
-				// AdUnitTagify.dropdown.show.call(AdUnitTagify); // load the list
-				// AdUnitTagify.DOM.scope.parentNode.appendChild(AdUnitTagify.DOM.dropdown);
-			} else {
-				// If already initialized, just remove previous tag.
-				AdUnitTagify.removeAllTags();
-			}
-		} else {
-			console.log("Error loading adunits");
-			$('.ui.modal.copy-waterfall-modal').modal('hide');
-		}
-	});
 });
 
 $("#copy-submit").click(function() {
 	let copyMode = $('#copy-mode').val();
 	let copyOnlySelected = $('#copy-only-selected').is(':checked');
-	let selectedValues = $("#tagify-adunits").val();
+	let selectedValues = $('.adunit-select-copy-form').dropdown('get value');
 	let lineItems = (copyOnlySelected) ? WaterfallTable.getSelectedData() : WaterfallTable.getData();
 	let selectedOrderKey = $(".copy-form-order-list").dropdown("get value");
 	let selectedOrderName = $(".copy-form-order-list").dropdown("get text");
@@ -289,43 +264,37 @@ $("#copy-submit").click(function() {
 		console.log("No selected line items but duplicate only selected line items option was on");
 		return false;
 	}
-	try {
-		selectedValues = JSON.parse(selectedValues);
-	} catch (error) {
+
+	let keyRegex = /^[0-9|a-z]{32}$/;
+	if (!keyRegex.test(selectedValues)) {
 		notifier.copyFormShow({header: "Input Validation Error", message: "Target ad unit was not selected. Please select target ad unit.", type: "negative"});
 		console.log("No ad unit was selected");
 		return false;
 	}
+
 	if (copyMode == "in_one_existing_order" && _.isEmpty(selectedOrderKey.trim())) {
 		notifier.copyFormShow({header: "Input Validation Error", message: "Please select Order for line items", type: "negative"});
 		console.log("Order is not selected");
 		return false;
 	}
 
-	let adUnitIds = [];
-	for (let i=0; i < selectedValues.length; i++) {
-		let eachAdUnitNameAndKey = selectedValues[i].value;
-		adUnitIds.push(eachAdUnitNameAndKey.match(/.*\(([0-9|a-z]{32})\).*/)[1]);
-	}
+	$('.ui.modal.copy-waterfall-modal').modal('hide');
 
-	$('.ui.modal.copy-waterfall-modal').modal({
-		onHide: function() {
-			let selectedOrderInfo = { orderKey: selectedOrderKey, orderName: selectedOrderName };
-			waterfallDuplicator.duplicate(adUnitIds, lineItems, copyMode, selectedOrderInfo, function() {
-				$(".all-content-wrapper").dimmer("hide");
-				chrome.runtime.sendMessage({
-					type: "chromeNotification", 
-					title: "Duplicate Completed", 
-					message: "Click here to load the duplicated ad unit in MoPub UI",
-					id: "adUnitId-" + adUnitIds[0]
-				});
-				loadWaterfall(AdUnitId, function() {
-					// Hmm.. do nothing for now
-					// Should I just release checkboxes. (once copy object then should update)
-				});
-			});
-		}
-	}).modal('hide');
+	let adUnitIds = [selectedValues];
+	let selectedOrderInfo = { orderKey: selectedOrderKey, orderName: selectedOrderName };
+	waterfallDuplicator.duplicate(adUnitIds, lineItems, copyMode, selectedOrderInfo, function() {
+		$(".all-content-wrapper").dimmer("hide");
+		chrome.runtime.sendMessage({
+			type: "chromeNotification", 
+			title: "Duplicate Completed", 
+			message: "Click here to load the duplicated ad unit in MoPub UI",
+			id: "adUnitId-" + adUnitIds[0]
+		});
+		loadWaterfall(AdUnitId, function() {
+			// Hmm.. do nothing for now
+			// Should I just release checkboxes. (once copy object then should update)
+		});
+	});
 });
 
 // Apply to MoPub
@@ -701,6 +670,12 @@ function updateLineItemTable(orderKey) {
 
 function updateAdunitInfo(responseObj) {
 	let adUnitId = (responseObj.key).toString();
+	let adUnitName = (responseObj.name).toString();
+
+	// Set global AdUnitId variable
+	AdUnitId = adUnitId;
+	AdUnitName = adUnitName;
+
 	let domToResMapping = {
 		"info-adunit-name": (responseObj.name).toString(),
 		"info-adunit-id": `<a href="https://app.mopub.com/ad-unit?key=${adUnitId}" target="_blank">${adUnitId}</a>`
@@ -719,9 +694,6 @@ function loadWaterfall(adunitId, callback) {
   let params = `?key=${adunitId}&includeAdSources=true`;
   let url = BASE_URL + GET_ADUNIT + params;
   let request = { url: url };
-
-	// Set global AdUnitId variable
-	AdUnitId = adunitId;
 
 	// Reset caches
 	orderManager.removeCache();
@@ -772,16 +744,16 @@ function loadWaterfall(adunitId, callback) {
 		});
 		$(".loader-waterfall-table").dimmer("hide");
 
-		callback();
+		callback(true);
   }).catch(function(error) {
 		notifier.show({
 			header: "Error occured when loading the waterfall. Please make sure to login to MoPub UI or try refreshing the page.",
 			type: "negative",
 			message: `${error.responseText}`
 		});
-    console.log(error.responseText);
+    console.log(error);
 		$(".loader-wrapper").dimmer("hide");
-		callback();
+		callback(false);
   });
 }
 

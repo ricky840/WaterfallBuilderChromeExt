@@ -13,13 +13,20 @@ var adUnitManager = (function(global) {
 			let format = adUnits[i].format.capitalize();
 			let key = adUnits[i].key;
       let status = (adUnits[i].active == true) ? "unitstatusactive" : "unitstatusinactive";
-			let value = `<${ostag}>${os}</${ostag}><unitformat>${format}</unitformat><unitname>${adUnitName}</unitname><appname>${appName}</appname><${status}></${status}><unitkey>(${key})</unitkey>`;
-			let searchBy = `${os} ${appName} ${adUnitName} ${format} ${key}`;
+
+			let value = `<${ostag}>${os}</${ostag}>`;
+			value += `<unitformat class="right floated">${format}</unitformat>`;
+			value += `<unitname>${adUnitName}</unitname>`;
+			value += `<appname>${appName}</appname>`;
+			value += `<${status}></${status}>`;
+			value += `<unitkey>(${key})</unitkey>`;
+
 			formatted.push({
 				value: value,
-				searchBy: searchBy
+				key: key
 			});
 		}
+
 		return formatted;
 	}
 

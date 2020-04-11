@@ -24,9 +24,6 @@ var AdUnitName;
 // WaterfallTable Grouping Option Flag
 WaterfallGrouping = true;
 
-// Adunit Tagify (Copy Form, need to fix this later)
-var AdUnitTagify;
-
 // Number of changed line items
 var NumberOfUpdatedLineItems = 0;
 

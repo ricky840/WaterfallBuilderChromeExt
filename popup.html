@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset="utf-8">
-		<title>Waterfall Builder for MoPub Twitter</title>
+		<title>Waterfall Builder for MoPub</title>
     <link rel="stylesheet" type="text/css" href="css/semantic.css">
     <link rel="stylesheet" type="text/css" href="css/table-css/semantic-ui/tabulator_semantic-ui.css">
     <link rel="stylesheet" type="text/css" href="css/tagify.css">
@@ -10,22 +10,26 @@
 	</head>
 	<body>
   <div class="body-wrapper">
+
 		<!-- Menu -->
-		<div class="ui tiny menu inverted no-radius mopub-menu borderless">
+		<div class="ui tiny menu inverted stackable no-radius mopub-menu borderless">
 			<a class="header item" href="">
 				<h4 style="margin-bottom: 0px;">Waterfall Builder for</h4>
 				<div class="mopub-logo-menu"></div>
 			</a>
-			<div class="horizontally fitted item" style="width: 50%;">
-				<div style="background: white; color: black; width: 100%; font-size: 1.2em;">
-					<input id="adunit-selector" class='selectMode'>
+			<div class="item" style="width: 55%;">
+				<div class="ui search selection scrolling dropdown adunit-select" style="width: 100%;">
+					<input type="hidden" name="ad-unit">
+					<i class="dropdown icon"></i>
+					<div class="default text"></div>
+					<div class="menu"></div>
 				</div>
 			</div>
-			<a class="item" href="https://app.mopub.com/account" target="_blank">
-				<div class="ui orange label logged-in-label">Logged in as</div>
-				<div id="logged-in-account" class="logged-in-account"></div>
-			</a>
 			<div class="right menu">
+				<a class="item" href="https://app.mopub.com/account" target="_blank">
+					<div class="ui orange label logged-in-label">Logged in as</div>
+					<div id="logged-in-account" class="logged-in-account"></div>
+				</a>
 				<a class="item">
 					<div id="add-adsource" class="toggle-line-item-bar">
 						<i class="bars icon"></i>
@@ -368,7 +372,12 @@
 					</div>
 					<div class="field">
 						<label>Select Target Ad Unit</label>
-						<input id="tagify-adunits">
+						<div class="ui fluid search selection scrolling dropdown adunit-select-copy-form error">
+							<input type="hidden" name="ad-unit">
+							<i class="dropdown icon"></i>
+							<div class="default text"></div>
+							<div class="menu"></div>
+						</div>
 					</div>
 				</form>
 			</div>
@@ -456,7 +465,7 @@
 					</div>
 					<div class="inline field">
 						<label>Rate</label>
-						$ <input id="edit-cpm" type="number" name="cpm" min="0.00" step="0.1" max="3000" placeholder="00.00"> CPM
+						$ <input id="edit-cpm" type="number" name="cpm" min="0.01" step="0.1" max="3000" placeholder="00.00"> CPM
 					</div>
 					<div class="field">
 						<label>Priority</label>

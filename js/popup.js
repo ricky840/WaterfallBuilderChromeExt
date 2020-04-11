@@ -8,33 +8,62 @@ $(document).ready(function() {
 	// Hide line item bar first
 	$("#add-adsource").trigger('click');
 
-	// Load AdUnits
+	// Load Ad Units
 	adUnitManager.loadAdUnits("list-name-id", function(adUnitList) {
 		if (adUnitList) {
-			$("#info-adunit-name").html("Please select ad unit");
-			let input = $("#adunit-selector")[0];
-			let menuAdUnitTagify = new Tagify(input, {
-				mode: "select",
-				enforceWhitelist: true,
-				whitelist: adUnitList,
-				keepInvalidTags: false,
-				placeholder: "Search ad unit..",
-				skipInvalid: true,
-				dropdown: {
-					position: "all",
-					maxItems: Infinity,
-					closeOnSelect: true
+			$("#info-adunit-name").html("Select ad unit");
+			let adUnitData = [];
+			for (let i=0; i < adUnitList.length; i++) {
+				adUnitData.push({
+					name: adUnitList[i].value,
+					value: adUnitList[i].key
+				});
+			}
+			// ad unit list in main menu
+			$(".adunit-select").dropdown({
+				clearable: true,
+				placeholder: "Search ad unit or key..",
+				values: adUnitData,
+				fullTextSearch: "exact",
+				sortSelect: true,
+				onChange: function (value, text, element) {
+					// Validate Id
+					let keyRegex = /^[0-9|a-z]{32}$/;
+					if (keyRegex.test(value)) {
+						$($(this)[0]).find("input").blur();
+						console.log(`Loading waterfall for ad unit ${value}`);
+						loadWaterfall(value, function(result) {
+							if (result) {
+								$(".button, .search-table-wrapper").removeClass('disabled');
+								console.log("Eanbling all buttons");
+							}
+						});
+					}				
 				}
 			});
-			menuAdUnitTagify.on('add', function(e) {
-				let selectedValue = e.detail.data.value;
-				let adUnitId = selectedValue.match(/.*\(([0-9|a-z]{32})\).*/)[1];
-				AdUnitName = selectedValue.match(/.*<unitname>(.*)<\/unitname>.*/)[1];
-				console.log(`Loading waterfall for ad unit ${selectedValue}`);
-				loadWaterfall(adUnitId, function() {
-					$(".button, .search-table-wrapper").removeClass('disabled');
-					console.log("Eanbling all buttons");
-				});
+			// ad unit list in copy form
+			$(".adunit-select-copy-form").dropdown({
+				clearable: true,
+				placeholder: "Search ad unit or key..",
+				values: adUnitData,
+				fullTextSearch: "exact",
+				sortSelect: true,
+				direction: "upward",
+				onShow: function() {
+					$($(this)[0]).removeClass("error");
+				},
+				onChange: function (value, text, element) {
+					dropdownDomJObj = $($(this)[0]);
+					// Validate Id
+					let keyRegex = /^[0-9|a-z]{32}$/;
+					if (keyRegex.test(value)) {
+						dropdownDomJObj.find("input").blur();
+					} else {
+						if (!dropdownDomJObj.dropdown('is visible')) {
+							dropdownDomJObj.addClass("error");
+						}
+					}
+				}
 			});
 		}
 	});

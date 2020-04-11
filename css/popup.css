@@ -367,7 +367,7 @@
 	font-weight: bold;
 	font-size: 1.1em !important;
 	word-break: break-all;
-	width: 238px;
+	/* width: 238px; */
 }
 .logged-in-account-desc {
 	font-weight: normal;
@@ -391,13 +391,24 @@
 	margin: 0px !important;
 }
 
-/* for adunit list in tagify */
+/* for adunit list in main menu */
+.adunit-select.dropdown > .search {
+	height: 100% !important;
+}
+.adunit-select.dropdown {
+	font-size: 1.2em; 
+	padding-top: 0.5em !important;
+	padding-bottom: 0.5em !important;
+}
+.adunit-select > .text {
+	vertical-align: -webkit-baseline-middle !important;
+}
 ios {
 	width: 30px !important;
 	padding: 4px !important;
 	font-size: 0.7rem !important;
 	text-align: center !important;
-	/* margin-right: 5px !important; */
+	margin-right: 5px !important;
 	background-color: #1da1f2 !important;
 	border-color: #1da1f2 !important;
 
@@ -405,7 +416,7 @@ ios {
 	display: inline-block;
 	line-height: 1;
 	vertical-align: baseline;
-	margin: 0.14285714em;
+	/* margin: 0.14285714em; */
 	background-image: none;
 	padding: .5833em .833em;
 	color: rgba(0,0,0,.6);
@@ -422,7 +433,7 @@ aos {
 	padding: 4px !important;
 	font-size: 0.7rem !important;
 	text-align: center !important;
-	/* margin-right: 5px !important; */
+	margin-right: 5px !important;
 	background-color: #f2711c !important;
 	border-color: #f2711c !important;
 
@@ -430,7 +441,7 @@ aos {
 	display: inline-block;
 	line-height: 1;
 	vertical-align: baseline;
-	margin: 0.14285714em;
+	/* margin: 0.14285714em; */
 	background-image: none;
 	padding: .5833em .833em;
 	color: rgba(0,0,0,.6);
@@ -446,7 +457,7 @@ unitformat {
 	padding: 4px !important;
 	font-size: 0.7rem !important;
 	text-align: center !important;
-	margin-right: 5px !important;
+	/* margin-right: 5px !important; */
 	background-color: #767676 !important;
 	border-color: #767676 !important;
 
@@ -454,7 +465,7 @@ unitformat {
 	display: inline-block;
 	line-height: 1;
 	vertical-align: baseline;
-	margin: 0.14285714em;
+	/* margin: 0.14285714em; */
 	background-image: none;
 	padding: .5833em .833em;
 	color: rgba(0,0,0,.6);
@@ -502,7 +513,7 @@ unitstatusactive {
   overflow: hidden;
   width: .5em;
   height: .5em;
-  vertical-align: baseline !important;
+  vertical-align: middle !important;
 }
 unitstatusinactive {
 	margin-right: 5px !important;
@@ -526,7 +537,7 @@ unitstatusinactive {
   overflow: hidden;
   width: .5em;
   height: .5em;
-  vertical-align: baseline !important;
+  vertical-align: middle !important;
 }
 
 /* Footer */
