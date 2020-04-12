@@ -80,7 +80,7 @@ var tableColumnDef = (function(global) {
 		{ field: 'autoCpm', title: 'AutoCpm', visible: false, download: true, sorter: 'string', formatter: f.jsonArrayFormatter },
 		{ field: 'budget', title: 'Budget', visible: false, download: true, sorter: 'string' },
 		{ field: 'budgetType', title: 'Budget Type', visible: false, download: true, sorter: 'string' },
-		{ field: 'frequencyCaps', title: 'Frequency Caps', visible: false, download: true, sorter: 'string' },
+		{ field: 'frequencyCaps', title: 'Frequency Caps', visible: false, download: true, sorter: 'string', formatter: f.jsonArrayFormatter },
 		{ field: 'bidStrategy', title: 'Bid Strategy', visible: false, download: true, sorter: 'string' }
 	];
 
