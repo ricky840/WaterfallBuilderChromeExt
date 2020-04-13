@@ -180,6 +180,7 @@ var tableColumnDef = (function(global) {
 		if (rowData.type == "marketplace") return false;	
 		WaterfallTable.deselectRow();
 		row.select();
+		editFormManager.resetForm();
 		$('.ui.modal.edit-modal').modal({
 			duration: 300,
 			autofocus: false,

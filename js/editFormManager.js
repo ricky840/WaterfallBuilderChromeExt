@@ -7,6 +7,7 @@ var editFormManager = (function(global) {
 		cpmId: "edit-cpm",
 		priorityId: "edit-priority-select",
 		statusId: "edit-status-select",
+		autocpmId: "edit-disallow-autocpm-select",
 		targetModeId: "target-mode",
 		targetCountryId: "target-country",
 		tagifyKeywords: "tagify-keywords"
@@ -15,6 +16,7 @@ var editFormManager = (function(global) {
 	function initForm(notification) {
 		$(`#${DOM_ID.priorityId}`).dropdown({ clearable: true });	
 		$(`#${DOM_ID.statusId}`).dropdown({ clearable: true });	
+		$(`#${DOM_ID.autocpmId}`).dropdown({ clearable: true });	
 		$(`#${DOM_ID.targetCountryId} .menu`).html(createCountryMenuListHtml());
 		$(`#${DOM_ID.targetCountryId}`).dropdown({
 			onChange: function(value, text, element) {
@@ -45,6 +47,14 @@ var editFormManager = (function(global) {
 		$(`#${DOM_ID.targetCountryId}`).dropdown('set exactly', rowData.targetedCountries);
 		keywordTagify.removeAllTags();
 		keywordTagify.addTags(rowData.keywords);
+		// disallowautocpm
+		if ("disallowAutoCpm" in rowData && rowData.disallowAutoCpm == true) {
+			$(`#${DOM_ID.autocpmId}`).dropdown('set selected', "yes");
+		} else if ("disallowAutoCpm" in rowData && rowData.disallowAutoCpm == false) {
+			$(`#${DOM_ID.autocpmId}`).dropdown('set selected', "no");
+		} else {
+			$(`#${DOM_ID.autocpmId}`).dropdown('restore defaults');
+		}
 	}
 
 	function updateNetworkInput(rowData) {
@@ -67,7 +77,7 @@ var editFormManager = (function(global) {
 	}
 		
 	function parseInput(formData) {
-		let cpm, priority, status, targetMode, targetCountries, keywords; 
+		let cpm, priority, status, targetMode, targetCountries, keywords, disallowAutoCpm; 
 		// Parse data
 		for (let i=0; i < formData.length; i++) {
 			switch (formData[i].name) {
@@ -85,6 +95,16 @@ var editFormManager = (function(global) {
 					break;
 				case "target_country":
 					targetCountries = formData[i].value.trim();
+					break;
+				case "disallow_autocpm":
+					let disallowAutoUpdate = formData[i].value.trim();
+					if (disallowAutoUpdate == "yes") {
+						disallowAutoCpm = true;
+					} else if (disallowAutoUpdate == "no") {
+						disallowAutoCpm = false;
+					} else {
+						disallowAutoCpm = "";
+					}
 					break;
 				case "keywords":
 					try {
@@ -109,7 +129,8 @@ var editFormManager = (function(global) {
 			"status": status,
 			"targetMode": targetMode,
 			"targetCountries": targetCountries,
-			"keywords": keywords
+			"keywords": keywords,
+			"disallowAutoCpm": disallowAutoCpm
 		}
 	}
 
@@ -117,6 +138,7 @@ var editFormManager = (function(global) {
 		$(`#${DOM_ID.cpmId}`).val('');	
 		$(`#${DOM_ID.priorityId}`).dropdown('clear');	
 		$(`#${DOM_ID.statusId}`).dropdown('clear');	
+		$(`#${DOM_ID.autocpmId}`).dropdown('clear');
 		$(`#${DOM_ID.targetModeId}`).dropdown('clear');
 		$(`#${DOM_ID.targetCountryId}`).dropdown('clear');
 		keywordTagify.removeAllTags();

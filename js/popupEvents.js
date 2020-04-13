@@ -207,6 +207,12 @@ $("#edit-submit").click(function() {
 		if (!_.isEmpty(input.keywords) && lineItem.type != "marketplace") {
 			lineItem.keywords = (input.keywords).split(",");
 		}
+		// Update disallowAutoCpm (only network type)
+		if (!_.isEmpty(input.disallowAutoCpm.toString()) && lineItem.type == "network") {
+			lineItem.disallowAutoCpm = input.disallowAutoCpm;
+		} else if (_.isEmpty(input.disallowAutoCpm.toString())) {
+			delete lineItem.disallowAutoCpm;
+		}
 	}
 
 	let selectedRowObj = WaterfallTable.getSelectedRows();
