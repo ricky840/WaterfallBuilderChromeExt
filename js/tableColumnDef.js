@@ -35,12 +35,6 @@ var tableColumnDef = (function(global) {
 			},
 			validator: ["required", "min:0.01", "max:9999"],
 			formatter: f.cpmFormatter,
-			cellEdited: function(cell) {
-				this.setSort([
-					{ column: "bid", dir: "desc" }, //then sort by this second
-					{ column: "priority", dir: "asc" } //sort by this first
-				]);
-			},
 			minWidth: 100,
 			width: 100
 		},

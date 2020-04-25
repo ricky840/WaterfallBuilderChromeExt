@@ -185,8 +185,13 @@ var csvManager = (function(global) {
 					notifier.show({
 						header: "Import Successful",
 						type: "success",
-						message: `${parsedDataList.length} lineitems were imported. Unnecessary overrides fields for network line items were ignored.`
+						message: `${parsedDataList.length} line items were imported. Unnecessary overrides fields for network line items were ignored.`
 					});
+					// Sort after import
+					WaterfallTable.setSort([
+						{ column: "bid", dir:"desc" },
+						{ column: 'priority', dir:"asc" }
+					]);
 				}
 			// Release Table
 			WaterfallTable.restoreRedraw();
@@ -204,6 +209,9 @@ var csvManager = (function(global) {
 			let [name, key, orderName, orderKey, priority, bid, type, networkType, 
 				networkAccountId, networkAdUnitId, networkAppId, networkAppSignature, networkLocation,
 				customEventClassName, customEventClassData, status, keywords, geoMode, countries] = data[i];
+
+			// Process rows only has the right number of columns (to prevent empty row at the end)
+			if (data[i].length != colNames.length) continue;
 
 			let overrideFields = {
 				'network_account_id': networkAccountId.toString().trim(),
@@ -379,10 +387,15 @@ var csvManager = (function(global) {
 		}
 		let codes = [];
 		for (let i=0; i < countryCodes.length; i++) {
-			if (countryCodes[i].trim() in list) {
-				codes.push(countryCodes[i].trim().toUpperCase());
+			let countryCode = countryCodes[i].trim();
+			if (!_.isEmpty(countryCode)) {
+				if (countryCode.toUpperCase() in list) {
+					codes.push(countryCode.toUpperCase());
+				} else {
+					throw new Error(`Country code <b>${countryCode}</b> is not found`);
+				}
 			} else {
-				throw new Error(`Country code ${countryCodes[i].trim()} is not found`);
+				throw new Error(`Country code is EMPTY value. See if there is additional comma or space in the list`);
 			}
 		}
 		return codes;
