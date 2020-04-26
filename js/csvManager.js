@@ -6,6 +6,7 @@ var csvManager = (function(global) {
 		"Line Item Key (Required. Leave EMPTY if new)",
 		"Order Name (Required)",
 		"Order Key (Required)",
+		"Assigned Ad Unit Keys (Reference only, will be ignored when import)",
 		"Priority (Required. Enter between 1 ~ 16)",
 		"CPM (Required)",
 		"Type (Required)",
@@ -32,21 +33,22 @@ var csvManager = (function(global) {
 				[colNames[1]]: eachLineItem.key,
 				[colNames[2]]: eachLineItem.orderName,
 				[colNames[3]]: eachLineItem.orderKey,
-				[colNames[4]]: eachLineItem.priority,
-				[colNames[5]]: eachLineItem.bid,
-				[colNames[6]]: eachLineItem.type,
-				[colNames[7]]: eachLineItem.networkType,
-				[colNames[8]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_account_id,
-				[colNames[9]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_adunit_id,
-				[colNames[10]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_app_id,
-				[colNames[11]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.app_signature,
-				[colNames[12]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.location,
-				[colNames[13]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_name,
-				[colNames[14]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_data,
-				[colNames[15]]: eachLineItem.status,
-				[colNames[16]]: eachLineItem.keywords,
-				[colNames[17]]: eachLineItem.includeGeoTargeting,
-				[colNames[18]]: eachLineItem.targetedCountries
+				[colNames[4]]: eachLineItem.adUnitKeys,
+				[colNames[5]]: eachLineItem.priority,
+				[colNames[6]]: eachLineItem.bid,
+				[colNames[7]]: eachLineItem.type,
+				[colNames[8]]: eachLineItem.networkType,
+				[colNames[9]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_account_id,
+				[colNames[10]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_adunit_id,
+				[colNames[11]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_app_id,
+				[colNames[12]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.app_signature,
+				[colNames[13]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.location,
+				[colNames[14]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_name,
+				[colNames[15]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_data,
+				[colNames[16]]: eachLineItem.status,
+				[colNames[17]]: eachLineItem.keywords,
+				[colNames[18]]: eachLineItem.includeGeoTargeting,
+				[colNames[19]]: eachLineItem.targetedCountries
 			});
 		}
 		let exportCsv = Papa.unparse(exportImportableData);
@@ -102,6 +104,7 @@ var csvManager = (function(global) {
 						if (lineItem) {
 							eachLineItem.orderName = lineItem.orderName;
 							eachLineItem.orderKey = lineItem.orderKey;
+							eachLineItem.adUnitKeys = lineItem.adUnitKeys;
 							exportData.push(eachLineItem);				
 							numberOfItemsToPrepare--;
 							loadingIndicator.increaseBar();
@@ -230,7 +233,7 @@ var csvManager = (function(global) {
 
 		// i=0 is title row
 		for (let i=1; i < data.length; i++) {
-			let [name, key, orderName, orderKey, priority, bid, type, networkType, 
+			let [name, key, orderName, orderKey, adUnitKeys, priority, bid, type, networkType, 
 				networkAccountId, networkAdUnitId, networkAppId, networkAppSignature, networkLocation,
 				customEventClassName, customEventClassData, status, keywords, geoMode, countries] = data[i];
 
@@ -253,6 +256,7 @@ var csvManager = (function(global) {
 					'key': (key.toString().trim() == "") ? null : csvFieldValidator('key', key),
 					'orderName': csvFieldValidator('orderName', orderName),
 					'orderKey': csvFieldValidator('orderKey', orderKey), 
+					// 'adUnityKeys': adUnityKeys, Ignoring for now
 					'priority': csvFieldValidator('priority', priority),
 					'bid': csvFieldValidator('bid', bid),
 					'type': csvFieldValidator('type', type),
