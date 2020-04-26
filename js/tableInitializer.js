@@ -58,8 +58,8 @@ var tableInitializer = (function(global) {
 		if (status == 'new') {
 			$(rowElement).addClass("flash");
 			notifier.show({
-				header: `New line item was added`,
-				message: `Name: <b>${row.getData().name}</b> Key: <b>${row.getData().key}</b>`, 
+				header: `New line item`,
+				message: `[New] Name: <b>${row.getData().name}</b> Key: <b>${row.getData().key}</b>`, 
 				type: "success", 
 				append: true
 			});

@@ -143,29 +143,42 @@ var csvManager = (function(global) {
 						return false;
 					}
 				}
+
 				// Parse
 				let parsedDataList = csvManager.rowParser(results.data);
 
-				// Lock Table
-				WaterfallTable.blockRedraw();
-
-				// Import
+				// Import process
 				if (parsedDataList) {
-					for (let i=0; i < parsedDataList.length; i++) {
+					// Lock Table
+					WaterfallTable.blockRedraw();
+
+					// Loaders
+					loadingIndicator.setTotalBarLoader(parsedDataList.length);
+					loadingIndicator.showBarLoader();
+					$(".updating-message").html(`Updating`);
+					$(".all-content-wrapper").dimmer("show");
+					notifier.clear();
+
+					// index
+					let index = 0;
+
+					let progress = setInterval(function() {
+						let currentData = parsedDataList[index];
+
 						// See if data exists in the table
-						let row = WaterfallTable.searchData("key", "=", parsedDataList[i].key);
+						let row = WaterfallTable.searchData("key", "=", currentData.key);
 						try {
 							if (row.length == 1) {
 								// Existing line item. Ignore order name and order key. It can't be updated anyway.
-								delete parsedDataList[i].orderName;
-								delete parsedDataList[i].orderKey;
-								WaterfallTable.updateData([parsedDataList[i]]);
+								delete currentData.orderName;
+								delete currentData.orderKey;
+								WaterfallTable.updateData([currentData]);
 							} else if (row.length == 0) {
 								// New line item, this requires order key. Otherwise throw error. order name will be ignored.
-								if ("orderKey" in parsedDataList[i]) {
-									WaterfallTable.addData([parsedDataList[i]]);
+								if ("orderKey" in currentData) {
+									WaterfallTable.addData([currentData]);
 								} else {
-									throw new Error(`New line item <b>${parsedDataList[i].name}</b> requires order key.`);
+									throw new Error(`New line item <b>${currentData.name}</b> requires order key.`);
 								}
 							}
 						} catch (error) {
@@ -175,28 +188,35 @@ var csvManager = (function(global) {
 								type: "negative",
 								message: `${error}`
 							});
+							clearInterval(progress);
 							// Release Table
 							WaterfallTable.restoreRedraw();
 							callback();
 							return false;
 						}
-					}
-					notifier.clear();
-					notifier.show({
-						header: "Import Successful",
-						type: "success",
-						message: `${parsedDataList.length} line items were imported. Unnecessary overrides fields for network line items were ignored.`
-					});
-					// Sort after import
-					WaterfallTable.setSort([
-						{ column: "bid", dir:"desc" },
-						{ column: 'priority', dir:"asc" }
-					]);
+
+						if(parsedDataList.length == index + 1) {
+							// Import complete!
+							notifier.show({
+								header: "Import Successful",
+								type: "success",
+								message: `${parsedDataList.length} line items were imported. Unnecessary overrides fields for network line items were ignored.`,
+								append: true
+							});
+							loadingIndicator.hideBarLoader();
+							$(".all-content-wrapper").dimmer("hide");
+							clearInterval(progress);
+							// Release Table
+							WaterfallTable.restoreRedraw();
+							callback();
+						} else {
+							loadingIndicator.increaseBar();
+							$(".updating-message").html(`Updating ${index}`);
+							index += 1;
+						}
+					}, 10);
 				}
-			// Release Table
-			WaterfallTable.restoreRedraw();
-			callback();
-		}
+			} // complete callback
 		});
 	}
 

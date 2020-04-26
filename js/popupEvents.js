@@ -551,16 +551,13 @@ $("#waterfall-upload-csv").click(function() {
 $('input[type="file"]').on('change', function() {
 	let file = $(this).prop('files')[0];
 	if (file == undefined) return;
-
+	// Reset file
 	$(this).val("");
-	$(".loader-waterfall-table").dimmer("show");
 
-	// Give it a short delay
-	setTimeout(function() { 
-		csvManager.processUpload(file, function() {
-			$(".loader-waterfall-table").dimmer("hide");
-		});
-	}, 200);
+	csvManager.processUpload(file, function() {
+		// Sort after import
+		sortByBidPriority(WaterfallTable);
+	});
 });
 
 // Add new line item button
@@ -712,7 +709,7 @@ function loadWaterfall(adunitId, callback) {
 	LineItemTable.clearData();
 
 	// Scroll to top
-	scrollToTop();
+	// scrollToTop();
 
 	// Show loader
 	$(".loader-wrapper").dimmer("show");
