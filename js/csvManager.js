@@ -64,7 +64,11 @@ var csvManager = (function(global) {
 			return true; 
 		} else if (option == "importable") {
 			let allData = WaterfallTable.getData();
+			let selectedData = WaterfallTable.getSelectedData();
 			let filteredData = [];
+
+			// Export only selected
+			if (selectedData.length > 0) allData = selectedData;
 
 			for (let i=0; i < allData.length; i++) {
 				let eachLineItem = allData[i];

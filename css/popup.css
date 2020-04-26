@@ -635,6 +635,13 @@ unitstatusinactive {
 	font-weight: bold;
 }
 
+/* export-only-selected-count */
+.export-only-selected-count {
+	margin-left: 5px;
+	color: #1da1f2;
+	font-weight: bold;
+}
+
 /* reload ad unit button */
 .reload-adunit-button {
 	padding: 0.4em !important;

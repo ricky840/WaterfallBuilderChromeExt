@@ -124,12 +124,14 @@ var tableInitializer = (function(global) {
 				// Only show edit buttons when it is not in adding line item mode.
 				if ($(".network-add-buttons").attr("status") == "hidden") {
 					if (rows.length > 0) {
-						$("#edit-selected").html(`Edit Selected (${rows.length})`).show();
-						$("#delete-selected").html(`Delete Selected (${rows.length})`).show();
-						$("#copy-waterfall").html(`Duplicate ${rows.length} items`);
+						$("#edit-selected").html(`Edit (${rows.length})`).show();
+						$("#delete-selected").html(`Delete (${rows.length})`).show();
+						$("#copy-waterfall").html(`Duplicate (${rows.length})`);
+						$("#waterfall-download-csv").html(`Export (${rows.length})`);
 						$("#add-line-item-btn").hide();
 					} else {
 						$("#copy-waterfall").html(`Duplicate Waterfall`);
+						$("#waterfall-download-csv").html(`Export`);
 						$("#edit-selected").hide();
 						$("#delete-selected").hide();
 						$("#add-line-item-btn").show();

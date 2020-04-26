@@ -390,13 +390,19 @@
 		<!-- Download Format Modal -->
 		<div class="ui modal download-option-modal mini">
 			<i class="close icon"></i>
-			<div class="header">Choose Download Format</div>
+			<div class="header">Export to CSV</div>
 			<div class="content">
 				<div class="ui tiny header">Including all fields</div>
-				<p>Download every field in the waterfall. This format cannot be imported.</p>
+				<p>Download every field in the waterfall. This format cannot be imported. This will export all line items.</p>
 				<div class="ui tiny header">Importable fields only</div>
-				<p>Download only fields that can be imported. This will export items that has running, paused, archived status only. Custom JS Network, Advanced Bidding, Segment and default MPX line item will not be exported.</p>
-				<a class="import-instruction" href="importInstruction.html" target="_blank">Import Instruction</a>
+				<p>Download only fields that can be imported. This will export items that has <b>running, paused, archived</b> status only. <b>Custom JS Network, Advanced Bidding, Segment</b> and <b>default MPX</b> line item will not be exported.</p>
+				<div id="export-selected-box">
+					<i class="bell icon blue"></i>
+					<label>Exporting selected only<span id="export-only-selected-count" class="export-only-selected-count"></span></label>
+				</div>
+				<div class="ui tiny sub header">
+					<a class="import-instruction" href="importInstruction.html" target="_blank">Import Instruction</a>
+				</div>
 			</div>
 			<div class="actions" style="float: left">
 				<div class="ui button tiny mopub-button-color mopub-button radius download-button" option="all">Including all fields</div>

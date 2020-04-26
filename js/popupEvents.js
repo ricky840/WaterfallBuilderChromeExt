@@ -63,7 +63,14 @@ $(".all-content-wrapper").on("change", ".select-all", function() {
 
 // Download CSV Button
 $("#waterfall-download-csv").click(function() {
-	$('#download-only-filtered').prop('checked', false);
+	let selectedRows = WaterfallTable.getSelectedRows();
+	if (selectedRows.length > 0) {
+		$("#export-selected-box").show();
+		$("#export-only-selected-count").html(`(${selectedRows.length} items selected)`);
+	} else {
+		$("#export-selected-box").hide();
+		$("#export-only-selected-count").html('');
+	}
 	$('.ui.modal.download-option-modal').modal('show');
 });
 
@@ -86,12 +93,6 @@ $("#edit-selected").click(function() {
 				let rowData = rows[0].getData();
 				editFormManager.fillRowInfo(rowData);
 			}
-		},
-		onHide: function() {
-			for (let i=0; i < rows.length; i++) {
-				rows[i].deselect();
-			}
-			releaseCheckBox(rows);
 		}
 	}).modal('show');
 });
