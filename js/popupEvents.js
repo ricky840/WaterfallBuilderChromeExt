@@ -173,6 +173,7 @@ $("#delete-selected").click(function() {
 $("#edit-submit").click(function() {
 	let formData = $('#edit-form').serializeArray();
 	let input = editFormManager.parseInput(formData);
+	let subBtn = $(this);
 
 	// Temp
 	console.log("Edit form user input");
@@ -225,15 +226,19 @@ $("#edit-submit").click(function() {
 		releaseCheckBox(selectedRowObj);
 		$('.ui.modal.edit-modal').modal('hide');
 		editFormManager.resetForm(); // Reset the form
+		subBtn.removeClass("loading disabled");
 	};
 	
-	WaterfallTable.updateData(selectedRowData).then(function(rows) {
-		console.log("Updated WaterfallTable");
-		afterUpdate();
-	}).catch(function(error) {
-		console.log(`Update failed - ${error.message}`);
-		afterUpdate();
-	});
+	subBtn.addClass("loading disabled");
+	setTimeout(function() { 
+		WaterfallTable.updateData(selectedRowData).then(function(rows) {
+			console.log("Updated WaterfallTable");
+			afterUpdate();
+		}).catch(function(error) {
+			console.log(`Update failed - ${error.message}`);
+			afterUpdate();
+		});
+	}, 10);
 });
 
 $("#copy-waterfall").click(function() {
