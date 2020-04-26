@@ -716,6 +716,9 @@ function loadWaterfall(adunitId, callback) {
 
 	// Scroll to top
 	// scrollToTop();
+	
+	// Uncheck select-all checkboxes
+	$(".select-all").prop("checked", false);
 
 	// Show loader
 	$(".loader-wrapper").dimmer("show");
