@@ -204,25 +204,33 @@ var moPubUI = (function(global) {
 		// Fields exist only in response should be removed when create a lineitem
 		delete responseObj.advertiser;
 		delete responseObj.disabled;
-		delete responseObj.filterLevel;
 		delete responseObj.network;
-		delete responseObj.categoryBlocklist;
-		delete responseObj.appBlocklist;
 		delete responseObj.status;
-		delete responseObj.dspWhitelist;
 		delete responseObj.started;
 		delete responseObj.creatives;
 		delete responseObj.orderName;
 		delete responseObj.key;
 		delete responseObj.active;
 		delete responseObj.pmpDealFields;
-		delete responseObj.attributeBlocklist;
-		delete responseObj.allowVideo
-		delete responseObj.domainBlocklist;
 		delete responseObj.visible;
-		delete responseObj.videoSetting;
 		delete responseObj.autoCpm;
 		delete responseObj.targetOther;
+
+		// [To-do] MPX Content Settings should be updated with different end point :(
+		// MPX Content Setting - Fullscreen display and video settings
+		delete responseObj.videoSetting;
+		delete responseObj.allowVideo;
+
+		// MPX Content Filtering
+		delete responseObj.filterLevel;
+
+		// MPX Content Setting.
+		delete responseObj.attributeBlocklist;
+		delete responseObj.categoryBlocklist;
+		delete responseObj.appBlocklist;
+		delete responseObj.dspWhitelist;
+		delete responseObj.domainBlocklist;
+
 		responseObj.start = getCurrentDatetimeUTC("ISO-8601");
 		responseObj.startImmediately = true;
 		return responseObj;

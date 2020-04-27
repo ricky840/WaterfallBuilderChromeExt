@@ -171,19 +171,23 @@ var tableColumnDef = (function(global) {
 	function editForm(e, cell) {
 		let row = cell.getRow();
 		let rowData = row.getData();
+		let selectedRows = WaterfallTable.getSelectedRows();
 		if (rowData.type == "marketplace") return false;	
+
 		WaterfallTable.deselectRow();
+		for (let i=0; i < selectedRows.length; i++) {
+			selectedRows[i].reformat(); // trigger render event
+		}
+		$(".select-all").prop("checked", false);
+
 		row.select();
 		editFormManager.resetForm();
+
 		$('.ui.modal.edit-modal').modal({
 			duration: 300,
 			autofocus: false,
 			onShow: function() {
 				editFormManager.fillRowInfo(rowData);
-			},
-			onHide: function() {
-				row.deselect();
-				row.reformat();
 			}
 		}).modal('show');
 	}

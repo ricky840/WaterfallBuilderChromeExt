@@ -84,7 +84,7 @@ var waterfallDuplicator = (function(global) {
 		}
 	}
 
-	function duplicate(adUnitIds, lineItems, option, selectedOrderInfo, postDuplicate) {
+	function duplicate(TargetAdUnitIds, lineItems, option, selectedOrderInfo, postDuplicate) {
 		let lineItemChanges = {};
 		let lineItemsKeysNeedOrderKey = [];
 		
@@ -100,8 +100,8 @@ var waterfallDuplicator = (function(global) {
         continue;
       }
 
-			// Assign Adunit Keys
-			each["adUnitKeys"] = adUnitIds;
+			// Assign Adunit Keys, (this will gets overrided but just in case)
+			each["adUnitKeys"] = TargetAdUnitIds;
 
 			lineItemChanges[each.key] = {
 				action: "new",
@@ -112,9 +112,10 @@ var waterfallDuplicator = (function(global) {
 			}
 
 			// If order key doesn't exist, find the current order key
-			if (!("orderKey" in each)) {
-				lineItemsKeysNeedOrderKey.push(each.key);
-			}
+			// [Update 4/26] Get line item information for all items
+			// if (!("orderKey" in each)) {
+			lineItemsKeysNeedOrderKey.push(each.key);
+			// }
 		}
 
 		console.log("Will duplicate following line items (changes)");
@@ -123,8 +124,11 @@ var waterfallDuplicator = (function(global) {
 		let whenOrderInfoIsReady = function(lineItems) {
 			for (let i=0; i < lineItems.length; i++) {
 				let change = lineItemChanges[lineItems[i].key];
-				change.updatedFields["orderKey"] = lineItems[i].orderKey;
-				change.updatedFields["orderName"] = lineItems[i].orderName;
+
+				// [Update 4/26] Instead of copying just order info, put entire line item info.
+				// Except for ad unit key. It should be target ad unit key
+				change.updatedFields = lineItems[i];
+				change.updatedFields["adUnitKeys"] = TargetAdUnitIds;
 				change.updatedFields["name"] += " (New)";
 			}
 
@@ -169,7 +173,9 @@ var waterfallDuplicator = (function(global) {
 		}
 
 		// Get Order Key for changes
-		getOrderInfoForLineItems(lineItemsKeysNeedOrderKey, whenOrderInfoIsReady);
+		if (lineItemsKeysNeedOrderKey.length > 0) {
+			getOrderInfoForLineItems(lineItemsKeysNeedOrderKey, whenOrderInfoIsReady);
+		}
 	}
 
   return {

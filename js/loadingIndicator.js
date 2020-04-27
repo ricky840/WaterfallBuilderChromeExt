@@ -17,7 +17,7 @@ var loadingIndicator = (function(global) {
 		setTimeout(function() { 
 			barLoader.css('visibility', 'hidden');
 			barLoader.progress('reset');
-		}, 500);
+		}, 100);
 	}
 
 	function increaseBar() {
