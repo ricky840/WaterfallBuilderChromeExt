@@ -172,9 +172,17 @@ var waterfallDuplicator = (function(global) {
 			}
 		}
 
-		// Get Order Key for changes
+		// Run duplication only when there is target line items
 		if (lineItemsKeysNeedOrderKey.length > 0) {
+			// Get Order Key for changes
 			getOrderInfoForLineItems(lineItemsKeysNeedOrderKey, whenOrderInfoIsReady);
+		} else {
+			// nothing to duplicate
+			notifier.show({
+				header: "No target line items to duplicate",
+				type: "info",
+				message: "Private Marketplace, Marketplace Tab (default MPX), Segment, Advanced Bidding line items will not be duplicated."
+			});
 		}
 	}
 

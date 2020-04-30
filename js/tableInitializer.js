@@ -182,6 +182,14 @@ var tableInitializer = (function(global) {
 				return html;
 			},
 
+			// Download config
+			downloadConfig:{
+        columnGroups: false, //include column groups in column headers for download
+        rowGroups: false, //do not include row groups in download
+        columnCalcs: false, //do not include column calculation rows in download
+        dataTree: false, //do not include data tree in download
+			},
+
 			// Disable line items that doesn't supported for now.
 			selectableCheck: function(row) {
 				let status = row.getData().status;

@@ -34,6 +34,12 @@ function getCurrentDatetimeUTC(format) {
   }
 }
 
+function getCurrentDateTimeAddDaysUTC(addDays) {
+	let now = new Date();
+	let endDate = new Date(now.setDate(now.getDate() + addDays));
+	return endDate.toISOString();
+}
+
 function clearEmpties(obj) {
   for (let key in obj) {
   	let value = obj[key];

@@ -200,12 +200,12 @@ var moPubUI = (function(global) {
 	}
 
 	function convertResToReqBody(responseObj) {
+		// This is only for new line item
 		// This will convert line item response to request body to create lineitem
 		// Fields exist only in response should be removed when create a lineitem
 		delete responseObj.advertiser;
 		delete responseObj.disabled;
 		delete responseObj.network;
-		delete responseObj.status;
 		delete responseObj.started;
 		delete responseObj.creatives;
 		delete responseObj.orderName;
@@ -215,6 +215,13 @@ var moPubUI = (function(global) {
 		delete responseObj.visible;
 		delete responseObj.autoCpm;
 		delete responseObj.targetOther;
+
+		// Remove status field if it is not one of running, paused, archived, unarchived
+		// This will ensure we're not sending any unecessary status to the server when create
+		let statusRegex = /^running$|^paused$|^archived$|^unarchived$/;
+		if (!statusRegex.test(responseObj.status)) {
+			delete responseObj.status;
+		}
 
 		// [To-do] MPX Content Settings should be updated with different end point :(
 		// MPX Content Setting - Fullscreen display and video settings
@@ -231,8 +238,16 @@ var moPubUI = (function(global) {
 		delete responseObj.dspWhitelist;
 		delete responseObj.domainBlocklist;
 
+		// Start can't be in the past for new line item
 		responseObj.start = getCurrentDatetimeUTC("ISO-8601");
 		responseObj.startImmediately = true;
+		// If there was end value, update with a week later
+		if (!_.isEmpty(responseObj.end)) {
+			responseObj.end = getCurrentDateTimeAddDaysUTC(7);
+		} else {
+			delete responseObj.end;
+		}
+
 		return responseObj;
 	}
 

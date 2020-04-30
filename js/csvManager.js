@@ -63,7 +63,7 @@ var csvManager = (function(global) {
 		if (option == "all") {
 			let filename = `${AdUnitName.replace(/\s+/g, "-")}_${AdUnitId}_${getCurrentTimeInEpoch()}.csv`;
 			WaterfallTable.download("csv", filename);
-			return true; 
+			callback();
 		} else if (option == "importable") {
 			let allData = WaterfallTable.getData();
 			let selectedData = WaterfallTable.getSelectedData();
@@ -89,46 +89,56 @@ var csvManager = (function(global) {
 			let exportData = [];
 			let numberOfItemsToPrepare = filteredData.length;
 
-			// Loaders
-			loadingIndicator.setTotalBarLoader(numberOfItemsToPrepare);
-			loadingIndicator.showBarLoader();
-			$(".updating-message").html(`Exporting line items, remaining ${numberOfItemsToPrepare}`);
-			$(".all-content-wrapper").dimmer("show");
+			// If there is nothing to export, then show notification
+			if (filteredData.length > 0) {
+				// Loaders
+				loadingIndicator.setTotalBarLoader(numberOfItemsToPrepare);
+				loadingIndicator.showBarLoader();
+				$(".updating-message").html(`Exporting line items, remaining ${numberOfItemsToPrepare}`);
+				$(".all-content-wrapper").dimmer("show");
 
-			for (let i=0; i < filteredData.length; i++) {
-				let eachLineItem = filteredData[i];
+				for (let i=0; i < filteredData.length; i++) {
+					let eachLineItem = filteredData[i];
 
-				// If order key doesn't exist, get it from MoPub
-				if (_.isEmpty(eachLineItem.orderKey)) {
-					lineItemManager.getLineItemFromMoPub(eachLineItem.key, function(lineItem) {
-						if (lineItem) {
-							eachLineItem.orderName = lineItem.orderName;
-							eachLineItem.orderKey = lineItem.orderKey;
-							eachLineItem.adUnitKeys = lineItem.adUnitKeys;
-							exportData.push(eachLineItem);				
-							numberOfItemsToPrepare--;
-							loadingIndicator.increaseBar();
-							$(".updating-message").html(`Exporting line items, remaining ${numberOfItemsToPrepare}`);
-						}	else {
-							console.log(`Failed to get line item info ${eachLineItem.name} ${eachLineItem.key}, stop exporting..`);
-							return false;
-						}
+					// If order key doesn't exist, get it from MoPub
+					if (_.isEmpty(eachLineItem.orderKey)) {
+						lineItemManager.getLineItemFromMoPub(eachLineItem.key, function(lineItem) {
+							if (lineItem) {
+								eachLineItem.orderName = lineItem.orderName;
+								eachLineItem.orderKey = lineItem.orderKey;
+								eachLineItem.adUnitKeys = lineItem.adUnitKeys;
+								exportData.push(eachLineItem);				
+								numberOfItemsToPrepare--;
+								loadingIndicator.increaseBar();
+								$(".updating-message").html(`Exporting line items, remaining ${numberOfItemsToPrepare}`);
+							}	else {
+								console.log(`Failed to get line item info ${eachLineItem.name} ${eachLineItem.key}, stop exporting..`);
+								return false;
+							}
 
-						if (numberOfItemsToPrepare == 0) {
-							// When data(all order key) is ready
-							$(".all-content-wrapper").dimmer("hide");
-							loadingIndicator.hideBarLoader();
-							console.log("Export ready");
-							exportToFile(exportData);
-						}
-					});
-				} else {
-					// if order key exists already, then just export it.
-					numberOfItemsToPrepare--;
-					loadingIndicator.increaseBar();
-					$(".updating-message").html(`Exporting line items, remaining ${numberOfItemsToPrepare}`);
-					exportData.push(eachLineItem);
+							if (numberOfItemsToPrepare == 0) {
+								// When data(all order key) is ready
+								$(".all-content-wrapper").dimmer("hide");
+								loadingIndicator.hideBarLoader();
+								console.log("Export ready");
+								exportToFile(exportData);
+							}
+						});
+					} else {
+						// if order key exists already, then just export it.
+						numberOfItemsToPrepare--;
+						loadingIndicator.increaseBar();
+						$(".updating-message").html(`Exporting line items, remaining ${numberOfItemsToPrepare}`);
+						exportData.push(eachLineItem);
+					}
 				}
+			} else {
+				// nothing to export
+				notifier.show({
+					header: "No target line items to export",
+					type: "info",
+					message: "Custom JS, Advanced Bidding, Segment and line items that are not in running, paused or archived status will not be exported."
+				});
 			}
 		}
 		callback();
