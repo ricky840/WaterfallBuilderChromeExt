@@ -32,6 +32,15 @@ const NEW_ORDER_NAME_POSTFIX = " (Created by WBExt)";
 const NEW_ORDER_ADVERTISER = "Advertiser";
 const NEW_ORDER_DESC = "Created by WaterfallBuilder Chrome Ext";
 
+// When Create New Line Item (Suffix Default)
+const NEW_LINE_ITEM_NAME_SUFFIX = " (New)";
+
+// Duplicated Line Item Name Suffix
+var LineItemNameSuffix = NEW_LINE_ITEM_NAME_SUFFIX;
+
+// New Order Name Suffix
+var OrderNameSuffix = NEW_ORDER_NAME_POSTFIX;
+
 // Table Heights and P
 const WATERFALL_TABLE_HEIGHT = 700;
 const LINEITEM_TABLE_HEIGHT = 504;

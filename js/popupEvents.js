@@ -249,7 +249,13 @@ $("#copy-waterfall").click(function() {
 	$(".copy-mode-dropdown").dropdown('restore default value');
 	$(".copy-form-order-list").dropdown('clear');
 	$(".adunit-select-copy-form").dropdown('clear');
+	$("#copy-form-lineitem-suffix").val("");
+	$("#copy-form-order-suffix").val("");
 	notifier.clearCopyForm();
+
+	// Reset suffix
+	LineItemNameSuffix = NEW_LINE_ITEM_NAME_SUFFIX;
+	OrderNameSuffix = NEW_ORDER_NAME_POSTFIX;
 	
 	// If there was selected line items, check selected checkbox
 	let selectedRows = WaterfallTable.getSelectedRows();
@@ -269,6 +275,12 @@ $("#copy-submit").click(function() {
 	let selectedOrderKey = $(".copy-form-order-list").dropdown("get value");
 	let selectedOrderName = $(".copy-form-order-list").dropdown("get text");
 	let selectedRows = WaterfallTable.getSelectedRows();
+
+	// Suffix. Not a good way to do it but being lazy
+	let lineItemSuffixInput = $("#copy-form-lineitem-suffix").val().trim();
+	let orderSuffixInput = $("#copy-form-order-suffix").val().trim();
+	LineItemNameSuffix = (_.isEmpty(lineItemSuffixInput)) ? NEW_LINE_ITEM_NAME_SUFFIX : ` ${lineItemSuffixInput}`;
+	OrderNameSuffix = (_.isEmpty(orderSuffixInput)) ? NEW_ORDER_NAME_POSTFIX : ` ${orderSuffixInput}`;
 
 	// Validate Inputs
 	if (copyOnlySelected && selectedRows.length <= 0) {

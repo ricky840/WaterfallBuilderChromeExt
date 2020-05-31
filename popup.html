@@ -351,7 +351,7 @@
 							<label>Duplicate only selected line items<span id="copy-only-selected-count" class="copy-only-selected-count"></span></label>
 						</div>
 					</div>
-					<div class="field">
+					<div class="field required">
 						<label>Duplicate Mode</label>
 						<select id="copy-mode" class="ui dropdown selection copy-mode-dropdown">
 							<option value="in_same_order" selected>Duplicate line items within the current order</option>
@@ -369,13 +369,31 @@
 					</div>
 					<div class="field">
 						<div class="ui message">
-							<ul class="list">
-								<li>Duplicated line items will have suffix of "(new)" in the name.</li>
-								<li>Newly created order will have suffix of "(Created by WBExt)" in the name.</li>
+							<ul class="ui list">
+								<li>Duplicated line items will have the name in <span class="mopub-color-text">{NAME} {SUFFIX}</span> format.
+									<ul>
+										<li>Example) Existing Line Item Name (New)</li>
+									</ul>
+								</li>
+								<li>Newly created orders will have the name in <span class="mopub-color-text">New Order {DATETIME} {SUFFIX}</span> format.
+									<ul>
+										<li>Example) New Order 2020/05/30 12:00:01 (Created by WBExt)</li>
+									</ul>
+								</li>
 							</ul>
 						</div>
 					</div>
-					<div class="field">
+					<div class="two fields">
+						<div class="field">
+							<label>Override Suffix for New Line Item Name (leave blank for default)</label>
+							<input type="text" id="copy-form-lineitem-suffix" placeholder="(New)">
+						</div>
+						<div class="field">
+							<label>Override Suffix for New Order Name (leave blank for default)</label>
+							<input type="text" id="copy-form-order-suffix" placeholder="(Created by WBExt)">
+						</div>
+					</div>
+					<div class="field required">
 						<label>Select Target Ad Unit</label>
 						<div class="ui fluid search selection scrolling dropdown adunit-select-copy-form error">
 							<input type="hidden" name="ad-unit">

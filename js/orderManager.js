@@ -33,7 +33,7 @@ var orderManager = (function(global) {
 
 	function createNewOrder(name, afterCreate, oldOrderKey = null) {
 		let newOrderData = {
-			name: name + NEW_ORDER_NAME_POSTFIX,
+			name: name + OrderNameSuffix,
 			advertiser: NEW_ORDER_ADVERTISER, 
 			description: `${NEW_ORDER_DESC} ${getCurrentDatetimeUTC()} UTC`
 		}

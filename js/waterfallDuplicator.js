@@ -107,7 +107,7 @@ var waterfallDuplicator = (function(global) {
 				action: "new",
 				type: each.type,
 				networkType: each.networkType,
-				lineItemName : each.name + " (New)",
+				lineItemName : each.name + LineItemNameSuffix,
 				updatedFields: each
 			}
 
@@ -129,7 +129,7 @@ var waterfallDuplicator = (function(global) {
 				// Except for ad unit key. It should be target ad unit key
 				change.updatedFields = lineItems[i];
 				change.updatedFields["adUnitKeys"] = TargetAdUnitIds;
-				change.updatedFields["name"] += " (New)";
+				change.updatedFields["name"] += LineItemNameSuffix;
 			}
 
 			switch (option) {
