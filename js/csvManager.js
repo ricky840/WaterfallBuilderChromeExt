@@ -14,6 +14,7 @@ var csvManager = (function(global) {
 		"Network Account Id (Based on network)",
 		"Network AdUnit Id (Based on network)",
 		"Network App Id (Based on network)",
+		"Placement Id (Mintegral only)",
 		"Network App Signature (Chartboost only)",
 		"Network Location (Chartboost only)",
 		"Custom Event ClassName (Custom network only)",
@@ -41,14 +42,15 @@ var csvManager = (function(global) {
 				[colNames[9]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_account_id,
 				[colNames[10]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_adunit_id,
 				[colNames[11]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_app_id,
-				[colNames[12]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.app_signature,
-				[colNames[13]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.location,
-				[colNames[14]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_name,
-				[colNames[15]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_data,
-				[colNames[16]]: eachLineItem.status,
-				[colNames[17]]: eachLineItem.keywords,
-				[colNames[18]]: eachLineItem.includeGeoTargeting,
-				[colNames[19]]: eachLineItem.targetedCountries
+				[colNames[12]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.placement_id,
+				[colNames[13]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.app_signature,
+				[colNames[14]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.location,
+				[colNames[15]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_name,
+				[colNames[16]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_data,
+				[colNames[17]]: eachLineItem.status,
+				[colNames[18]]: eachLineItem.keywords,
+				[colNames[19]]: eachLineItem.includeGeoTargeting,
+				[colNames[20]]: eachLineItem.targetedCountries
 			});
 		}
 		let exportCsv = Papa.unparse(exportImportableData);
@@ -244,7 +246,7 @@ var csvManager = (function(global) {
 		// i=0 is title row
 		for (let i=1; i < data.length; i++) {
 			let [name, key, orderName, orderKey, adUnitKeys, priority, bid, type, networkType, 
-				networkAccountId, networkAdUnitId, networkAppId, networkAppSignature, networkLocation,
+				networkAccountId, networkAdUnitId, networkAppId, networkPlacementId, networkAppSignature, networkLocation,
 				customEventClassName, customEventClassData, status, keywords, geoMode, countries] = data[i];
 
 			// Process rows only has the right number of columns (to prevent empty row at the end)
@@ -254,6 +256,7 @@ var csvManager = (function(global) {
 				'network_account_id': networkAccountId.toString().trim(),
 				'network_adunit_id': networkAdUnitId.toString().trim(),
 				'network_app_id': networkAppId.toString().trim(),
+				'placement_id': networkPlacementId.toString().trim(),
 				'app_signature': networkAppSignature.toString().trim(),
 				'location': networkLocation.toString().trim(),
 				'custom_event_class_name': customEventClassName.toString().trim(),
