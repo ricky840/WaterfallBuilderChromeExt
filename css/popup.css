@@ -549,8 +549,9 @@ unitstatusinactive {
 	text-align: center;
 	color: #657786; 
 	padding: 0.6em;
+	padding-bottom: 0px;
 	width: 100%;
-	font-size: 1em;
+	font-size: 0.9em;
 }
 
 /* Version number */

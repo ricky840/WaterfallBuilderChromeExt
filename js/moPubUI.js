@@ -8,6 +8,14 @@ var moPubUI = (function(global) {
 
 		let changes = refineChanges(lineItemChanges);
 
+		// if something is wrong with refining changes, it will return false (override field validation)
+		// Do not proceed with updating
+		if (!changes) {
+			$(".all-content-wrapper").dimmer("hide");
+			loadingIndicator.hideBarLoader();
+			return false;
+		}
+
 		// Debug Temp
 		// console.log("All changes");
 		// console.log(changes)
@@ -176,10 +184,10 @@ var moPubUI = (function(global) {
 					updatedFields.overrideFields = overrideFieldValidator.validate(networkType, updatedFields.overrideFields)
 				} catch (error) {
 					notifier.show({
-						header: "Validation Error",
+						header: "Network Id Validation Error",
 						type: "negative",
 						message: `Key: <b>${lineItemKey}</b> ${error}`,
-						append: true
+						append: false
 					});
 					return false;
 				}

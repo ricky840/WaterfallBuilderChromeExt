@@ -68,6 +68,7 @@ var editFormManager = (function(global) {
 			console.log(`Updated network info ${overrideFields}`);
 			rowData.overrideFields = overrideFields;
 			WaterfallTable.updateData([rowData]);
+			WaterfallTable.redraw(true); // rerender everything (for the case where additinoal network fields)
 			return true;
 		} catch(error) {
 			notifier.editNetworkFormShow({message: error, type: "negative"});
