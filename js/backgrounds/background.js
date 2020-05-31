@@ -63,7 +63,7 @@ chrome.runtime.onInstalled.addListener(function(event) {
   if (event.reason === 'update') {
     chrome.storage.local.set({extUpdated: true, freshInstalled: false}, function() {
       console.log("Extension Updated");
-    })
+    });
   }
 });
 
