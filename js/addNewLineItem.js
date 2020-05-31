@@ -39,6 +39,7 @@ var addNewLineItem = (function(global) {
 		network_account_id: "Network account id",
 		network_app_id: "Network app id",
 		network_adunit_id: "Network ad unit id",
+		placement_id: "Placement id",
 		app_signature: "App signature",
 		location: "Location",
 		custom_event_class_name: "Custom event class name",

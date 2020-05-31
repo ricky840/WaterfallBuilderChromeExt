@@ -160,6 +160,7 @@ var editFormManager = (function(global) {
 		let network_account_id = (_.isEmpty(overrideFields.network_account_id)) ? "" : escapeDoubleQuote(overrideFields.network_account_id); 
 		let network_app_id = (_.isEmpty(overrideFields.network_app_id)) ? "" : escapeDoubleQuote(overrideFields.network_app_id);
 		let network_adunit_id = (_.isEmpty(overrideFields.network_adunit_id)) ? "" : escapeDoubleQuote(overrideFields.network_adunit_id);
+		let placement_id = (_.isEmpty(overrideFields.placement_id)) ? "" : escapeDoubleQuote(overrideFields.placement_id);
 		let app_signature = (_.isEmpty(overrideFields.app_signature)) ? "" : escapeDoubleQuote(overrideFields.app_signature);
 		let location = (_.isEmpty(overrideFields.location)) ? "" : escapeDoubleQuote(overrideFields.location);
 		let custom_event_class_name = (_.isEmpty(overrideFields.custom_event_class_name)) ? "" : escapeDoubleQuote(overrideFields.custom_event_class_name);
@@ -263,6 +264,10 @@ var editFormManager = (function(global) {
 					<div class="field required">
 						<label>App Id</label>
 						<input type="text" name="network_app_id" value="${network_app_id}">
+					</div>
+					<div class="field required">
+						<label>Placement Id</label>
+						<input type="text" name="placement_id" value="${placement_id}">
 					</div>`;
 				break;
 			case "unity":

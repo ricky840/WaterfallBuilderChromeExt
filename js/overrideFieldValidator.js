@@ -91,12 +91,13 @@ var overrideFieldValidator = (function(global) {
 				}
 				break;
 			case "mintegral":
-				if (_.isEmpty(value.network_account_id) || _.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
-					throw new Error(`${networkName} requires <b>network_adunit_id (unit id)</b>, <b>network_app_id (app id)</b>, <b>network_account_id (app key)</b>`);
+				if (_.isEmpty(value.network_account_id) || _.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id) || _.isEmpty(value.placement_id)) {
+					throw new Error(`${networkName} requires <b>network_adunit_id (unit id)</b>, <b>network_app_id (app id)</b>, <b>network_account_id (app key)</b>, <b>placement_id</b>`);
 				} else {
 					overrideFields.network_account_id = value.network_account_id; // required
 					overrideFields.network_adunit_id = value.network_adunit_id; // required
 					overrideFields.network_app_id = value.network_app_id; // required
+					overrideFields.placement_id = value.placement_id; // required
 				}
 				break;
 			case "unity":
