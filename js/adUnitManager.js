@@ -31,10 +31,10 @@ var adUnitManager = (function(global) {
 	}
 
 	// formatOption = list-name-id | raw
-	function loadAdUnits(formatOption, callback) {
+	function loadAdUnits(formatOption, useCache, callback) {
 
 		// Load from cache if exists
-		if (!_.isEmpty(originalResponse)) {
+		if (useCache && !_.isEmpty(originalResponse)) {
 			console.log("Loading ad units from cache");
 			(formatOption == "list-name-id") ? callback(listFormat(originalResponse)) : callback(originalResponse);
 		} else {

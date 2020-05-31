@@ -34,6 +34,32 @@ $("#reload-ad-unit").click(function() {
 	});
 });
 
+/* Reload ad unit, sync ad unit button */
+$("#adunit-sync-btn").click(function() {
+	let syncBtn = $(this);
+	syncBtn.find(".adunit-sync").hide();
+	syncBtn.find(".loader").show();
+	$(".adunit-select").addClass("disabled");
+
+	adUnitManager.loadAdUnits("list-name-id", false, function(adUnitList) {
+		let adUnitData = [];
+		for (let i=0; i < adUnitList.length; i++) {
+			adUnitData.push({
+				name: adUnitList[i].value,
+				value: adUnitList[i].key
+			});
+		}
+		// Update only when successfully fetched list
+		if (adUnitData.length > 0) {
+			$(".adunit-select").dropdown('setup menu', {values: adUnitData});
+			$(".adunit-select-copy-form").dropdown('setup menu', {values: adUnitData});
+		}
+		syncBtn.find(".adunit-sync").show();
+		syncBtn.find(".loader").hide();
+		$(".adunit-select").removeClass("disabled");
+	});
+});
+
 /* Select all checkbox */
 $(".all-content-wrapper").on("change", ".select-all", function() {
 	let selected = $(this).is(":checked");

@@ -9,7 +9,7 @@ $(document).ready(function() {
 	$("#add-adsource").trigger('click');
 
 	// Load Ad Units
-	adUnitManager.loadAdUnits("list-name-id", function(adUnitList) {
+	adUnitManager.loadAdUnits("list-name-id", false, function(adUnitList) {
 		if (adUnitList) {
 			$("#info-adunit-name").html("Select ad unit");
 			let adUnitData = [];
@@ -72,7 +72,7 @@ $(document).ready(function() {
 	accountManager.updateHtmlEmail();
 
 	// Version Update
-	$(".wb-version").html(`v${chrome.runtime.getManifest().version}`);	
+	document.title += ` v${chrome.runtime.getManifest().version}`;
 
 	// Column Selector
 	let colDefs = WaterfallTable.getColumnDefinitions(); // Get column definition array
