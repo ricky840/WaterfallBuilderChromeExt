@@ -153,25 +153,25 @@ var tableInitializer = (function(global) {
 
 			// Manage Row Movement
 			movableRows: true,
-			movableRowsReceiver: function(fromRow, toRow, fromTable) {
-				let insertData = fromRow.getData();
-				let searhResult = WaterfallTable.searchRows("key", "=", insertData.key);
-				if (searhResult.length > 0) {
-					notifier.clear();
-					notifier.show({
-						header: "Existing line item",
-						type: "info",
-						message: `<b>${insertData.name}</b> <b>${insertData.key}</b> already exists.`
-					});
-					return false;
-				}
-				if (!insertData.adUnitKeys.includes(AdUnitId)) {
-					insertData.adUnitKeys.push(AdUnitId); // Connect to New AdUnit #Important! AdUnitId is global variable
-					console.log(`Assigning adunit ${AdUnitId} for ${insertData.key}`);
-				}
-				WaterfallTable.updateOrAddData([insertData]);
-				return true;
-			},
+			// movableRowsReceiver: function(fromRow, toRow, fromTable) {
+			// 	let insertData = fromRow.getData();
+			// 	let searhResult = WaterfallTable.searchRows("key", "=", insertData.key);
+			// 	if (searhResult.length > 0) {
+			// 		notifier.clear();
+			// 		notifier.show({
+			// 			header: "Existing line item",
+			// 			type: "info",
+			// 			message: `<b>${insertData.name}</b> <b>${insertData.key}</b> already exists.`
+			// 		});
+			// 		return false;
+			// 	}
+			// 	if (!insertData.adUnitKeys.includes(AdUnitId)) {
+			// 		insertData.adUnitKeys.push(AdUnitId); // Connect to New AdUnit #Important! AdUnitId is global variable
+			// 		console.log(`Assigning adunit ${AdUnitId} for ${insertData.key}`);
+			// 	}
+			// 	WaterfallTable.updateOrAddData([insertData]);
+			// 	return true;
+			// },
 		
 			// Grouping config
 			groupBy: "priority",
@@ -228,9 +228,9 @@ var tableInitializer = (function(global) {
 			index: "key", // To avoid dup in the table
 
 			// Movable Row Config
-			movableRows: true,
-			movableRowsConnectedTables: "#waterfall-adunit",
-			movableRowsSender: "delete",
+			// movableRows: true,
+			// movableRowsConnectedTables: "#waterfall-adunit",
+			// movableRowsSender: "delete",
 
 			// Pagination
 			pagination: "local",

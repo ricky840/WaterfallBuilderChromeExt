@@ -417,20 +417,29 @@ $(".lineitem-action-buttons").click(function() {
 				});
 				existingItems.push(data);
 				continue;
-			}	
-			if (!data.adUnitKeys.includes(AdUnitId)) { 
-				// [Important] Update orgLineItems without new assigning ad unit id first
-				// so the assigned line item can be considered as updated item
-				lineItemManager.cacheLineItem([data]);
-
-			  // Assign new AdUnit Id - this should happen after updating the orgLineItem
-				data.adUnitKeys.push(AdUnitId);
-
-				// Add to the delete list (for line item table)
-				deleteRowIndex.push(data.key);
-
-				console.log(`Assigning adunit ${AdUnitId} for ${data.key}`);
 			}
+
+			// [Important] Update orgLineItems without new assigning ad unit id first
+			// so the assigned line item can be considered as new item
+			lineItemManager.cacheLineItem([data]);
+
+			lineItemManager.getLineItemFromMoPub(data.key, function(lineItem) {
+				if (lineItem) {
+					let rows = WaterfallTable.searchRows("key", "=", lineItem.key);
+					for (let i=0; i < rows.length; i++) {
+						let lineItemInTable = rows[i].getData();
+						lineItemInTable["adUnitKeys"] = lineItem.adUnitKeys;
+						lineItemInTable["adUnitKeys"].push(AdUnitId);
+						rows[i].update(lineItemInTable).then(function(){
+							console.log(`Assigning adunit ${AdUnitId} for line item ${lineItem.key}`);
+						});
+					}
+				}
+			});
+
+			// Add to the delete list (for line item table)
+			deleteRowIndex.push(data.key);
+
 		} else if (action == "duplicate") {
 			data.adUnitKeys = [AdUnitId];
 			data.key = "temp-" + stringGen(32);
