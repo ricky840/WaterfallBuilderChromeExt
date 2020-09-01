@@ -74,6 +74,19 @@ $(document).ready(function() {
 	// Version Update
 	document.title += ` v${chrome.runtime.getManifest().version}`;
 
+  // Update Notification
+  chrome.storage.local.get("extUpdated", function(result) {
+    if(result["extUpdated"]) {
+      let manifest = chrome.runtime.getManifest();
+      notifier.show({
+        header: "Extension Updated",
+        type: "info",
+        message: `Waterfall Builder was updated to ${manifest.version} See <a href="https://github.com/ricky840/WaterfallBuilderChromeExt/releases" target="_blank">change logs</a> for more details. :)`
+      });
+    }
+    chrome.storage.local.set({"extUpdated": false});
+  });
+
 	// Column Selector
 	let colDefs = WaterfallTable.getColumnDefinitions(); // Get column definition array
 	for(let i =0; i < colDefs.length; i++) {
