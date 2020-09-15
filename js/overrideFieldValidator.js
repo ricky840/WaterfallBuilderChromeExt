@@ -90,14 +90,13 @@ var overrideFieldValidator = (function(global) {
 					delete overrideFields.network_account_id;
 				}
 				break;
-			case "mintegral":
-				if (_.isEmpty(value.network_account_id) || _.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id) || _.isEmpty(value.placement_id)) {
-					throw new Error(`${networkName} requires <b>network_adunit_id (unit id)</b>, <b>network_app_id (app id)</b>, <b>network_account_id (app key)</b>, <b>placement_id</b>`);
+			case "pangle":
+				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
+					throw new Error(`${networkName} requires <b>network_adunit_id (placement id)</b>, <b>network_app_id (game id)</b>`);
 				} else {
-					overrideFields.network_account_id = value.network_account_id; // required
 					overrideFields.network_adunit_id = value.network_adunit_id; // required
 					overrideFields.network_app_id = value.network_app_id; // required
-					overrideFields.placement_id = value.placement_id; // required
+					delete overrideFields.network_account_id;
 				}
 				break;
 			case "unity":

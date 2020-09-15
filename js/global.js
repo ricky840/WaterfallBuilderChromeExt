@@ -75,8 +75,8 @@ const NETWORK_TYPE_NAME = {
 	vungle: "Vungle",
 	verizon: "Verizon",
 	unity: "Unity",
-	mintegral: "Mintegral",
 	yahoo: "Yahoo",
+	pangle: "Pangle",
 	custom_html: "Custom JS",
 	custom_native: "Custom SDK"
 }

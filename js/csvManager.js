@@ -374,11 +374,11 @@ var csvManager = (function(global) {
 				}
 				break;
 			case "networkType":
-				regex = /^admob_native$|^applovin_sdk$|^adcolony$|^chartboost$|^facebook$|^ironsource$|^tapjoy$|^vungle$|^mintegral$|^unity$|^verizon$|^yahoo$|^custom_html$|^custom_native$/i;
+				regex = /^admob_native$|^applovin_sdk$|^adcolony$|^chartboost$|^facebook$|^ironsource$|^tapjoy$|^vungle$|^pangle$|^unity$|^verizon$|^yahoo$|^custom_html$|^custom_native$/i;
 				if (regex.test(value)) {
 					returnValue = value.toLowerCase();
 				} else {
-					throw new Error(`NetworkType should be one of admob_native, applovin_sdk, adcolony, chartboost, facebook, ironsource, tapjoy, vungle, mintegral, unity, verizon, yahoo, custom_native. Value: <b>${value}</b>`);
+					throw new Error(`NetworkType should be one of admob_native, applovin_sdk, adcolony, chartboost, facebook, ironsource, tapjoy, vungle, pangle, unity, verizon, yahoo, custom_native. Value: <b>${value}</b>`);
 				}
 				break;
 			case "status":

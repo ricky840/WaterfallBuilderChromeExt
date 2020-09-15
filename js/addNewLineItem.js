@@ -93,9 +93,9 @@ var addNewLineItem = (function(global) {
 				newLineItem.networkType = "vungle";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
 				break;
-			case "add-mintegral":
+			case "add-pangle":
 				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
-				newLineItem.networkType = "mintegral";
+				newLineItem.networkType = "pangle";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
 				break;
 			case "add-unity":
