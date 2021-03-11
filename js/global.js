@@ -77,6 +77,7 @@ const NETWORK_TYPE_NAME = {
 	unity: "Unity",
 	yahoo: "Yahoo",
 	pangle: "Pangle",
+	snap: "Snap",
 	custom_html: "Custom JS",
 	custom_native: "Custom SDK"
 }

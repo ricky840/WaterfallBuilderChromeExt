@@ -241,6 +241,13 @@ $("#edit-submit").click(function() {
 		} else if (_.isEmpty(input.disallowAutoCpm.toString())) {
 			delete lineItem.disallowAutoCpm;
 		}
+		// Update IDFA targeting
+		if (!_.isEmpty(input.idfaTargeting) && lineItem.type != "marketplace") {
+			lineItem.idfaTargeting = input.idfaTargeting;
+		} else {
+			// Remove if there was no value
+			delete lineItem.idfaTargeting;
+		}
 	}
 
 	let selectedRowObj = WaterfallTable.getSelectedRows();

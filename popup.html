@@ -118,6 +118,7 @@
 								<button id="add-chartboost" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Chartboost</button>
 								<button id="add-facebook" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Facebook</button>
 								<button id="add-pangle" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Pangle</button>
+								<button id="add-snap" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Snap</button>
 								<button id="add-ironsource" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>IronSource</button>
 								<button id="add-tapjoy" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>TapJoy</button>
 								<button id="add-unity" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Unity</button>
@@ -534,6 +535,16 @@
 							<option value="archived">Archived</option>
 						</select>
 					</div>
+					<h4 class="ui dividing header blue">IDFA Targeting</h4>
+					<div class="field">
+						<label>IDFA Targeting for line items (Default MPX does not support IDFA targeting)</label>
+						<select id="edit-idfa-targeting-select" class="ui dropdown" name="idfa_targeting">
+							<option value="">Select</option>
+							<option value="all">All ad requests</option>
+							<option value="only_idfa">Only ad requests from a device with a IDFA</option>
+							<option value="no_idfa">Only ad requests from a device without a IDFA</option>
+						</select>
+					</div>
 					<h4 class="ui dividing header blue">Disable AutoCPM Update</h4>
 					<div class="field">
 						<label>Disable Auto CPM updating for selected line items (This will only apply for network item type)</label>
@@ -543,6 +554,7 @@
 							<option value="no">No</option>
 						</select>
 					</div>
+
 					<h4 class="ui dividing header blue">Geo Targeting</h4>
 					<div class="field">
 						<label>Geo Targeting Mode</label>

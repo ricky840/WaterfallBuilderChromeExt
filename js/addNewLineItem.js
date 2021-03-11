@@ -98,6 +98,11 @@ var addNewLineItem = (function(global) {
 				newLineItem.networkType = "pangle";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
 				break;
+			case "add-snap":
+				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
+				newLineItem.networkType = "snap";
+				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
+				break;
 			case "add-unity":
 				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
 				newLineItem.networkType = "unity";

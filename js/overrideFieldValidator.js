@@ -99,6 +99,15 @@ var overrideFieldValidator = (function(global) {
 					delete overrideFields.network_account_id;
 				}
 				break;
+			case "snap":
+				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
+					throw new Error(`${networkName} requires <b>network_adunit_id (slot id)</b>, <b>network_app_id (app id)</b>`);
+				} else {
+					overrideFields.network_adunit_id = value.network_adunit_id; // required
+					overrideFields.network_app_id = value.network_app_id; // required
+					delete overrideFields.network_account_id;
+				}
+				break;
 			case "unity":
 				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
 					throw new Error(`${networkName} requires <b>network_adunit_id (placement id)</b>, <b>network_app_id (game id)</b>`);

@@ -20,6 +20,7 @@ var csvManager = (function(global) {
 		"Custom Event ClassName (Custom network only)",
 		"Custom Event ClassData (Custom network only)",
 		"Status (Required)",
+		"IDFA Targeting (Required)",
 		"Keywords (Optional. Comma separated)",
 		"GeoTargetingMode(Required. If 'all', countires will be ignored)",
 		"Countries (Optional. Comma separated)"
@@ -48,9 +49,10 @@ var csvManager = (function(global) {
 				[colNames[15]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_name,
 				[colNames[16]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_data,
 				[colNames[17]]: eachLineItem.status,
-				[colNames[18]]: eachLineItem.keywords,
-				[colNames[19]]: eachLineItem.includeGeoTargeting,
-				[colNames[20]]: eachLineItem.targetedCountries
+				[colNames[18]]: eachLineItem.idfaTargeting,
+				[colNames[19]]: eachLineItem.keywords,
+				[colNames[20]]: eachLineItem.includeGeoTargeting,
+				[colNames[21]]: eachLineItem.targetedCountries
 			});
 		}
 		let exportCsv = Papa.unparse(exportImportableData);
@@ -101,38 +103,29 @@ var csvManager = (function(global) {
 
 				for (let i=0; i < filteredData.length; i++) {
 					let eachLineItem = filteredData[i];
+					lineItemManager.getLineItemFromMoPub(eachLineItem.key, function(lineItem) {
+						if (lineItem) {
+							eachLineItem.orderName = lineItem.orderName;
+							eachLineItem.orderKey = lineItem.orderKey;
+							eachLineItem.adUnitKeys = lineItem.adUnitKeys;
+							eachLineItem.idfaTargeting = lineItem.idfaTargeting;
+							exportData.push(eachLineItem);				
+							numberOfItemsToPrepare--;
+							loadingIndicator.increaseBar();
+							$(".updating-message").html(`Exporting line items, remaining ${numberOfItemsToPrepare}`);
+						}	else {
+							console.log(`Failed to get line item info ${eachLineItem.name} ${eachLineItem.key}, stop exporting..`);
+							return false;
+						}
 
-					// If order key doesn't exist, get it from MoPub
-					if (_.isEmpty(eachLineItem.orderKey)) {
-						lineItemManager.getLineItemFromMoPub(eachLineItem.key, function(lineItem) {
-							if (lineItem) {
-								eachLineItem.orderName = lineItem.orderName;
-								eachLineItem.orderKey = lineItem.orderKey;
-								eachLineItem.adUnitKeys = lineItem.adUnitKeys;
-								exportData.push(eachLineItem);				
-								numberOfItemsToPrepare--;
-								loadingIndicator.increaseBar();
-								$(".updating-message").html(`Exporting line items, remaining ${numberOfItemsToPrepare}`);
-							}	else {
-								console.log(`Failed to get line item info ${eachLineItem.name} ${eachLineItem.key}, stop exporting..`);
-								return false;
-							}
-
-							if (numberOfItemsToPrepare == 0) {
-								// When data(all order key) is ready
-								$(".all-content-wrapper").dimmer("hide");
-								loadingIndicator.hideBarLoader();
-								console.log("Export ready");
-								exportToFile(exportData);
-							}
-						});
-					} else {
-						// if order key exists already, then just export it.
-						numberOfItemsToPrepare--;
-						loadingIndicator.increaseBar();
-						$(".updating-message").html(`Exporting line items, remaining ${numberOfItemsToPrepare}`);
-						exportData.push(eachLineItem);
-					}
+						if (numberOfItemsToPrepare == 0) {
+							// When data(all order key) is ready
+							$(".all-content-wrapper").dimmer("hide");
+							loadingIndicator.hideBarLoader();
+							console.log("Export ready");
+							exportToFile(exportData);
+						}
+					});
 				}
 			} else {
 				// nothing to export
@@ -247,7 +240,7 @@ var csvManager = (function(global) {
 		for (let i=1; i < data.length; i++) {
 			let [name, key, orderName, orderKey, adUnitKeys, priority, bid, type, networkType, 
 				networkAccountId, networkAdUnitId, networkAppId, networkPlacementId, networkAppSignature, networkLocation,
-				customEventClassName, customEventClassData, status, keywords, geoMode, countries] = data[i];
+				customEventClassName, customEventClassData, status, idfaTargeting, keywords, geoMode, countries] = data[i];
 
 			// Process rows only has the right number of columns (to prevent empty row at the end)
 			if (data[i].length != colNames.length) continue;
@@ -276,6 +269,7 @@ var csvManager = (function(global) {
 					'networkType': (type == "network") ? csvFieldValidator('networkType', networkType) : null,
 					'overrideFields': (type == "network") ? overrideFieldValidator.validate(networkType, overrideFields) : {}, // unified overridesfield form
 					'status': csvFieldValidator('status', status),
+					'idfaTargeting': csvFieldValidator('idfaTargeting', idfaTargeting),
 					'keywords': csvFieldValidator('keywords', keywords),
 					'includeGeoTargeting': csvFieldValidator('includeGeoTargeting', geoMode),
 					'targetedCountries': (geoMode == "all") ? [] : csvFieldValidator('targetedCountries', countries),
@@ -374,11 +368,11 @@ var csvManager = (function(global) {
 				}
 				break;
 			case "networkType":
-				regex = /^admob_native$|^applovin_sdk$|^adcolony$|^chartboost$|^facebook$|^ironsource$|^tapjoy$|^vungle$|^pangle$|^unity$|^verizon$|^yahoo$|^custom_html$|^custom_native$/i;
+				regex = /^admob_native$|^applovin_sdk$|^adcolony$|^chartboost$|^facebook$|^ironsource$|^tapjoy$|^vungle$|^pangle$|^snap$|^unity$|^verizon$|^yahoo$|^custom_html$|^custom_native$/i;
 				if (regex.test(value)) {
 					returnValue = value.toLowerCase();
 				} else {
-					throw new Error(`NetworkType should be one of admob_native, applovin_sdk, adcolony, chartboost, facebook, ironsource, tapjoy, vungle, pangle, unity, verizon, yahoo, custom_native. Value: <b>${value}</b>`);
+					throw new Error(`NetworkType should be one of admob_native, applovin_sdk, adcolony, chartboost, facebook, ironsource, tapjoy, vungle, pangle, snap, unity, verizon, yahoo, custom_native. Value: <b>${value}</b>`);
 				}
 				break;
 			case "status":
@@ -387,6 +381,14 @@ var csvManager = (function(global) {
 					returnValue = value.toLowerCase();
 				} else {
 					throw new Error(`Status should be one of running, paused or archived. <b>${value}</b>`);
+				}
+				break;
+			case "idfaTargeting":
+				regex = /^all|^only_idfa|^no_idfa/i;
+				if (regex.test(value)) {
+					returnValue = value.toLowerCase();
+				} else {
+					throw new Error(`IDFA Targeting should be one of all, only_idfa or no_idfa. <b>${value}</b>`);
 				}
 				break;
 			case "keywords":

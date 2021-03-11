@@ -8,6 +8,7 @@ var editFormManager = (function(global) {
 		priorityId: "edit-priority-select",
 		statusId: "edit-status-select",
 		autocpmId: "edit-disallow-autocpm-select",
+		idfaTargetgId: "edit-idfa-targeting-select",
 		targetModeId: "target-mode",
 		targetCountryId: "target-country",
 		tagifyKeywords: "tagify-keywords"
@@ -17,6 +18,7 @@ var editFormManager = (function(global) {
 		$(`#${DOM_ID.priorityId}`).dropdown({ clearable: true });	
 		$(`#${DOM_ID.statusId}`).dropdown({ clearable: true });	
 		$(`#${DOM_ID.autocpmId}`).dropdown({ clearable: true });	
+		$(`#${DOM_ID.idfaTargetgId}`).dropdown({ clearable: true });	
 		$(`#${DOM_ID.targetCountryId} .menu`).html(createCountryMenuListHtml());
 		$(`#${DOM_ID.targetCountryId}`).dropdown({
 			onChange: function(value, text, element) {
@@ -55,6 +57,8 @@ var editFormManager = (function(global) {
 		} else {
 			$(`#${DOM_ID.autocpmId}`).dropdown('restore defaults');
 		}
+		//Idfa Targeting (does not work currently)
+		$(`#${DOM_ID.idfaTargetgId}`).dropdown('set selected', rowData.idfaTargeting);
 	}
 
 	function updateNetworkInput(rowData) {
@@ -78,7 +82,7 @@ var editFormManager = (function(global) {
 	}
 		
 	function parseInput(formData) {
-		let cpm, priority, status, targetMode, targetCountries, keywords, disallowAutoCpm; 
+		let cpm, priority, status, targetMode, targetCountries, keywords, disallowAutoCpm, idfaTargeting; 
 		// Parse data
 		for (let i=0; i < formData.length; i++) {
 			switch (formData[i].name) {
@@ -96,6 +100,10 @@ var editFormManager = (function(global) {
 					break;
 				case "target_country":
 					targetCountries = formData[i].value.trim();
+					break;
+				case "idfa_targeting":
+					idfaTargeting = formData[i].value.trim();
+					if (_.isEmpty(idfaTargeting)) idfaTargeting = "";
 					break;
 				case "disallow_autocpm":
 					let disallowAutoUpdate = formData[i].value.trim();
@@ -131,7 +139,8 @@ var editFormManager = (function(global) {
 			"targetMode": targetMode,
 			"targetCountries": targetCountries,
 			"keywords": keywords,
-			"disallowAutoCpm": disallowAutoCpm
+			"disallowAutoCpm": disallowAutoCpm,
+			"idfaTargeting": idfaTargeting
 		}
 	}
 
@@ -139,6 +148,7 @@ var editFormManager = (function(global) {
 		$(`#${DOM_ID.cpmId}`).val('');	
 		$(`#${DOM_ID.priorityId}`).dropdown('clear');	
 		$(`#${DOM_ID.statusId}`).dropdown('clear');	
+		$(`#${DOM_ID.idfaTargetgId}`).dropdown('clear');
 		$(`#${DOM_ID.autocpmId}`).dropdown('clear');
 		$(`#${DOM_ID.targetModeId}`).dropdown('clear');
 		$(`#${DOM_ID.targetCountryId}`).dropdown('clear');
@@ -256,6 +266,17 @@ var editFormManager = (function(global) {
 				html = `
 					<div class="field required">
 						<label>Ad Placement Id</label>
+						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
+					</div>
+					<div class="field required">
+						<label>App Id</label>
+						<input type="text" name="network_app_id" value="${network_app_id}">
+					</div>`;
+				break;
+			case "snap":
+				html = `
+					<div class="field required">
+						<label>Slot Id</label>
 						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
 					</div>
 					<div class="field required">
