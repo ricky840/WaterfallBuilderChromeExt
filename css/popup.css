@@ -15,13 +15,14 @@
 }
 
 /* Menu on top */
-.menu {
+/* .menu {
   margin-top: 0px !important;
 }
-
+*/
 .mopub-menu {
-	background: #14171a !important;
-	box-shadow: 0 2px 5px rgba(0,0,0,.35) !important;
+	/* background: #14171a !important; */
+	box-shadow: 0 3px 5px rgba(0,0,0,.35) !important;
+	margin-bottom: 1.5em !important;
 }
 
 /* Bar Loader */
@@ -106,7 +107,7 @@
 
 /* Search Input */
 .mopub-input-search {
-	border-radius: 1.6rem !important;
+	/* border-radius: 1.6rem !important; */
 	/* border: 1px solid #657786 !important; */
 	/* color: #657786 !important; */
 	/* font-weight: bold !important; */
@@ -145,15 +146,20 @@
 
 /* Tabulator */
 .tabulator {
-	font-size: 12px;
+	font-size: 0.9em;
 }
 
 .tabulator-group-toggle {
 	float: left; /* To have the arrow on the right for grouping */
 }
+.tabulator .tabulator-group {
+	box-shadow: 0 2px 5px rgb(0 0 0 / 10%) !important;
+	background-color: #cce2ff8a !important;
+}
 
 .tabulator .tabulator-header {
-	color: #657786 !important;
+	/* color: #657786 !important; */
+	box-shadow: 0 2px 5px rgb(0 0 0 / 10%) !important;
 }
 
 .tabulator-col.tabulator-sortable {
@@ -177,9 +183,9 @@
 	position: relative;
 	cursor: pointer;
 }
-
+/*
 .tabulator input[type='checkbox']:before { 
-	/* border: 1px solid #D4D4D5; */
+	border: 1px solid #D4D4D5;
 	content: "";
 	display: block;
 	position: absolute;
@@ -219,10 +225,14 @@
 	border-radius: 3px;
 	background-color: white;
 }
+*/
 
-.tabulator-row.tabulator-selectable:hover {
-	background-color: #eaf5fd !important;
+/* .tabulator-row.tabulator-selectable:hover {
+	background-color: #eaf5fd;
 }
+.tabulator-row.tabulator-selectable.updated-row:hover {
+	background-color: #ecf2dc !important;
+} */
 
 /* Cell Edit */
 .tabulator-row .tabulator-cell.tabulator-editing {
@@ -246,12 +256,12 @@
 /* Circle Loader */
 .ui.inverted.dimmer .ui.loader:after {
 	/* border-color: #1da1f2 #1da1f2 transparent !important; */
-	border-color: #1da1f2 transparent transparent !important;
+	/* border-color: #1da1f2 transparent transparent !important; */
 }
 
 .ui.inverted.dimmer .ui.loader:before {
 	/* border-color: rgba(0, 0, 0, 0) !important; */
-	border-color: rgb(210, 233, 250) !important;
+	/* border-color: rgb(210, 233, 250) !important; */
 }
 
 /* UI Update Loader */
@@ -267,6 +277,18 @@
 }
 .cell-format-value {
 	font-weight: 500;
+}
+.tabulator-unselectable .cell-header {
+	color: #D0D0D0 !important;
+}
+.tabulator-unselectable .cell-format-value {
+	color: #D0D0D0 !important;
+}
+
+.cell-inside-label {
+	padding: 4.5px !important;
+	margin-right: 1px !important;
+	border-radius: 0 !important;
 }
 
 .less-padding-label {
@@ -307,13 +329,17 @@
 	/* color: #1da1f2; */
 	font-weight: bold;
 }
-
 .lineitem-ordername {
 	color: #657786;
 }
-
 .lineitem-networktype {
 	color: #657786;
+}
+.tabulator-unselectable .lineitem-ordername {
+	color: #D0D0D0 !important;
+}
+.tabulator-unselectable .lineitem-networktype {
+	color: #D0D0D0 !important;
 }
 
 /* Item Count in Table footer */
@@ -369,9 +395,9 @@
 }
 .logged-in-account {
 	font-weight: bold;
-	font-size: 1.1em !important;
+	font-size: 1em !important;
 	word-break: break-all;
-	/* width: 238px; */
+	/* width: 200px; */
 }
 .logged-in-account-desc {
 	font-weight: normal;
@@ -400,19 +426,22 @@
 	height: 100% !important;
 }
 .adunit-select.dropdown {
-	font-size: 1.2em; 
+	/* font-size: 1.2em;  */
 	padding-top: 0.5em !important;
 	padding-bottom: 0.5em !important;
+	width: 100%;
 }
 .adunit-select > .text {
 	vertical-align: -webkit-baseline-middle !important;
+	width: 100%;
+	margin-bottom: 2px;
 }
 ios {
 	width: 30px !important;
-	padding: 4px !important;
-	font-size: 0.7rem !important;
+	padding: 5px 4px 5px 4px !important;
+	font-size: 0.7em !important;
 	text-align: center !important;
-	margin-right: 5px !important;
+	margin-right: 1em !important;
 	background-color: #1da1f2 !important;
 	border-color: #1da1f2 !important;
 
@@ -434,10 +463,10 @@ ios {
 }
 aos {
 	width: 30px !important;
-	padding: 4px !important;
-	font-size: 0.7rem !important;
+	padding: 5px 4px 5px 4px !important;
+	font-size: 0.7em !important;
 	text-align: center !important;
-	margin-right: 5px !important;
+	margin-right: 1em !important;
 	background-color: #f2711c !important;
 	border-color: #f2711c !important;
 
@@ -459,9 +488,10 @@ aos {
 }
 unitformat {
 	padding: 4px !important;
-	font-size: 0.7rem !important;
+	font-size: 0.7em !important;
 	text-align: center !important;
-	/* margin-right: 5px !important; */
+	float: right;
+	margin-right: 0.7em !important;
 	background-color: #767676 !important;
 	border-color: #767676 !important;
 
@@ -483,14 +513,13 @@ unitformat {
 }
 appname {
 	font-size: 0.9em !important;
-	margin-right: 5px !important;
+	margin-right: 0.7em !important;
   color: gray !important;
 }
 unitname {
 	/* color: #1da1f2 !important; */
-	font-size: 0.9em !important;
 	font-weight: bold !important;
-	margin-right: 5px !important;
+	margin-right: 0.7em !important;
 }
 unitkey {
 	display: none !important;
@@ -549,9 +578,10 @@ unitstatusinactive {
 	text-align: center;
 	color: #657786; 
 	padding: 0.6em;
-	padding-bottom: 0px;
+	padding-bottom: 1em;
 	width: 100%;
 	font-size: 0.9em;
+	background-color: white;
 }
 
 /* Version number */
@@ -587,7 +617,7 @@ unitstatusinactive {
 .add-new:before {
 	content: 'New';
 	margin-top: 2.7em;
-	margin-left: 0.1em;
+	margin-left: 0.3em;
 	color: red;
 	position: absolute;
 	font-weight: bold;
@@ -602,7 +632,7 @@ unitstatusinactive {
 	background-color: #fff3f2;
 }
 .updated-row:before {
-	content: 'Update';
+	content: 'Updated';
 	margin-top: 2.7em;
 	margin-left: 0.1em;
 	color: green;
@@ -659,14 +689,14 @@ unitstatusinactive {
 } 
 
 /* line item key link */
-.lineitem-key-link {
+/* .lineitem-key-link {
 	color: #657786 !important;
 	text-decoration: none !important;
 }
 .lineitem-key-link:hover {
 	color: #1da1f2 !important;
 	text-decoration: underline !important;
-}
+} */
 
 /* ad unit id link in main page */
 #info-adunit-id:hover {
@@ -676,11 +706,23 @@ unitstatusinactive {
 
 /* Column header height (give space at the bottom to adjust width easy) */
 .tabulator .tabulator-header .tabulator-col {
-	height: 55px;
+	/* height: 55px; */
 }
 
 /* ad unit sync button in the menu bar */
 .adunit-sync:hover {
 	color: #1da1f2 !important;
 	cursor: pointer;
+}
+
+
+
+/* NEW ---------------------------------------------------------- */
+
+#info-adunit-name {
+	word-break: break-all;
+}
+
+.full-height-segment {
+	height: 100%;
 }

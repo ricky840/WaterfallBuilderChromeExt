@@ -9,32 +9,145 @@
 		<link rel="stylesheet" type="text/css" href="css/popup.css">
 	</head>
 	<body>
-  <div class="body-wrapper">
+		<!-- Bottom Sidebar -->
+		<div class="ui bottom sidebar">
+			<div class="ui secondary blue padded segment">
 
-		<!-- Menu -->
-		<div class="ui tiny menu inverted stackable no-radius mopub-menu borderless">
-			<a class="header item" href="">
-				<h4 style="margin-bottom: 0px;">Publisher UI Extension for</h4>
+				<!-- Status Filter -->
+				<div id="status-filter-lineitem" class="ui tiny grey circular basic button dropdown labeled icon lineitem-filter">
+					<i class="filter icon"></i>
+					<div class="default text">Filter Status</div>
+					<div class="menu">
+						<div class="item" data-value="running">
+							<div class="ui green empty circular label tiny"></div>Running
+						</div>
+						<div class="item" data-value="all">
+							<div class="ui light blue empty circular label tiny"></div>All
+						</div>
+						<div class="item" data-value="paused">
+							<div class="ui yellow empty circular label tiny"></div>Paused
+						</div>
+						<div class="item" data-value="archived">
+							<div class="ui gray empty circular label tiny"></div>Archived
+						</div>
+					</div>
+				</div>
+				<!-- Type Filter -->
+				<div id="type-filter-lineitem" class="ui tiny grey circular basic button dropdown labeled icon lineitem-filter">
+					<i class="filter icon"></i>
+					<span class="text">Filter Type</span>
+					<div class="menu">
+						<div class="ui icon search input">
+							<i class="search icon"></i>
+							<input type="text" name="Search" placeholder="Search...">
+						</div>
+						<div class="item" data-value="clear-filter">
+							<i class="close icon"></i>
+							Clear Filter
+						</div>
+						<div class="type scrolling menu">
+							<div class="header network-type">
+								Filter by network
+							</div>
+							<div class="divider line-item-type"></div>
+							<div class="header item-type">
+								Filter by item type
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="ui checkbox show-key-checkbox lineitem-filter">
+					<input type="checkbox" name="show-key">
+					<label>Show Key</label>
+				</div>
+				<div class="ui icon input small lineitem-filter" style="float: right;">
+					 <input type="text" placeholder="Find line item" id="line-item-search" class="mopub-input-search">
+					 <i class="search icon"></i>
+				</div>
+				<button class="lineitem-action-buttons ui blue basic circular button tiny" action="duplicate" style="display: none;">Duplicate</button>	
+				<button class="lineitem-action-buttons ui blue basic circular button tiny" action="assign" style="display: none;">Assign</button>	
+				<div id="loader-lineitem-table" style="width: 100%;">
+					<div class="ui top aligned inverted dimmer">
+						<div class="ui loader"></div>
+					</div>
+					<div id="lineitem-list"></div>
+				</div>
+
+				<!-- Order List -->
+
+				<!-- Status Filter -->
+				<div id="status-filter-order" class="ui grey basic circular dropdown labeled icon button tiny order-filter">
+					<i class="filter icon"></i>
+					<div class="default text">Filter Status</div>
+					<div class="menu">
+						<div class="item" data-value="running">
+							<div class="ui green empty circular label tiny"></div>Running
+						</div>
+						<div class="item" data-value="all">
+							<div class="ui light blue empty circular label tiny"></div>All
+						</div>
+						<div class="item" data-value="paused">
+							<div class="ui yellow empty circular label tiny"></div>Paused
+						</div>
+						<div class="item" data-value="archived">
+							<div class="ui gray empty circular label tiny"></div>Archived
+						</div>
+					</div>
+				</div>
+				<div class="ui icon input small order-filter" style="float: right;">
+					<input type="text" placeholder="Search order.." id="order-search" class="mopub-input-search">
+					<i class="search icon"></i>
+				</div>
+				<button id="load-lineitem-btn" class="ui button blue basic circular tiny" style="display: none;"></button>
+				<div class="loader-wrapper loader-order-table" style="width: 100%;">
+					<div class="ui top aligned inverted dimmer">
+						<div class="ui loader"></div>
+					</div>
+					<div id="order-list"></div>
+				</div>
+			<!-- </div>  -->
+			<!-- Lineitem section end -->
+
+			</div>
+		</div>
+
+
+  <!-- Entire body loader -->
+	<div class="ui inverted dimmer loader-entire-body">
+		<div class="ui blue text loader">Loading</div>
+	</div>
+
+
+	<!-- 여기서 부터 바디 시작 -->
+  <div class="body-wrapper pusher">
+
+		<!-- Menu Bar -->
+		<div class="ui menu inverted no-radius mopub-menu borderless">
+			<a class="item" href="">
+				<h4 style="margin-bottom: 0px;">Publisher UI Extension</h4>
 				<div class="mopub-logo-menu"></div>
 			</a>
-			<div class="item" style="width: 55%;">
-				<div class="ui search selection scrolling dropdown adunit-select" style="width: 100%;">
+			<div class="item" style="flex-grow: 1; padding-left: 0px">
+				<div class="ui search inverted clearable selection scrolling dropdown adunit-select">
 					<input type="hidden" name="ad-unit">
 					<i class="dropdown icon"></i>
 					<div class="default text"></div>
 					<div class="menu"></div>
 				</div>
 			</div>
-			<div class="item" style="padding: 0px; margin: 0px;">
+			<!-- <div class="item" style="padding: 0px; margin: 0px;">
 				<div id="adunit-sync-btn">
 					<i class="sync icon large adunit-sync"></i>
 					<div class="ui active inline inverted loader small" style="display: none;"></div>
 				</div>
-			</div>
+			</div> -->
 			<div class="right menu">
-				<a class="item" href="https://app.mopub.com/account" target="_blank">
+				<!-- <a class="item" href="https://app.mopub.com/account" target="_blank">
 					<div class="ui orange label logged-in-label">Logged in as</div>
 					<div id="logged-in-account" class="logged-in-account"></div>
+				</a> -->
+				<a class="item">
+					<p>API Keys</p>
 				</a>
 				<a class="item">
 					<div id="add-adsource" class="toggle-line-item-bar">
@@ -43,9 +156,10 @@
 				</a>
 			</div>
 		</div>
+		<!-- Menu Bar end -->
 
-		<!-- Loading Bar -->
-		<div class="ui grid">
+		<!-- Loading Bar (bar indicator) -->
+		<!-- <div class="ui grid">
 			<div class="one column row no-padding">
 				<div class="column">
 					<div id="loader-bar" class="ui bottom attached progress red" data-value="0" style="visibility: hidden;">
@@ -53,283 +167,410 @@
 					</div>
 				</div>
 			</div>
+		</div> -->
+
+	<div class="ui basic segment loader-waterfall-table-wrapper"">
+
+		<div class="ui inverted dimmer loader-except-menu-bar">
+			<div class="ui blue elastic loader"></div>
 		</div>
 
-		<div class="ui grid all-content-wrapper">
-			<!-- Loader -->
-			<div class="ui dimmer inverted">
-				<div class="ui text large loader updating-message update-loader"></div>
+
+		<!-- Information Panels -->
+		<div class="ui compact grid container" style="width: 100%;">
+			<div class="row">
+
+				<div class="two wide column">
+					<div class="ui segment full-height-segment">
+						<div class="ui top attached blue label">Format</div>
+						<div>Rewarded Ad</div>
+					</div>
+				</div>
+
+				<div class="four wide column">
+					<div class="ui segment full-height-segment">
+						<div class="ui top attached blue label">Ad Unit Key</div>
+						<div id="info-adunit-id" class="sub header"></div>
+					</div>
+				</div>
+
+				<div class="four wide column">
+					<div class="ui segment full-height-segment">
+						<div class="ui top attached blue label">API Key in Use</div>
+						<p>Ricky Test API Key</p>
+					</div>
+				</div>
+
+				<div class="four wide column">
+					<div class="ui segment full-height-segment">
+						<div class="ui top attached blue label">Logged in Account (showing primary)</div>
+						<div>
+							<a class="item" href="https://app.mopub.com/account" target="_blank">
+								<div id="logged-in-account" class="logged-in-account"></div>
+							</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="two wide column">
+					<div class="ui segment full-height-segment">
+						<div class="ui top attached blue label">Ad Unit QRCode</div>
+					</div>
+				</div>
+
 			</div>
+		</div>
+		<!-- Information Panels End -->
+
+
+		<!-- Divider -->
+		<div class="ui section divider" style="margin-bottom: 0px;"></div>
+
+
+		<!-- Control Buttons -->
+		<div class="ui basic vertically fitted segment">
+			<div class="ui very horizontal divided list">
+				<div class="item">
+					<button class="ui small black tertiary button"><i class="upload icon"></i>Import</button>
+				</div>
+				<div class="item">
+					<button class="ui small black tertiary button control-btn control-btn-export">
+						<i class="download icon"></i>
+						<span>Export</span>
+						<a class="ui circular tiny gray label hidden">0</a>
+					</button>
+				</div>
+				<div class="item">
+					<button class="ui small black tertiary button control-btn control-btn-del-adunit">
+						<i class="trash icon"></i>Delete Ad Unit
+					</button>
+				</div>
+				<div class="item">
+					<button class="ui small black tertiary button control-btn control-btn-add-new">
+						<i class="plus circle icon"></i>Add New Line Item
+					</button>
+				</div>
+				<div class="item">
+					<button class="ui small black tertiary button control-btn control-btn-duplicate">
+						<i class="copy icon"></i>Duplicate Line Item
+						<a class="ui circular tiny gray label hidden">0</a>
+					</button>
+				</div>
+				<div class="item">
+					<button class="ui small black tertiary button control-btn control-btn-delete">
+						<i class="trash alternate outline circle icon"></i>Delete Selected
+						<a class="ui circular tiny gray label hidden">0</a>
+					</button>
+				</div>
+				<div class="item">
+					<button class="ui small black tertiary button control-btn control-btn-edit">
+						<i class="edit circle icon"></i>Edit Selected
+						<a class="ui circular tiny gray label hidden">0</a>
+					</button>
+				</div>
+			</div>
+			<div style="float: right;">
+				<button class="ui button blue circular control-btn-apply-change">
+					<span>Apply Change</span>
+					<a class="ui gray tiny label circular total-change-count">0</a>
+				</button>
+			</div>
+		</div>
+
+		<!-- Waterfall Table -->
+		<!-- <div class="ui grid all-content-wrapper"> -->
+
+			<!-- Loader -->
+			<!-- <div class="ui inverted dimmer">
+				<div class="ui blue elastic loader updating-message update-loader"></div>
+			</div> -->
+
+			<!-- 이전에 워터폴 레벨 버튼들 있던 곳 -->
 			<!-- Grid -->
-			<div class="ui grid container" style="width: 99% !important;">
+			<!-- <div class="ui grid container" style="width: 100%;">
 				<div class="row">
 					<div class="eleven wide column">
 						<div class="adunit-header">
-							<h2 class="ui header">
-								<span id="info-adunit-name"><div class="ui active inline loader small"></div> Loading..</span>
-								<a id="info-adunit-status" class="ui gray empty circular label"></a>
-								<button id="reload-ad-unit" class="ui button tiny reload-adunit-button">Reload Waterfall</button>
-								<div id="info-adunit-id" class="sub header"></div>
-							</h2>
+							<h2 class="ui header"> -->
+								<!-- <span id="info-adunit-name"><div class="ui active inline loader small"></div> Loading..</span> -->
+								<!-- <a id="info-adunit-status" class="ui gray empty circular label"></a> -->
+								<!-- <button id="reload-ad-unit" class="ui button tiny reload-adunit-button">Reload Waterfall</button>
+								<div id="info-adunit-id" class="sub header"></div> -->
+							<!-- </h2>
 						</div>
 					</div>
-					<div class="five wide column right floated">
-						<span class="waterfall-level-buttons">
-							<button id="apply-waterfall" class="ui button tiny mopub-button-color mopub-button-radius right floated" style="display: none;"></button>
-							<button id="copy-waterfall" class="ui button tiny mopub-button-color mopub-button-radius right floated">Duplicate Waterfall</button>
+					<div class="five wide column right floated"> -->
+
+						<!-- <span class="waterfall-level-buttons"> -->
+							<!-- <button id="apply-waterfall" class="ui button tiny mopub-button-color mopub-button-radius right floated" style="display: none;"></button>
+							<button id="copy-waterfall" class="ui button tiny mopub-button-color mopub-button-radius right floated">Duplicate Waterfall</button> -->
 							<!-- Download / Upload -->
-							<input type="file" id="upload-file" accept=".csv" style="display: none;">
+							<!-- <input type="file" id="upload-file" accept=".csv" style="display: none;">
 							<button id="waterfall-download-csv" class="ui button tiny right floated mopub-ops-button-color mopub-button-radius waterfall-filter import-export">Export</button>
-							<button id="waterfall-upload-csv" class="ui button tiny right floated mopub-ops-button-color mopub-button-radius waterfall-filter import-export">Import</button>
-						</span>
-						<span class="add-network-done-buttons" style="display: none;">
+							<button id="waterfall-upload-csv" class="ui button tiny right floated mopub-ops-button-color mopub-button-radius waterfall-filter import-export">Import</button> -->
+						<!-- </span> -->
+
+						<!-- <span class="add-network-done-buttons" style="display: none;">
 							<button id="close-add-network" class="ui button tiny mopub-button-color mopub-button-radius add-network" style="float: right;">Done</button>
-						</span>
-					</div>
-				</div>
-			</div> <!-- grid end -->
+						</span> -->
+
+					<!-- </div>
+				</div> -->
+			<!-- </div>  -->
+			<!-- grid end -->
+
 				
 			<!-- Grid -->
-			<div class="ui grid container" style="width: 99% !important;">
-				<div class="ui divider" style="width: 100%; margin: 0px;"></div>
+			<div class="ui grid container" style="width: 100%;">
+
 				<!-- Notification -->
 				<div class="one column row no-margin">
 					<div class="column">
 						<div id="notification"></div>
 					</div>
 				</div>
-				
-				<div class="row">
-					<!-- Waterfall section -->
-					<div class="nine wide column" id="waterfall-section">
 
-						<!-- Network templete add btn -->
-						<span class="network-add-buttons" style="display: none;" status="hidden">
-							<h4 style="margin-bottom: 0.4em;">Select Order</h4>
+				<!-- Add Network Buttons -->
+				<div class="one column row no-margin no-padding new-network-section" style="display: none;">
+					<div class="column">
+						<div class="ui grey segment">
+							<div style="margin-bottom: 1.5em;">
+								<h3 style="display: inline;">Select Order</h3>
+								<button class="ui small button blue circular right floated control-btn-close">Close</button>
+							</div>
 							<div class="ui search small selection error dropdown add-item-order-list" style="width: 100%;">
 								<div class="text"></div>
 								<i class="dropdown icon"></i>
 							</div>
-							<div>
-								<button id="add-mpx" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>MPX</button>
-								<button id="add-admob" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>AdMob</button>
-								<button id="add-adcolony" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>AdColony</button>
-								<button id="add-applovin" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>AppLovin</button>
-								<button id="add-chartboost" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Chartboost</button>
-								<button id="add-facebook" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Facebook</button>
-								<button id="add-pangle" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Pangle</button>
-								<button id="add-snap" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Snap</button>
-								<button id="add-ironsource" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>IronSource</button>
-								<button id="add-tapjoy" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>TapJoy</button>
-								<button id="add-unity" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Unity</button>
-								<button id="add-vungle" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Vungle</button>
-								<button id="add-verizon" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Verizon</button>
-								<button id="add-yahoo" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Yahoo</button>
-								<button id="add-customsdk" class="ui button mini mopub-basic-button-color mopub-button-radius add-network add-item"><i class="plus icon"></i>Custom SDK</button>
-								<div id="add-direct" class="ui labeled icon dropdown button mini mopub-basic-button-color mopub-button-radius add-network">
-									<i class="plus icon"></i>
-									<span class="text">Direct</span>
-									<div class="menu">
-										<div class="item" data-value="gtee">Guaranteed</div>
-										<div class="item" data-value="non_gtee">Non-guaranteed</div>
-										<div class="item" data-value="promo">Promotional</div>
-										<div class="item" data-value="backfill_promo">Backfill promotional</div>
+							<div class="ui small horizontal list">
+								<div class="item">
+									<button id="add-mpx" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>Marketplace
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-admob" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>AdMob
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-adcolony" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>AdColony
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-applovin" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>AppLovin
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-chartboost" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>Chartboost
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-facebook" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>Facebook
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-pangle" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>Pangle
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-snap" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>Snap
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-ironsource" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>IronSource
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-tapjoy" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>TapJoy
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-unity" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>Unity
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-vungle" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>Vungle
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-verizon" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>Verizon
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-yahoo" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>Yahoo
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-customsdk" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>Custom SDK
+									</button>
+								</div>
+								<div class="item">
+									<div id="add-direct" class="ui compact small blue basic button circular labeled icon dropdown add-network">
+										<i class="plus icon"></i>
+										<span class="text">Direct</span>
+										<div class="menu">
+											<div class="item" data-value="gtee">Guaranteed</div>
+											<div class="item" data-value="non_gtee">Non-guaranteed</div>
+											<div class="item" data-value="promo">Promotional</div>
+											<div class="item" data-value="backfill_promo">Backfill promotional</div>
+										</div>
 									</div>
 								</div>
 							</div>
-						</span>
-
-						<span class="edit-delete-item">
-							<!-- Edit selected -->
-							<button id="edit-selected" class="ui button tiny right floated mopub-button-color mopub-button-radius" style="display: none;"></button>
-							<!-- Delete selected -->
-							<button id="delete-selected" class="ui button tiny right floated mopub-button-color mopub-button-radius" style="display: none;"></button>
-						</span>
-
-						<!-- Status Filter -->
-						<div id="status-filter" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius waterfall-filter">
-							<i class="filter icon"></i>
-							<div class="default text">Filter Status</div>
-							<div class="menu">
-								<div class="item" data-value="running">
-									<div class="ui green empty circular label tiny"></div>Running
-								</div>
-								<div class="item" data-value="all">
-									<div class="ui light blue empty circular label tiny"></div>All
-								</div>
-								<div class="item" data-value="paused">
-									<div class="ui yellow empty circular label tiny"></div>Paused
-								</div>
-								<div class="item" data-value="archived">
-									<div class="ui gray empty circular label tiny"></div>Archived
-								</div>
-							</div>
 						</div>
+					</div>
+				</div>
 
-						<!-- Type Filter -->
-						<div id="type-filter" class="ui labeled dropdown icon button tiny mopub-ops-button-color mopub-button-radius waterfall-filter">
-							<i class="filter icon"></i>
-							<span class="text">Filter Type</span>
-							<div class="menu">
-								<div class="ui icon search input">
-									<i class="search icon"></i>
-									<input type="text" name="Search" placeholder="Search...">
-								</div>
-								<div class="item" data-value="clear-filter">
-									<i class="close icon"></i>
-									Clear Filter
-								</div>
-								<div class="type scrolling menu">
-									<div class="header network-type">
-										Filter by network
-									</div>
-									<div class="divider line-item-type"></div>
-									<div class="header item-type">
-										Filter by item type
+
+
+				<!-- 여기서 부터 테이블-->
+				<div class="row">
+					<div class="sixteen wide column" id="waterfall-section">
+
+						<div class="ui grey segment">
+
+
+							<div class="ui horizontal list" style="width: 100%;">
+								<!-- Status Filter -->
+								<div class="item">
+									<div id="status-filter" class="ui tiny button basic circular dropdown labeled icon waterfall-filter">
+										<i class="filter icon"></i>
+										<div class="default text">Filter: Status</div>
+										<div class="menu">
+											<div class="item" data-value="running">
+												<div class="ui green empty circular label tiny"></div>Running
+											</div>
+											<div class="item" data-value="all">
+												<div class="ui light blue empty circular label tiny"></div>All
+											</div>
+											<div class="item" data-value="paused">
+												<div class="ui yellow empty circular label tiny"></div>Paused
+											</div>
+											<div class="item" data-value="archived">
+												<div class="ui gray empty circular label tiny"></div>Archived
+											</div>
+										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-
-						<!-- Column Selector -->
-						<div id="column-selector" class="ui labeled dropdown icon button tiny mopub-ops-button-color mopub-button-radius waterfall-filter">
-							<i class="dropdown icon"></i>
-							<span class="ui">Columns</span>
-							<div class="menu">
-								<div class="ui icon search input">
-									<i class="search icon"></i>
-									<input type="text" name="Search" placeholder="Search&hellip;">
+								
+								<!-- Type Filter -->
+								<div class="item">
+									<div id="type-filter" class="ui tiny button basic circular dropdown labeled icon waterfall-filter">
+										<i class="filter icon"></i>
+										<span class="text">Filter: Type</span>
+										<div class="menu">
+											<div class="ui icon search input">
+												<i class="search icon"></i>
+												<input type="text" name="Search" placeholder="Search...">
+											</div>
+											<div class="item" data-value="clear-filter">
+												<i class="close icon"></i>
+												Clear Filter
+											</div>
+											<div class="type scrolling menu">
+												<div class="header network-type">
+													Filter by network
+												</div>
+												<div class="divider line-item-type"></div>
+												<div class="header item-type">
+													Filter by item type
+												</div>
+											</div>
+										</div>
+									</div>
 								</div>
-								<div class="column scrolling menu"></div>
+
+								<!-- Sort Reset -->
+								<div class="item">
+									<button class="ui tiny button basic circular waterfall-filter">Resize Columns</button>
+								</div>
+
+								<!-- Sort Reset -->
+								<div class="item">
+									<button id="sort-reset" class="ui tiny button basic circular waterfall-filter">Reset Sorting</button>
+								</div>
+
+								<!-- Add line items -->
+								<!-- <button id="add-line-item-btn" class="ui button tiny right floated mopub-button-color mopub-button-radius waterfall-filter">Add New</button> -->
+
+								<!-- Search items -->
+								<div class="item" style="float: right;">
+									<div class="ui icon input small waterfall-filter">
+										<input type="text" placeholder="Find line items" id="waterfall-search" class="mopub-input-search">
+										<i class="search icon"></i>
+									</div>
+								</div>
+
 							</div>
+
+							<!-- Column selector -->
+							<div class="ui horizontal list" style="width: 100%;">
+								<div class="item" style="width: 100%;">
+									<form class="ui small form">
+										<div class="field">
+											<label>Columns</label>
+											<select id="column-selector" class="ui fluid search four column dropdown waterfall-columns" multiple=""></select>
+										</div>
+									</form>
+								</div>
+							</div>
+
 						</div>
-
-						<!-- Sort Reset -->
-						<button id="sort-reset" class="ui button tiny mopub-ops-button-color mopub-button-radius waterfall-filter">Reset Sorting</button>
-
-						<!-- Add line items -->
-						<button id="add-line-item-btn" class="ui button tiny right floated mopub-button-color mopub-button-radius waterfall-filter">Add New</button>
-
-						<!-- Search items -->
-					  <div class="ui icon input small waterfall-filter" style="float: right; margin-right: 5px;">
-					 	  <input type="text" placeholder="Search.." id="waterfall-search" class="mopub-input-search">
-					 	  <i class="search icon"></i>
-					  </div>
+						<!-- segment ends -->
 
 						<!-- Waterfall Table -->
-						<div class="loader-wrapper loader-waterfall-table" style="width: 100%;">
-							<div class="ui top aligned inverted dimmer">
-								<div class="ui loader"></div>
-							</div>
-							<div id="waterfall-adunit"></div>
-						</div>
+						<div id="waterfall-adunit" class="grey"></div>
+
+
 					</div> <!-- Waterfall section end -->
 
-					<!-- Lineitem section -->
-					<div class="seven wide column" id="adsource-section">
-						<!-- Status Filter -->
-						<div id="status-filter-lineitem" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius lineitem-filter">
-							<i class="filter icon"></i>
-							<div class="default text">Filter Status</div>
-							<div class="menu">
-								<div class="item" data-value="running">
-									<div class="ui green empty circular label tiny"></div>Running
-								</div>
-								<div class="item" data-value="all">
-									<div class="ui light blue empty circular label tiny"></div>All
-								</div>
-								<div class="item" data-value="paused">
-									<div class="ui yellow empty circular label tiny"></div>Paused
-								</div>
-								<div class="item" data-value="archived">
-									<div class="ui gray empty circular label tiny"></div>Archived
-								</div>
-							</div>
-						</div>
-						<!-- Type Filter -->
-						<div id="type-filter-lineitem" class="ui labeled dropdown icon button tiny mopub-ops-button-color mopub-button-radius lineitem-filter">
-							<i class="filter icon"></i>
-							<span class="text">Filter Type</span>
-							<div class="menu">
-								<div class="ui icon search input">
-									<i class="search icon"></i>
-									<input type="text" name="Search" placeholder="Search...">
-								</div>
-								<div class="item" data-value="clear-filter">
-									<i class="close icon"></i>
-									Clear Filter
-								</div>
-								<div class="type scrolling menu">
-									<div class="header network-type">
-										Filter by network
-									</div>
-									<div class="divider line-item-type"></div>
-									<div class="header item-type">
-										Filter by item type
-									</div>
-								</div>
-							</div>
-						</div>
-						<div class="ui checkbox show-key-checkbox lineitem-filter">
-							<input type="checkbox" name="show-key">
-							<label>Show Key</label>
-						</div>
-					  <div class="ui icon input small lineitem-filter" style="float: right;">
-					 	  <input type="text" placeholder="Search line item.." id="line-item-search" class="mopub-input-search">
-					 	  <i class="search icon"></i>
-					  </div>
-						<button class="lineitem-action-buttons ui button tiny mopub-button-color mopub-button-radius" action="duplicate" style="display: none;">Duplicate</button>	
-						<button class="lineitem-action-buttons ui button tiny mopub-button-color mopub-button-radius" action="assign" style="display: none;">Assign</button>	
-						<div id="loader-lineitem-table" style="width: 100%;">
-							<div class="ui top aligned inverted dimmer">
-								<div class="ui loader"></div>
-							</div>
-							<div id="lineitem-list"></div>
-						</div>
-
-						<!-- Order -->
-						<!-- Status Filter -->
-						<div id="status-filter-order" class="ui dropdown labeled icon button tiny mopub-ops-button-color mopub-button-radius order-filter">
-							<i class="filter icon"></i>
-							<div class="default text">Filter Status</div>
-							<div class="menu">
-								<div class="item" data-value="running">
-									<div class="ui green empty circular label tiny"></div>Running
-								</div>
-								<div class="item" data-value="all">
-									<div class="ui light blue empty circular label tiny"></div>All
-								</div>
-								<div class="item" data-value="paused">
-									<div class="ui yellow empty circular label tiny"></div>Paused
-								</div>
-								<div class="item" data-value="archived">
-									<div class="ui gray empty circular label tiny"></div>Archived
-								</div>
-							</div>
-						</div>
-						<div class="ui icon input small order-filter" style="float: right;">
-							<input type="text" placeholder="Search order.." id="order-search" class="mopub-input-search">
-							<i class="search icon"></i>
-						</div>
-						<button id="load-lineitem-btn" class="ui button blue tiny mopub-button-color mopub-button-radius" style="display: none;"></button>
-						<div class="loader-wrapper loader-order-table" style="width: 100%;">
-							<div class="ui top aligned inverted dimmer">
-								<div class="ui loader"></div>
-							</div>
-							<div id="order-list"></div>
-						</div>
-					</div> <!-- Lineitem section end -->
 
 				</div> <!-- Row end -->
+
+
 			</div> <!-- End of Grid -->
-		</div> <!-- End of content wrapper -->
+
+
+	</div> <!-- loader waterfall table wrapper end-->
+		<!-- End of content wrapper -->
+
+
 	</div> <!-- End of body wrapper -->
 
+
+
+
+
 	<footer class="page-footer">
-		<span><i class="exclamation circle icon" style="margin: 0px;"></i></span>
-		<span>This is not an official product |</span>
-		<span>Developed by <a href="mailto:ricky840@gmail.com">ricky840@gmail.com</a> |</span>
-		<span><a href="https://github.com/ricky840/WaterfallBuilderChromeExt/releases" target="_blank">Change logs</a></span>
+		<div class="ui tiny divided horizontal list">
+			<div class="item">
+				<i class="exclamation circle icon" style="margin-bottom: 0.2em;"></i>
+				<span>This is not an official product</span>
+			</div>
+			<div class="item">
+				developed by <a href="mailto:ricky840@gmail.com">ricky840@gmail.com</a>
+			</div>
+			<div class="item">
+				<span class="extension-version"></span>
+			</div>
+			<div class="item">
+				<a href="https://github.com/ricky840/WaterfallBuilderChromeExt/releases" target="_blank">Change Logs</a>
+			</div>
+		</div>
 	</footer>
 
 		<!-- Modals -->
@@ -451,24 +692,23 @@
 					<thead>
 						<tr>
 							<th>Name</th>
-							<th>Key</th>
 							<th>Action</th>
 							<th>Type</th>
-							<th>Changes to be made</th>
+							<th>Changes</th>
 						</tr>
 					</thead>
-					<tbody id="change-table-body">
+					<tbody class="review-change-table-body">
 					</tbody>
 					<tfoot>
 						<tr>
-							<th id="change-table-count" colspan="6"></th>
+							<th class="review-change-count" colspan="6"></th>
 						</tr>
 					</tfoot>
 				</table>
 			</div>
 			<div class="actions">
-				<div id="review-cancel" class="ui tiny deny button mopub-ops-button-color mopub-button-radius">Cancel</div>
-				<div id="review-submit" class="ui tiny ok button mopub-button-color mopub-button-radius">Apply</div>
+				<div class="ui small deny button blue circular review-change-cancel">Cancel</div>
+				<div class="ui small ok button blue circular review-change-submit">Apply</div>
 			</div>
 		</div>
 
@@ -588,9 +828,11 @@
 			</div>
 		</div> <!-- Edit model end -->
 
+    <script type="text/javascript" src="js/class/LineItem.js"></script>
+
 		<script type="text/javascript" src="lib/jquery-3.4.1.min.js"></script>
 		<script type="text/javascript" src="lib/semantic.min.js"></script>
-		<script type="text/javascript" src="/lib/table-js/tabulator.js"></script>
+		<script type="text/javascript" src="lib/table-js/tabulator.js"></script>
 		<script type="text/javascript" src="lib/lodash.js"></script>
 		<script type="text/javascript" src="lib/http.js"></script>
 		<script type="text/javascript" src="lib/papaparse.min.js"></script>
@@ -599,6 +841,9 @@
 
     <script type="text/javascript" src="js/global.js"></script>
     <script type="text/javascript" src="js/notifier.js"></script>
+    <script type="text/javascript" src="js/moPubApi.js"></script>
+    <script type="text/javascript" src="js/loaders.js"></script>
+
     <script type="text/javascript" src="js/editFormManager.js"></script>
 		<script type="text/javascript" src="js/tableFormatters.js"></script> <!-- -->
     <script type="text/javascript" src="js/tableColumnDef.js"></script>
@@ -607,14 +852,20 @@
     <script type="text/javascript" src="js/overrideFieldValidator.js"></script>
     <script type="text/javascript" src="js/csvManager.js"></script>
     <script type="text/javascript" src="js/waterfallDuplicator.js"></script>
-    <script type="text/javascript" src="js/reviewChange.js"></script>
+    <script type="text/javascript" src="js/reviewModalController.js"></script>
     <script type="text/javascript" src="js/accountManager.js"></script>
-    <script type="text/javascript" src="js/addNewLineItem.js"></script>
+    <script type="text/javascript" src="js/newLineItemFactory.js"></script>
+    <script type="text/javascript" src="js/controlBtnManager.js"></script>
+
 
     <script type="text/javascript" src="js/tableInitializer.js"></script>
+    <script type="text/javascript" src="js/waterfallTableController.js"></script>
+    <script type="text/javascript" src="js/orderTableController.js"></script>
+    <script type="text/javascript" src="js/lineItemStore.js"></script>
     <script type="text/javascript" src="js/orderManager.js"></script>
     <script type="text/javascript" src="js/lineItemManager.js"></script>
     <script type="text/javascript" src="js/moPubUI.js"></script>
+    <script type="text/javascript" src="js/moPubUpdator.js"></script>
     <script type="text/javascript" src="js/loadingIndicator.js"></script>
 
     <script type="text/javascript" src="js/popupEvents.js"></script>

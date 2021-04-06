@@ -12,19 +12,35 @@ $('#notification,	#edit-form-notification, #copy-form-notification, #edit-networ
 
 // Show and Hide lineitem button
 $("#add-adsource").click(function() {
-	if($("#adsource-section").is(":hidden")) {
-		$('#waterfall-adunit').parents('#waterfall-section').removeClass().addClass('nine wide column');
-		$('#adsource-section').show();
-		WaterfallTable.redraw();
-		LineItemTable.redraw();
-		OrderTable.redraw();
-	} else {
-		$('#adsource-section').hide();
-		$('#waterfall-adunit').parents('#waterfall-section').removeClass().addClass('sixteen wide column');	
-		WaterfallTable.redraw();
-		LineItemTable.redraw();
-		OrderTable.redraw();
-	}
+
+	// Slider bar test
+	// $('.ui.sidebar').sidebar({
+	// 	defaultTransition: {
+	// 		computer: {
+	// 			right  : 'overlay',
+	// 		}
+	// 	}
+	// });
+	// showing multiple
+
+	// TEMP SIDEBAR
+	// $('.ui.sidebar').sidebar('setting', 'transition', 'overlay').sidebar('toggle');
+
+
+	// if($("#adsource-section").is(":hidden")) {
+	// 	$('#waterfall-adunit').parents('#waterfall-section').removeClass().addClass('nine wide column');
+	// 	$('#adsource-section').show();
+	// 	WaterfallTable.redraw();
+	// 	LineItemTable.redraw();
+	// 	OrderTable.redraw();
+	// } else {
+	// 	$('#adsource-section').hide();
+	// 	$('#waterfall-adunit').parents('#waterfall-section').removeClass().addClass('sixteen wide column');	
+	// 	WaterfallTable.redraw();
+	// 	LineItemTable.redraw();
+	// 	OrderTable.redraw();
+	// }
+
 });	
 
 $("#reload-ad-unit").click(function() {
@@ -354,49 +370,16 @@ $("#copy-submit").click(function() {
 	});
 });
 
-// Apply to MoPub
-$("#apply-waterfall").click(function() {
-	scrollToTop();
-	let lineItemChanges = lineItemManager.getLineItemChanges();
-	let refinedChanges = moPubUI.refineChanges(lineItemChanges);
-	if (_.keys(refinedChanges).length == 0) {
-		notifier.show({
-			header: "Waterfall Unchanged",
-			type: "info",
-			message: "There is no update."
-		});
-		return false;
-	}
-	// Modal
-	let html = reviewChange.createHtml(refinedChanges);
-	$("#change-table-body").html(html);
-	$("#change-table-count").html(`<b>Total ${_.keys(refinedChanges).length} changed line items</b>`);
+// Apply to MoPub button
+$(".control-btn-apply-change").click(function() {
+	const numberOfChanges = lineItemStore.getTotalNumberOfChanges();
+	if (numberOfChanges == 0) return;
+
+	const lineItems = lineItemStore.getChangedLineItems();
+	const html = reviewModalController.createHtml(lineItems);
+	$(".review-change-table-body").html(html);
+	$(".review-change-count").html(`<b>Total ${numberOfChanges} changed line item(s)</b>`);
 	$('.ui.modal.review-change-modal').modal('show');
-});
-
-$("#review-submit").click(function() {
-	$('.ui.modal.review-change-modal').modal({
-		onApprove: function() {
-			scrollToTop();
-			let lineItemChanges = lineItemManager.getLineItemChanges();
-			moPubUI.updateWaterfall(lineItemChanges, function(result) {
-				$(".all-content-wrapper").dimmer("hide");
-				chrome.runtime.sendMessage({
-					type: "chromeNotification", 
-					title: "Update Completed", 
-					message: "Click here to load the ad unit in MoPub UI",
-					id: "adUnitId-" + AdUnitId
-				});
-				loadWaterfall(AdUnitId, function() {
-					// do something
-				});
-			});	
-		}
-	}).modal('hide');
-});
-
-$("#review-cancel").click(function() {
-	$('.ui.modal.review-change-modal').modal('hide');
 });
 
 // Assign or Duplicate LineItems
@@ -621,39 +604,42 @@ $('input[type="file"]').on('change', function() {
 });
 
 // Add new line item button
-$("#add-line-item-btn").click(function() {
-	$(".waterfall-filter").hide();
-	$(".waterfall-level-buttons").hide();
+$(".control-btn-add-new").click(function() {
+	$(".new-network-section").show();
 
-	$(".network-add-buttons").show().attr("status", "shown");
-	$(".add-network-done-buttons").show();
+	// $(".waterfall-filter").hide();
+	// $(".waterfall-level-buttons").hide();
+
+	// $(".network-add-buttons").show().attr("status", "shown");
+	// $(".add-network-done-buttons").show();
 
 	// Disable Grouping for temporary
 	WaterfallTable.setGroupBy(false);
 });
 
 // Done button!
-$("#close-add-network").click(function() {
-	$(".waterfall-filter").show();
-	$(".waterfall-level-buttons").show();
+$(".control-btn-close").click(function() {
+	$(".new-network-section").hide();
+	// $(".waterfall-filter").show();
+	// $(".waterfall-level-buttons").show();
 
-	$(".network-add-buttons").hide().attr("status", "hidden");
-	$(".add-network-done-buttons").hide();
+	// $(".network-add-buttons").hide().attr("status", "hidden");
+	// $(".add-network-done-buttons").hide();
 
 	// Enable grouping
 	WaterfallTable.setGroupBy("priority");
 
 	// If there was selected line items in the add mode, show edit mode (manually trigger row selectionchanged event)
-	let selectedRows = WaterfallTable.getSelectedRows();
-	if (selectedRows.length > 0) {
-		selectedRows[0].toggleSelect();
-		selectedRows[0].toggleSelect();
-	}
+	// let selectedRows = WaterfallTable.getSelectedRows();
+	// if (selectedRows.length > 0) {
+	// 	selectedRows[0].toggleSelect();
+	// 	selectedRows[0].toggleSelect();
+	// }
 });
 
 // Add Line Item buttons
 $(".add-network.add-item").click(function() {
-	let orderKey = $(".add-item-order-list.dropdown").dropdown('get value');
+	const orderKey = $(".add-item-order-list.dropdown").dropdown('get value');
 	if (_.isEmpty(orderKey.trim())) {
 		notifier.show({
 			header: "Order Required",
@@ -662,22 +648,13 @@ $(".add-network.add-item").click(function() {
 		});
 		return false;
 	}
-	let type = $(this).attr("id");
-	let orderName = $(".add-item-order-list.dropdown").dropdown('get text');
-
-	let mpxRows = WaterfallTable.searchRows("type", "=", "mpx_line_item");
-	if (mpxRows.length >= 7 && type == "add-mpx") {
-		notifier.show({
-			header: "Too many Marketplace line items",
-			type: "negative",
-			message: "It is not recommended having more than 7 marketplace line items"
-		});
-		return false;
-	}
+	const type = $(this).attr("id");
+	const order = orderTableController.getOrderByKey(orderKey);
+	const adUnitKey = waterfallTableController.getCurrentAdUnitKey();
 
 	// Clear notifiation
 	notifier.clear();
-	addNewLineItem.add(type, {orderName: orderName, orderKey: orderKey});	
+	newLineItemFactory.add(type, order, adUnitKey);	
 });
 
 // Reset sorting
@@ -756,75 +733,75 @@ function updateAdunitInfo(responseObj) {
 	}
 }
 
-function loadWaterfall(adunitId, callback) {
-  let params = `?key=${adunitId}&includeAdSources=true`;
-  let url = BASE_URL + GET_ADUNIT + params;
-  let request = { url: url };
+// function loadWaterfall(adunitId, callback) {
+//   let params = `?key=${adunitId}&includeAdSources=true`;
+//   let url = BASE_URL + GET_ADUNIT + params;
+//   let request = { url: url };
 
-	// Reset caches
-	orderManager.removeCache();
-	lineItemManager.removeCache();
+// 	// Reset caches
+// 	orderManager.removeCache();
+// 	lineItemManager.removeCache();
 
-	// Empty LineItem Table
-	LineItemTable.clearData();
+// 	// Empty LineItem Table
+// 	LineItemTable.clearData();
 
-	// Scroll to top
-	// scrollToTop();
+// 	// Scroll to top
+// 	// scrollToTop();
 	
-	// Uncheck select-all checkboxes
-	$(".select-all").prop("checked", false);
+// 	// Uncheck select-all checkboxes
+// 	$(".select-all").prop("checked", false);
 
-	// Show loader
-	$(".loader-wrapper").dimmer("show");
+// 	// Show loader
+// 	$(".loader-wrapper").dimmer("show");
 
-	// Reset buttons on the top right corner
-	resetWaterfallLevelButtons();
+// 	// Reset buttons on the top right corner
+// 	resetWaterfallLevelButtons();
 
-	// Make http request
-  http.getRequest(request).then(function(result) {
-    let responseObj = JSON.parse(result.responseText);
-		updateAdunitInfo(responseObj);
+// 	// Make http request
+//   http.getRequest(request).then(function(result) {
+//     let responseObj = JSON.parse(result.responseText);
+// 		updateAdunitInfo(responseObj);
 
-		// Temp
-		console.log("Initial AdSrouce Response");
-		console.log(responseObj.adSources);
+// 		// Temp
+// 		console.log("Initial AdSrouce Response");
+// 		console.log(responseObj.adSources);
 		
-		// Convert AdSource to LineItem
-		let tableData = adSourceManager.convertToLineItem(responseObj.adSources);
+// 		// Convert AdSource to LineItem
+// 		let tableData = adSourceManager.convertToLineItem(responseObj.adSources);
 
-    WaterfallTable.blockRedraw();
-    WaterfallTable.replaceData(tableData).then(function() {
-      WaterfallTable.restoreRedraw();
-    }).catch(function(error) {
-			console.log(error.responseText);
-      WaterfallTable.restoreRedraw();
-		});
+//     WaterfallTable.blockRedraw();
+//     WaterfallTable.replaceData(tableData).then(function() {
+//       WaterfallTable.restoreRedraw();
+//     }).catch(function(error) {
+// 			console.log(error.responseText);
+//       WaterfallTable.restoreRedraw();
+// 		});
 
-		// Cache original line item values
-		lineItemManager.cacheLineItem(tableData);
+// 		// Cache original line item values
+// 		lineItemManager.cacheLineItem(tableData);
 
-		// Load Orders
-		OrderTable.blockRedraw();
-		loadOrderList(function(responseText) { 
-			OrderTable.restoreRedraw();
-			$(".loader-order-table").dimmer("hide");
-			// Init order list dropdown
-			initOrderDropDown(responseText);
-		});
-		$(".loader-waterfall-table").dimmer("hide");
+// 		// Load Orders
+// 		OrderTable.blockRedraw();
+// 		loadOrderList(function(responseText) { 
+// 			OrderTable.restoreRedraw();
+// 			$(".loader-order-table").dimmer("hide");
+// 			// Init order list dropdown
+// 			initOrderDropDown(responseText);
+// 		});
+// 		$(".loader-waterfall-table").dimmer("hide");
 
-		callback(true);
-  }).catch(function(error) {
-		notifier.show({
-			header: "Error occured when loading the waterfall. Please make sure to login to MoPub UI or try refreshing the page.",
-			type: "negative",
-			message: `${error.responseText}`
-		});
-    console.log(error);
-		$(".loader-wrapper").dimmer("hide");
-		callback(false);
-  });
-}
+// 		callback(true);
+//   }).catch(function(error) {
+// 		notifier.show({
+// 			header: "Error occured when loading the waterfall. Please make sure to login to MoPub UI or try refreshing the page.",
+// 			type: "negative",
+// 			message: `${error.responseText}`
+// 		});
+//     console.log(error);
+// 		$(".loader-wrapper").dimmer("hide");
+// 		callback(false);
+//   });
+// }
 
 function loadOrderList(callback) {
   let url = BASE_URL + GET_ORDERS;
@@ -869,13 +846,13 @@ function resetWaterfallLevelButtons() {
 	$("#changes-waterfall").hide();
 }
 
-function initOrderDropDown(responseText) {
+function initOrderDropDown(orders) {
 	let dropdownData = [];
-	if (!_.isEmpty(responseText)) {
-		let response = JSON.parse(responseText);
+	if (!_.isEmpty(orders)) {
+		// let response = JSON.parse(responseText);
 		let status;
-		for (let i=0; i < response.length; i++) {
-			switch (response[i].status) {
+		for (let i=0; i < orders.length; i++) {
+			switch (orders[i].status) {
 				case "running":
 					status = `<a class="ui green empty circular label tiny"></a>`;
 					break;
@@ -887,8 +864,8 @@ function initOrderDropDown(responseText) {
 					break;
 			}
 			dropdownData.push({
-				name: `${status}${response[i].name}`,
-				value: response[i].key
+				name: `${status}${orders[i].name}`,
+				value: orders[i].key
 			});
 		}
 	}

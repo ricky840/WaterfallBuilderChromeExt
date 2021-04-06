@@ -18,38 +18,27 @@ var tableInitializer = (function(global) {
 	}
 
 	function updateNumberOfChangeButton() {
-		let changes = moPubUI.refineChanges(lineItemManager.getLineItemChanges());
-		let num = _.keys(changes).length;
-		if (num > 0) {
-			$("#copy-waterfall").hide();
-			$("#apply-waterfall").html(`Apply ${num} Changed Items`).show();
-		} else if (num == 0) {
-			$("#copy-waterfall").show();
-			$("#apply-waterfall").hide();
-		}
+		const count = lineItemStore.getTotalNumberOfChanges();
+		$(".total-change-count").html(count);
 	}
 
 	function addNewBadge(row) {
-		$(row.getElement()).addClass("add-new");
+		row.getElement().classList.add("add-new");
 		return true;
 	}
 
-	function addUpdateBadge(row) {
-		// event triggers even if the value is edited back to original value.
-		// so had to compare with original row and see if it was really changed.
-		let rowElement = row.getElement();
-		let orgLineItem = lineItemManager.getOrgLineItems();
-		if (!_.isEqual(orgLineItem[row.getData().key], row.getData())) { 
-			// Value changed, put update badge
-			if (!$(rowElement).hasClass("add-new")) {
-				$(rowElement).addClass("updated-row");
-				console.log("different");
-				console.log(orgLineItem[row.getData().key]);
-				console.log(row.getData());
-			}
+	function addUpdatedBadge(row) {
+		const rowData = row.getData();
+		const lineItemKey = rowData.key;
+		const lineItem = lineItemStore.getLineItemByKey(lineItemKey);
+		lineItemStore.updateLineItem(rowData);
+
+		// Return if it wasn't actually updated
+		if (!lineItem.isUpdated()) {
+			row.getElement().classList.remove("updated-row");
+			return;
 		} else {
-			// Value unchanged, remove update badge
-			$(rowElement).removeClass("updated-row");
+			lineItem.isNewlyCreated() ? false : row.getElement().classList.add("updated-row");
 		}
 	}
 
@@ -80,9 +69,9 @@ var tableInitializer = (function(global) {
 			data: [],
 			layout: "fitColumns",
 			index: "key", // To avoid duplicates in the table
-			tooltips: true,
-			placeholder: placeHolder,
-			// movableColumns: true,
+			// tooltips: true,
+			// placeholder: placeHolder,
+			movableColumns: true,
 
 			// Add new line item at the top
 			addRowPos: top,
@@ -97,16 +86,16 @@ var tableInitializer = (function(global) {
       rowUpdated: function(row) { 
 				flashRow(row, 'updated');
 				updateNumberOfChangeButton();
-				addUpdateBadge(row);
+				addUpdatedBadge(row);
 				console.log("row updated");
 			},
 
 			cellEdited: function(cell) {
-				addUpdateBadge(cell.getRow());
+				addUpdatedBadge(cell.getRow());
 				console.log("cell edited");
 			},
 
-			dataEdited: function(data) {
+			dataChanged: function(data) {
 				updateNumberOfChangeButton();
 				console.log("data edited");
 			},
@@ -121,30 +110,25 @@ var tableInitializer = (function(global) {
 			},
 
 			rowSelectionChanged: function(data, rows) {
-				// Only show edit buttons when it is not in adding line item mode.
-				if ($(".network-add-buttons").attr("status") == "hidden") {
-					if (rows.length > 0) {
-						$("#edit-selected").html(`Edit (${rows.length})`).show();
-						$("#delete-selected").html(`Delete (${rows.length})`).show();
-						$("#copy-waterfall").html(`Duplicate (${rows.length})`);
-						$("#waterfall-download-csv").html(`Export (${rows.length})`);
-						$("#add-line-item-btn").hide();
-					} else {
-						$("#copy-waterfall").html(`Duplicate Waterfall`);
-						$("#waterfall-download-csv").html(`Export`);
-						$("#edit-selected").hide();
-						$("#delete-selected").hide();
-						$("#add-line-item-btn").show();
-					} 
+				rows.forEach((row) => {
+					const rowElementClassList = row.getElement().classList;
+					if (rowElementClassList.contains("tabulator-unselectable") && rowElementClassList.contains("tabulator-selected")) {
+						row.deselect();
+					}
+				});
+				if (rows.length > 0) {
+					controlBtnManager.updateLabels(WaterfallTable.getSelectedRows().length);
+				} else if (rows.length == 0) {
+					controlBtnManager.updateLabels(0);
 				}
 			},
 
 			rowSelected: function(row) {
-				row.reformat();				
+				// row.reformat();				
 			},
 
 			rowDeselected: function(row) {
-				row.reformat();				
+				// row.reformat();				
 			},
 
 			dataFiltered: function(filters, rows) {
@@ -152,7 +136,7 @@ var tableInitializer = (function(global) {
 			},
 
 			// Manage Row Movement
-			movableRows: true,
+			// movableRows: true,
 			// movableRowsReceiver: function(fromRow, toRow, fromTable) {
 			// 	let insertData = fromRow.getData();
 			// 	let searhResult = WaterfallTable.searchRows("key", "=", insertData.key);
@@ -177,8 +161,9 @@ var tableInitializer = (function(global) {
 			groupBy: "priority",
 			groupToggleElement: false,
 			groupHeader: function(value, count, data, group) {
-				let html = `Priority ${value} (${count} line items)`;
-				// let html = `Priority <a class="ui gray circular label">${value}</a>`;
+				let html = `Priority ${value}`;
+				// let html = `Priority ${value} (${count} line items)`;
+				// let html = `Priority <a class="ui blue basic circular label">${value}</a>`;
 				return html;
 			},
 
@@ -200,7 +185,7 @@ var tableInitializer = (function(global) {
 				let regexType = /advanced\_|pmp\_|segment/;
 				if (!regexStatus.test(status) || regexType.test(type)) {
 					let rowElement = row.getElement();
-					$(rowElement).addClass('tabulator-unselectable');
+					// $(rowElement).addClass('tabulator-unselectable');
 					return false;	
 				}
 				return true;
@@ -275,7 +260,7 @@ var tableInitializer = (function(global) {
 				let regexType = /advanced\_|pmp\_|segment/;
 				if (!regexStatus.test(status) || regexType.test(type)) {
 					let rowElement = row.getElement();
-					$(rowElement).addClass('tabulator-unselectable');
+					// $(rowElement).addClass('tabulator-unselectable');
 					return false;	
 				}
 				return true;
@@ -299,7 +284,6 @@ var tableInitializer = (function(global) {
 			height: ORDER_TABLE_HEIGHT,
 			data: [],
 			layout: "fitColumns",
-			tooltips: true,
 			placeholder: placeHolder,
 
 			// Pagination
@@ -329,7 +313,7 @@ var tableInitializer = (function(global) {
 				let status = row.getData().status;
 				if (status != "running") {
 					let rowElement = row.getElement();
-					$(rowElement).addClass('tabulator-unselectable');
+					// $(rowElement).addClass('tabulator-unselectable');
 					return false;	
 				}
 				return true;

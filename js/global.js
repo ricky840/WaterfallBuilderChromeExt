@@ -12,6 +12,10 @@ const GET_APPS = "/web-client/api/apps/query";
 const GET_ADUNITS = "/web-client/api/ad-units/query";
 const GET_ACCOUNT = "/web-client/api/users/query";
 
+
+// Test
+const MOPUB_API_KEY = "302733f8c24243c0b25edec6baa39f03";
+
 // Tabulator Objects
 var WaterfallTable, LineItemTable, OrderTable;
 

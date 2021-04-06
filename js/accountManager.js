@@ -28,8 +28,8 @@ var accountManager = (function(global) {
 	
 	function updateHtmlEmail(email) {
 		fetchAccountInfo().then(function(userEmail) {
-			let html = `${userEmail}<div class="logged-in-account-desc">(Showing primary in your account)</div>`;
-			$("#logged-in-account").html(html);
+			// let html = `${userEmail}<div class="logged-in-account-desc">(Showing primary account)</div>`;
+			$("#logged-in-account").html(userEmail);
 		}).catch(function(error) {
 			$("#logged-in-account").html("Unknown");
 		});

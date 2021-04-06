@@ -1,78 +1,154 @@
-$(document).ready(function() { 
+// Extension version
+$(".page-footer .extension-version").html(`v${chrome.runtime.getManifest().version}`);
 
+
+async function initialize() {
+
+	// Init tables
 	tableInitializer.init();
 
-	// Init Loading Indicator Bar
-	loadingIndicator.init($("#loader-bar"));
+	// Load ad units
+	const adUnits = await moPubApi.getAdUnits();
+	const adUnitsForDropDown = adUnitManager.dropDownFormatter(adUnits);
 
-	// Hide line item bar first
-	$("#add-adsource").trigger('click');
+	// Load order
+	const orders = await orderTableController.loadOrders();
+	initOrderDropDown(orders);
 
-	// Load Ad Units
-	adUnitManager.loadAdUnits("list-name-id", false, function(adUnitList) {
-		if (adUnitList) {
-			$("#info-adunit-name").html("Select ad unit");
-			let adUnitData = [];
-			for (let i=0; i < adUnitList.length; i++) {
-				adUnitData.push({
-					name: adUnitList[i].value,
-					value: adUnitList[i].key
-				});
+	// Init ad unit dropdown in menu bar
+	$(".adunit-select").dropdown({
+		clearable: true,
+		placeholder: "Search ad unit name or key",
+		values: adUnitsForDropDown,
+		fullTextSearch: "exact",
+		sortSelect: true,
+		onChange: async function (value, text, element) {
+			if (validateAdUnitKey(value)) {
+				loaders.show("adunit");
+				await waterfallTableController.loadLineItems(value);
+				loaders.hide("adunit");
+			} else {
+				console.log(`Invalid Ad Unit Key: ${value}`);
 			}
-			// ad unit list in main menu
-			$(".adunit-select").dropdown({
-				clearable: true,
-				placeholder: "Search ad unit or key..",
-				values: adUnitData,
-				fullTextSearch: "exact",
-				sortSelect: true,
-				onChange: function (value, text, element) {
-					// Validate Id
-					let keyRegex = /^[0-9|a-z]{32}$/;
-					if (keyRegex.test(value)) {
-						$($(this)[0]).find("input").blur();
-						console.log(`Loading waterfall for ad unit ${value}`);
-						loadWaterfall(value, function(result) {
-							if (result) {
-								$(".button, .search-table-wrapper").removeClass('disabled');
-								console.log("Eanbling all buttons");
-							}
-						});
-					}				
-				}
-			});
-			// ad unit list in copy form
-			$(".adunit-select-copy-form").dropdown({
-				clearable: true,
-				placeholder: "Search ad unit or key..",
-				values: adUnitData,
-				fullTextSearch: "exact",
-				sortSelect: true,
-				direction: "upward",
-				onShow: function() {
-					$($(this)[0]).removeClass("error");
-				},
-				onChange: function (value, text, element) {
-					dropdownDomJObj = $($(this)[0]);
-					// Validate Id
-					let keyRegex = /^[0-9|a-z]{32}$/;
-					if (keyRegex.test(value)) {
-						dropdownDomJObj.find("input").blur();
-					} else {
-						if (!dropdownDomJObj.dropdown('is visible')) {
-							dropdownDomJObj.addClass("error");
-						}
-					}
-				}
-			});
 		}
 	});
 
-	// Load Account Info
-	accountManager.updateHtmlEmail();
+	// $(".adunit-select-copy-form").dropdown({
+	// 	clearable: true,
+	// 	placeholder: "Search ad unit or key..",
+	// 	values: adUnitsForDropDown,
+	// 	fullTextSearch: "exact",
+	// 	sortSelect: true,
+	// 	direction: "upward",
+	// 	onShow: function() {
+	// 		$($(this)[0]).removeClass("error");
+	// 	},
+	// 	onChange: function (value, text, element) {
+	// 		dropdownDomJObj = $($(this)[0]);
+	// 		// Validate Id
+	// 		let keyRegex = /^[0-9|a-z]{32}$/;
+	// 		if (keyRegex.test(value)) {
+	// 			dropdownDomJObj.find("input").blur();
+	// 		} else {
+	// 			if (!dropdownDomJObj.dropdown('is visible')) {
+	// 				dropdownDomJObj.addClass("error");
+	// 			}
+	// 		}
+	// 	}
+	// });
 
-	// Version Update
-	document.title += ` v${chrome.runtime.getManifest().version}`;
+
+	// Init review change modal
+	$('.ui.modal.review-change-modal').modal({
+		onApprove: async function() {
+			loaders.show("adunit");
+			const results = await moPubUpdator.applyToMoPub();
+			loaders.hide("adunit");
+		}
+	});
+
+	
+
+
+
+	loaders.hide("body");
+}
+
+// Show loader as soon as it opens up
+loaders.show("body");
+
+$(document).ready(async function() { 
+
+
+	initialize();
+
+
+
+
+
+	// Load Ad Units
+	// adUnitManager.loadAdUnits("list-name-id", false, function(adUnitList) {
+	// 	if (adUnitList) {
+	// 		$("#info-adunit-name").html("Select ad unit");
+	// 		let adUnitData = [];
+	// 		for (let i=0; i < adUnitList.length; i++) {
+	// 			adUnitData.push({
+	// 				name: adUnitList[i].value,
+	// 				value: adUnitList[i].key
+	// 			});
+	// 		}
+	// 		// ad unit list in main menu
+	// 		$(".adunit-select").dropdown({
+	// 			clearable: true,
+	// 			placeholder: "Search ad unit or key..",
+	// 			values: adUnitData,
+	// 			fullTextSearch: "exact",
+	// 			sortSelect: true,
+	// 			onChange: function (value, text, element) {
+	// 				// Validate Id
+	// 				let keyRegex = /^[0-9|a-z]{32}$/;
+	// 				if (keyRegex.test(value)) {
+	// 					$($(this)[0]).find("input").blur();
+	// 					console.log(`Loading waterfall for ad unit ${value}`);
+	// 					loadWaterfall(value, function(result) {
+	// 						if (result) {
+	// 							$(".button, .search-table-wrapper").removeClass('disabled');
+	// 							console.log("Eanbling all buttons");
+	// 						}
+	// 					});
+	// 				}				
+	// 			}
+	// 		});
+	// 		// ad unit list in copy form
+			// $(".adunit-select-copy-form").dropdown({
+			// 	clearable: true,
+			// 	placeholder: "Search ad unit or key..",
+			// 	values: adUnitData,
+			// 	fullTextSearch: "exact",
+			// 	sortSelect: true,
+			// 	direction: "upward",
+			// 	onShow: function() {
+			// 		$($(this)[0]).removeClass("error");
+			// 	},
+			// 	onChange: function (value, text, element) {
+			// 		dropdownDomJObj = $($(this)[0]);
+			// 		// Validate Id
+			// 		let keyRegex = /^[0-9|a-z]{32}$/;
+			// 		if (keyRegex.test(value)) {
+			// 			dropdownDomJObj.find("input").blur();
+			// 		} else {
+			// 			if (!dropdownDomJObj.dropdown('is visible')) {
+			// 				dropdownDomJObj.addClass("error");
+			// 			}
+			// 		}
+			// 	}
+			// });
+	// 	}
+	// });
+
+	// Load Account Info
+	 accountManager.updateHtmlEmail();
+
 
   // Update Notification
   chrome.storage.local.get("extUpdated", function(result) {
@@ -89,25 +165,29 @@ $(document).ready(function() {
 
 	// Column Selector
 	let colDefs = WaterfallTable.getColumnDefinitions(); // Get column definition array
-	for(let i =0; i < colDefs.length; i++) {
-		if (colDefs[i]["field"]) {
-			let checked = colDefs[i].visible == true ? "checked" : "";
-			let html = ` 
-			<div class="ui item checkbox tiny" data-value="${colDefs[i].field}">
-        <input type="checkbox" name="${colDefs[i].field}" ${checked}>
-        <label>${colDefs[i].title}</label>
-      </div>`;
-			$(".column.scrolling.menu").append(html);
+	let visibleColumns = [];
+	colDefs.forEach(column => {
+		if (column["field"]) {
+			if (column.visible == true) visibleColumns.push(column.field);
+			const html = `<option value="${column.field}">${column.title}</option>`;
+			$("#column-selector").append(html);
 		}
-	}
+	});
 
 	// Column Select
 	$("#column-selector").dropdown({
-		action: function(text, value, element) {
-			WaterfallTable.toggleColumn(value);
+		direction: "upward",
+		// clearable: true,
+		onAdd: function(value, text, element) {
+			WaterfallTable.showColumn(value);
+			WaterfallTable.redraw(true);
+		},
+		onRemove: function(value, text, element) {
+			WaterfallTable.hideColumn(value);
 			WaterfallTable.redraw(true);
 		}
-	});
+	}).dropdown("set selected", visibleColumns);
+
 
 	// Type Filter Init
 	for (let key in TYPE_NAME) {
@@ -216,18 +296,21 @@ $(document).ready(function() {
 				});
 				return false;
 			}
-			let orderName = $(".add-item-order-list.dropdown").dropdown('get text');
+			const type = value;
+			const order = orderTableController.getOrderByKey(orderKey);
+			const adUnitKey = waterfallTableController.getCurrentAdUnitKey();
+		
 			// Clear notifiation
 			notifier.clear();
-			addNewLineItem.add(value, {orderName: orderName, orderKey: orderKey});
+			newLineItemFactory.add(type, order, adUnitKey);	
 		}
 	});
 
 	// Disable all buttons
-	if (AdUnitId == undefined) {
-		$(".button, .search-table-wrapper").addClass('disabled');
-		console.log("Disabling all buttons");
-	}
+	// if (AdUnitId == undefined) {
+	// 	$(".button, .search-table-wrapper").addClass('disabled');
+	// 	console.log("Disabling all buttons");
+	// }
 
 	// Status Filter Init
 	$('#status-filter, #status-filter-lineitem, #status-filter-order').dropdown({

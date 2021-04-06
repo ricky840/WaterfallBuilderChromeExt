@@ -3,10 +3,10 @@ var adUnitManager = (function(global) {
 
 	let originalResponse = {};
 
-	function listFormat(adUnits) {
+	function dropDownFormatter(adUnits) {
 		let formatted = [];
 		for (let i=0; i < adUnits.length; i++) {
-			let os = (adUnits[i].appType == "iphone") ? "iOS" : "AOS";
+			let os = (adUnits[i].appType == "ios") ? "iOS" : "AOS";
 			let ostag = (os == "iOS") ? "ios" : "aos";
 			let appName = adUnits[i].appName.capitalize();
 			let adUnitName = adUnits[i].name.capitalize();
@@ -15,15 +15,15 @@ var adUnitManager = (function(global) {
       let status = (adUnits[i].active == true) ? "unitstatusactive" : "unitstatusinactive";
 
 			let value = `<${ostag}>${os}</${ostag}>`;
-			value += `<unitformat class="right floated">${format}</unitformat>`;
+			value += `<unitformat>${format}</unitformat>`;
 			value += `<unitname>${adUnitName}</unitname>`;
 			value += `<appname>${appName}</appname>`;
 			value += `<${status}></${status}>`;
 			value += `<unitkey>(${key})</unitkey>`;
 
 			formatted.push({
-				value: value,
-				key: key
+				name: value,
+				value: key
 			});
 		}
 
@@ -60,6 +60,7 @@ var adUnitManager = (function(global) {
 	}
 
   return {
-		loadAdUnits: loadAdUnits
+		loadAdUnits: loadAdUnits,
+		dropDownFormatter: dropDownFormatter
   }
 })(this);

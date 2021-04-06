@@ -1,11 +1,13 @@
 var tableFormatters = (function(global) {
   "use strict";
 
-	// line item name, add editable class if it is not marketplace
+	// Line item name, add editable class if it is not marketplace
 	function nameFormatter(cell, formatterParams, onRendered) {
 		let marketplace_regex = /^marketplace$/i;
 		let rowData = cell.getData();
-		let html = `<div class="lineitem-name">${cell.getValue()}</div><div class="lineitem-ordername">${rowData.orderName}</div>`; 
+		let html = `
+			<div class="lineitem-name">${cell.getValue()}</div>
+			<div class="lineitem-ordername">${rowData.orderName}</div>`; 
 		if (!marketplace_regex.test(cell.getValue())) {
 			$(cell.getElement()).addClass("editable-cell");
 		}
@@ -13,16 +15,19 @@ var tableFormatters = (function(global) {
 	}
 
 	function lineItemKeyFormatter(cell, formatterParams, onRendered) {
-		let html = `<a class="lineitem-key-link" href="https://app.mopub.com/line-item?key=${cell.getValue()}" target="_blank">${cell.getValue()}</a>`;
+		let html = `
+			<a class="lineitem-key-link" href="https://app.mopub.com/line-item?key=${cell.getValue()}" target="_blank">
+			${cell.getValue()}
+			</a>`;
 		return html;
 	}
 
-	// line item type name formatter
+	// Line item type name formatter
 	function typeNameFormatter(cell, formatterParams, onRendered) {
 		return (TYPE_NAME[cell.getValue()] == undefined) ? cell.getValue() : TYPE_NAME[cell.getValue()];
 	}
 
-	// line item network type name formatter
+	// Line item network type name formatter
 	function networkTypeNameFormatter(cell, formatterParams, onRendered) {
 		return (NETWORK_TYPE_NAME[cell.getValue()] == undefined) ? cell.getValue() : NETWORK_TYPE_NAME[cell.getValue()];
 	}
@@ -39,7 +44,7 @@ var tableFormatters = (function(global) {
 		if (!marketplace_regex.test(rowData.name)) {
 			$(cell.getElement()).addClass("editable-cell");
 		}
-		let html = `<span class="ui gray circular label small">${cell.getValue()}</span>`;
+		let html = `<span class="ui grey basic label small">${cell.getValue()}</span>`;
 		return html;
 	}
 	
@@ -80,12 +85,38 @@ var tableFormatters = (function(global) {
 		return cell.getValue().capitalize();
 	}
 
+	function overrideFieldFormatter(cell, formatterParams, onRendered) {
+		let lineItemKey = cell.getData().key;
+		let value = cell.getValue();
+		if (!_.isEmpty(clearEmpties(value))) $(cell.getElement()).addClass("editable-cell");
+		let html = "";
+
+		for (let key in value) {
+			if (_.isEmpty(value[key])) continue;
+			let betterKeyName = key.replace(/network_/g, "").replace(/_/g, " ");
+
+			html += '<div>';
+			if (key == "html_data") {
+				html += `<span class="cell-header">${betterKeyName}</span>
+				<span class="cell-format-value">
+					<a href="https://app.mopub.com/edit-line-item?key=${lineItemKey}" target="_blank">click</a>
+				</span>`;
+			} else {
+				html += `<span class="cell-header">${betterKeyName}</span>
+				<span class="cell-format-value">${value[key]}</span>`;
+			}
+			html += '</div>';
+		}
+		return html;
+	}
+
 	function jsonArrayFormatter(cell, formatterParams, onRendered) {
 		let lineItemKey = cell.getData().key;
 		let value = cell.getValue();
 		let html = "";
+
 		if (cell.getField() == "overrideFields" || cell.getField() == "targetedCountries" || cell.getField() == "keywords") {
-			if (!_.isEmpty(clearEmpties(value)))	$(cell.getElement()).addClass("editable-cell");
+			if (!_.isEmpty(clearEmpties(value))) $(cell.getElement()).addClass("editable-cell");
 		}
 
 		if (jQuery.type(value) == "object") {
@@ -128,8 +159,8 @@ var tableFormatters = (function(global) {
 	
 	function orderNameFormatter(cell, formatterParams, onRendered) {
 		let rowData = cell.getData();
-		let html = `<div class="lineitem-name">${cell.getValue()} (${rowData.activeLineItemCount} / ${rowData.lineItemCount})</div>`;
-		html += `<div class="lineitem-ordername">${rowData.key}</div>`; 
+		let html = `<div class="lineitem-name">${cell.getValue()}</div>`;
+		html += `<a class="lineitem-key-link" href="https://app.mopub.com/order?key=${rowData.key}" target="_blank">${rowData.key}</a>`;
 		return html;
 	}
 
@@ -158,12 +189,11 @@ var tableFormatters = (function(global) {
 	}
 
 	function priorityFormatterNotEditable(cell, formatterParams, onRendered) {
-		let html = `<span class="ui gray circular label small">${cell.getValue()}</span>`;
+		let html = `<span class="ui grey basic label small">${cell.getValue()}</span>`;
 		return html;
 	}
  
 	// Formatter Helpers
-	
 	function createCellHtmlForObject(lineItemKey, object) {
 		let html = "";
 		for (let key in object) {
@@ -171,9 +201,13 @@ var tableFormatters = (function(global) {
 			html += '<div>';
 			if (key == "html_data") {
 				// html += `<span class="cell-header">${key}</span>: <a class="customHtml" key="${lineItemKey}">click</a>`;
-				html += `<span class="cell-header">${key}</span><span class="cell-format-value"><a href="https://app.mopub.com/edit-line-item?key=${lineItemKey}" target="_blank">click</a></span>`;
+				html += `<span class="cell-header">${key}</span>
+				<span class="cell-format-value">
+					<a href="https://app.mopub.com/edit-line-item?key=${lineItemKey}" target="_blank">click</a>
+				</span>`;
 			} else {
-				html += `<span class="cell-header">${key}</span><span class="cell-format-value">${object[key]}</span>`;
+				html += `<span class="cell-header">${key}</span>
+				<span class="cell-format-value">${object[key]}</span>`;
 			}
 			html += '</div>';
 		}
@@ -184,7 +218,7 @@ var tableFormatters = (function(global) {
 		let html = '<div>';
 		for (let i=0; i < array.length; i++) {
 			let value = JSON.stringify(array[i], undefined, 2).replace(/"/g,"");
-			html += `<div class="ui tiny label less-padding-label">${value}</div>`;
+			html += `<div class="ui tiny label basic cell-inside-label">${value}</div>`;
 		}
 		html += '</div>';
 		return html;
@@ -206,6 +240,7 @@ var tableFormatters = (function(global) {
 		orderNameFormatter: orderNameFormatter,
 		statusFormatterNotEditable: statusFormatterNotEditable,
 		cpmFormatterNotEditable: cpmFormatterNotEditable,
-		priorityFormatterNotEditable: priorityFormatterNotEditable
+		priorityFormatterNotEditable: priorityFormatterNotEditable,
+		overrideFieldFormatter: overrideFieldFormatter
   }
 })(this);

@@ -1,26 +1,37 @@
 var tableColumnDef = (function(global) {
   "use strict";
 
-	let titleCheckBoxWB =`<div class='ui checkbox fitted'><input class="select-all" type='checkbox' table="waterfall"><label></label></div>`;
-	let titleCheckBoxOrder =`<div class='ui checkbox fitted'><input class="select-all" type='checkbox' table="order"><label></label></div>`;
-	let titleCheckBoxLineItem =`<div class='ui checkbox fitted'><input class="select-all" type='checkbox' table="lineitem"><label></label></div>`;
+	// let titleCheckBoxWB =`<div class='ui checkbox fitted'><input class="select-all" type='checkbox' table="waterfall"><label></label></div>`;
+	const titleCheckBoxOrder =`<div class='ui checkbox fitted'><input class="select-all" type='checkbox' table="order"><label></label></div>`;
+	const titleCheckBoxLineItem =`<div class='ui checkbox fitted'><input class="select-all" type='checkbox' table="lineitem"><label></label></div>`;
 
 	// Alias for formatters
-	let f = tableFormatters;
+	const f = tableFormatters;
 
 	// Waterfall Table Def
-	let waterfallColumns = [
-		{ rowHandle: true, formatter: "handle", headerSort: false, resizable: false, width: 42, minWidth: 42 },
-		{ title: titleCheckBoxWB, resizable: false, headerSort: false, width: 30, formatter: f.checkBoxFormatter, cellClick: checkBoxClick },
-		{ field: 'name', title: 'Name', visible: true, download: true, editor: "input", editable: editCheck, minWidth: 80, cellEdited: nameValidator, formatter: f.nameFormatter },
+	const waterfallColumns = [
+		{ titleFormatter: "rowSelection", resizable: false, headerSort: false, width: 30, formatter: "rowSelection", hozAlign: "center" },
+		{ field: 'name', title: 'Name', visible: true, download: true, editor: "input", editable: editCheck, cellEdited: nameValidator, formatter: f.nameFormatter },
 		{ field: 'key', title: 'Key', visible: false, download: true, sorter: 'string', formatter: f.lineItemKeyFormatter },
-		{ field: 'orderName', title: 'Order', visible: false, download: true, minWidth: 80 },
-		// { field: 'orderKey', title: 'Order Key', visible: false, download: true },
-		{ field: 'type', title: 'Item Type', visible: true, download: true, minWidth: 110, width: 110, sorter: 'string', formatter: f.lineItemTypeFormatter },
-		{ field: 'networkType', title: 'Network Type', visible: false, download: true, minWidth: 150, width: 150, sorter: 'string', formatter: f.networkTypeNameFormatter },
-		{ field: 'network', title: 'Network', visible: false, download: true, formatter: f.jsonArrayFormatter, sorter: 'string' },
-		{ field: 'overrideFields', title: 'Override Fields', download: true, formatter: f.jsonArrayFormatter, visible: true, sorter: 'string', cellClick: editOverrideFields },
-		{ field: 'includeGeoTargeting', title: 'GeoTarget Mode', visible: true, download: true, width: 140, sorter: 'string', formatter: f.geoTargetModeFormatter, cellClick: editForm },
+		{ field: 'orderName', title: 'Order', visible: false, download: true },
+		{ field: 'orderKey', title: 'Order Key', visible: false, download: true },
+		{ field: 'type', title: 'Type', visible: true, download: true, sorter: 'string', formatter: f.lineItemTypeFormatter, width: 120 },
+		{ field: 'networkType', title: 'Network Type', visible: false, download: true, sorter: 'string', formatter: f.networkTypeNameFormatter },
+		{ field: 'overrideFields', title: 'Override Fields', download: true, formatter: f.overrideFieldFormatter, visible: true, sorter: 'string', cellClick: editOverrideFields },
+
+		// New Fields
+		{ field: 'disallowAutoCpm', title: 'Disallow AutoCPM', download: true, formatter: f.jsonArrayFormatter, sorter: 'string', visible: false },
+		{ field: 'adUnitKeys', title: 'Assigned AdUnits', download: true, formatter: f.jsonArrayFormatter, sorter: 'string', visible: false },
+		{ field: 'enableOverrides', title: 'Enable Overrides', download: true, formatter: f.jsonArrayFormatter, sorter: 'string', visible: false },
+		{ field: 'budgetStrategy', title: 'Budget Strategy', download: true, formatter: f.jsonArrayFormatter, sorter: 'string', visible: false },
+		{ field: 'targetedCarriers', title: 'Carriers', download: true, formatter: f.jsonArrayFormatter, sorter: 'string', visible: false },
+		{ field: 'frequencyCapsEnabled', title: 'FrequencyCap Enabled', download: true, formatter: f.jsonArrayFormatter, sorter: 'string', visible: false },
+		{ field: 'allocationPercentage', title: 'Allocation Percentage', download: true, formatter: f.jsonArrayFormatter, sorter: 'string', visible: false },
+		{ field: 'refreshInterval', title: 'Refresh Interval', download: true, formatter: f.jsonArrayFormatter, sorter: 'string', visible: false },
+		{ field: 'userAppsTargeting', title: 'UserApps Targeting', download: true, formatter: f.jsonArrayFormatter, sorter: 'string', visible: false },
+		{ field: 'userAppsTargetingList', title: 'UserApps TargetingList', download: true, formatter: f.jsonArrayFormatter, sorter: 'string', visible: false },
+
+		{ field: 'includeGeoTargeting', title: 'GeoTarget Mode', visible: true, download: true, sorter: 'string', formatter: f.geoTargetModeFormatter, cellClick: editForm, width: 100 },
 		{ field: 'targetedCountries', title: 'Countries', visible: true, download: true, formatter: f.jsonArrayFormatter, sorter: 'string', cellClick: editForm },
 		{ field: 'targetedRegions', title: 'Regions', visible: false, download: true, formatter: f.jsonArrayFormatter, sorter: 'string' },
 		{ field: 'targetedCities', title: 'Cities', visible: false, download: true, formatter: f.jsonArrayFormatter, sorter: 'string' },
@@ -50,6 +61,7 @@ var tableColumnDef = (function(global) {
 				min: 1,
 				max: 16,
 				step: 1,
+				width: 100,
 				elementAttributes:{
 					maxlength: "2", //set the maximum character length of the input element to 10 characters
 				}
@@ -62,20 +74,17 @@ var tableColumnDef = (function(global) {
 					{ column: 'priority', dir:"asc" }
 				]);
 			},
-			align: "left",
+			hozAlign: "left",
 			minWidth: 90,
 			width: 90,
 			formatter: f.priorityFormatter
 		},
 		{ field: 'start', title: 'Start', visible: false, download: true, sorter: 'string' },
 		{ field: 'end', title: 'End', visible: false, download: true, sorter: 'string' },
-		{ field: 'active', title: 'Active', visible: false, download: true, sorter: 'string' },
-		{ field: 'disabled', title: 'Disabled', visible: false, download: true, sorter: 'string' },
-		{ field: 'autoCpm', title: 'AutoCpm', visible: false, download: true, sorter: 'string', formatter: f.jsonArrayFormatter },
+		{ field: 'autoCpm', title: 'AutoCPM', visible: false, download: true, sorter: 'string', formatter: f.jsonArrayFormatter },
 		{ field: 'budget', title: 'Budget', visible: false, download: true, sorter: 'string' },
 		{ field: 'budgetType', title: 'Budget Type', visible: false, download: true, sorter: 'string' },
 		{ field: 'frequencyCaps', title: 'Frequency Caps', visible: false, download: true, sorter: 'string', formatter: f.jsonArrayFormatter },
-		{ field: 'bidStrategy', title: 'Bid Strategy', visible: false, download: true, sorter: 'string' }
 	];
 
 	let lineitemColumns = [
@@ -92,12 +101,11 @@ var tableColumnDef = (function(global) {
 	];
 
   let orderColumns = [
-		{ title: titleCheckBoxOrder, resizable: false, headerSort: false, width: 30, formatter: f.checkBoxFormatter, cellClick: checkBoxClick},
-		{ field: 'name', title: 'Order (Active / Total)', visible: true, formatter: f.orderNameFormatter },
-		{ field: 'lineItemCount', title: 'Total', visible: false, sorter: "number", minWidth: 90, width: 90 },
-		{ field: 'activeLineItemCount', title: 'Active', sorter: "number", visible: false, minWidth: 90, width: 90 },
+		{ titleFormatter: "rowSelection", resizable: false, headerSort: false, width: 30, formatter: "rowSelection", hozAlign: "center" },
+		{ field: 'name', title: 'Name', visible: true, formatter: f.orderNameFormatter },
 		{ field: 'key', title: 'Key', visible: false },
-		{ field: 'description', title: 'Description', visible: false },
+		{ field: 'description', title: 'Description', visible: true },
+		{ field: 'advertiser', title: 'Advertiser', visible: true },
 		{ field: 'status', title: 'Status', visible: true, minWidth: 90, width: 90, formatter: f.statusFormatterNotEditable },
 	];
 
