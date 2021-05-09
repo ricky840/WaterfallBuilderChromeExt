@@ -151,9 +151,6 @@ var newLineItemFactory = (function(global) {
 		// Assign Temp Key
 		newLineItem.key = `temp-${stringGen(32)}`;
 
-		// Save in the store
-		lineItemStore.saveLineItem(newLineItem, true);
-
 		// Add to the Waterfall
 		WaterfallTable.addData([newLineItem], true);
 	}	

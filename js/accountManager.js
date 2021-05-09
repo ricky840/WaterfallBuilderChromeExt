@@ -3,36 +3,31 @@ var accountManager = (function(global) {
 
 	let userEmail;
 
-	function fetchAccountInfo() {
-		return new Promise(function(resolve, reject) { 
-			let request = { url: BASE_URL + GET_ACCOUNT };
-			http.getRequest(request).then(function(result) {
-		  	let accountInfo = JSON.parse(result.responseText);
+	function loadAccountInfo() {
+		return new Promise(async (resolve, reject) => { 
+			try {
+				const accountInfo = await moPubApi.getUsers();
 				if (accountInfo.length > 0) {
 					for (let i=0; i < accountInfo.length; i++) {
 						if (accountInfo[i].isPrimary) {
 							userEmail = accountInfo[i].email;
+							updateHtmlEmail(userEmail);
 							break;
 						}
 					}
-					// Temp
 					console.log(`Logged in user ${userEmail}`);
 					resolve(userEmail);
 				}		
-			}).catch(function(error) {
+			} catch (error) {
 				console.log("Error while fetching user account");
-				reject();
-			});
+				console.log(error);
+				updateHtmlEmail("Unknown");
+			}
 		});
 	}
 	
 	function updateHtmlEmail(email) {
-		fetchAccountInfo().then(function(userEmail) {
-			// let html = `${userEmail}<div class="logged-in-account-desc">(Showing primary account)</div>`;
-			$("#logged-in-account").html(userEmail);
-		}).catch(function(error) {
-			$("#logged-in-account").html("Unknown");
-		});
+		$("#logged-in-account").html(email);
 	}
 
 	function getUserEmail() {
@@ -40,7 +35,7 @@ var accountManager = (function(global) {
 	}
  
   return {
-		fetchAccountInfo: fetchAccountInfo,
+		loadAccountInfo: loadAccountInfo,
 		updateHtmlEmail: updateHtmlEmail,
 		getUserEmail: getUserEmail
   }

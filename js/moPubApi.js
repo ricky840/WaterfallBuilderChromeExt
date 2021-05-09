@@ -4,12 +4,19 @@ var moPubApi = (function(global) {
   const MOPUB_API_DOMAIN = "api.mopub.com";
   const BASE_URL = `https://${MOPUB_API_DOMAIN}`;
   const MOPUB_API_AUTH_HEADER = "X-API-KEY";
+	const MOPUB_PAGE_ITEM_LIMIT = 100;
 
   const GET_ADUNITS = "/v1/adunits";
 	const GET_LINE_ITEMS = "/v1/line-items";
+	const GET_AB_LINE_ITEMS = "/v1/advanced-bidding-settings";
 	const GET_ORDERS = "/v1/orders";
 	const CREATE_LINE_ITEM = "/v1/line-items";
+	const CREATE_ORDER = "/v1/orders";
 	const UPDATE_LINE_ITEM = "/v1/line-items";
+
+	// Internal APIs, should be updated later on
+	const COPY_LINE_ITEM = "https://app.mopub.com/web-client/api/line-items/copy";
+	const GET_USERS = "https://app.mopub.com/web-client/api/users/query";
 
 	function mergeResponseData(responses) {
 		let finalData = [];
@@ -31,9 +38,10 @@ var moPubApi = (function(global) {
 				const task = new Promise(async (resolve, reject) => { 
 					let requestUrl = new URL(url);
 					requestUrl.searchParams.set("page", i);
+					requestUrl.searchParams.set("limit", MOPUB_PAGE_ITEM_LIMIT);
 					const request = { 
 						url: requestUrl.toString(),
-						headers: { [MOPUB_API_AUTH_HEADER]: MOPUB_API_KEY }
+						headers: { [MOPUB_API_AUTH_HEADER]: apiKeyManager.getActiveApiKey().key }
 					};
 					try {
 						const result = await http.getRequest(request);
@@ -58,8 +66,8 @@ var moPubApi = (function(global) {
   function getAdUnits() {
 		return new Promise(async (resolve, reject) => { 
 			const request = { 
-        url: BASE_URL + GET_ADUNITS,
-        headers: { [MOPUB_API_AUTH_HEADER]: MOPUB_API_KEY }
+        url: BASE_URL + GET_ADUNITS + `?limit=${MOPUB_PAGE_ITEM_LIMIT}`,
+        headers: { [MOPUB_API_AUTH_HEADER]: apiKeyManager.getActiveApiKey().key }
       };
 
 			try {
@@ -92,11 +100,11 @@ var moPubApi = (function(global) {
 		});
 	}
 
-	function getLineItems(adUnitKey) {
+	function getLineItemsByAdUnit(adUnitKey) {
 		return new Promise(async (resolve, reject) => { 
 			const request = { 
-        url: BASE_URL + GET_LINE_ITEMS + "?adUnitKey=" + adUnitKey,
-        headers: { [MOPUB_API_AUTH_HEADER]: MOPUB_API_KEY}
+        url: BASE_URL + GET_LINE_ITEMS + `?adUnitKey=${adUnitKey}&limit=${MOPUB_PAGE_ITEM_LIMIT}`,
+        headers: { [MOPUB_API_AUTH_HEADER]: apiKeyManager.getActiveApiKey().key}
       };
 
 			try {
@@ -128,11 +136,67 @@ var moPubApi = (function(global) {
 		});
 	}
 
+	function getLineItemsByOrder(orderKey) {
+		return new Promise(async (resolve, reject) => { 
+			const request = { 
+        url: BASE_URL + GET_LINE_ITEMS + `?orderKey=${orderKey}&limit=${MOPUB_PAGE_ITEM_LIMIT}`,
+        headers: { [MOPUB_API_AUTH_HEADER]: apiKeyManager.getActiveApiKey().key}
+      };
+
+			try {
+				const result = await http.getRequest(request);
+				const response = JSON.parse(result.responseText);
+				const lastPageNum = hasMorePages(response);
+				const currentPageNum = 1; // It will be always 1
+				let lineItemList = mergeResponseData([response])
+
+				// There is no additional pages
+				if (lastPageNum == 0) {
+					resolve(lineItemList);
+					return;
+				}
+
+				let pageResponses = [];
+				const pageResults = await getAllPageResult(request.url, currentPageNum, lastPageNum);
+				pageResults.forEach(eachResult => {
+					const response = JSON.parse(eachResult.responseText);
+					pageResponses.push(response);
+				});
+
+				lineItemList = lineItemList.concat(mergeResponseData(pageResponses));
+				resolve(lineItemList);
+			} catch (error) {
+				// When first request fails
+				reject(error);
+			}
+		});
+	}
+
+	function getLineItemsByOrders(orderKeyList) {
+		return new Promise(async (resolve, reject) => {
+			let taskList = [];
+
+			orderKeyList.forEach(orderKey => {
+				const task = getLineItemsByOrder(orderKey);
+				taskList.push(task);
+			});
+
+			// Promises are ready
+			Promise.allSettled(taskList).then((results) => {
+				let values = [];
+				results.forEach(each => {
+					values.push(each.value);
+				});
+				resolve(values);
+			});
+		});
+	}
+
 	function getOrders() {
 		return new Promise(async (resolve, reject) => { 
 			const request = { 
-        url: BASE_URL + GET_ORDERS ,
-        headers: { [MOPUB_API_AUTH_HEADER]: MOPUB_API_KEY }
+        url: BASE_URL + GET_ORDERS + `?limit=${MOPUB_PAGE_ITEM_LIMIT}`,
+        headers: { [MOPUB_API_AUTH_HEADER]: apiKeyManager.getActiveApiKey().key }
       };
 
 			try {
@@ -165,11 +229,36 @@ var moPubApi = (function(global) {
 		});
 	}
 
-	function createNewLineItem(postData) {
+	function createNewLineItem(postData, lineItemKey) {
 		return new Promise(async (resolve, reject) => { 
 			const request = { 
         url: BASE_URL + CREATE_LINE_ITEM,
-        headers: { [MOPUB_API_AUTH_HEADER]: MOPUB_API_KEY },
+        headers: { [MOPUB_API_AUTH_HEADER]: apiKeyManager.getActiveApiKey().key },
+				data: postData
+      };
+
+			try {
+				const result = await http.postRequest(request);
+				const response = {
+					mopubResponse: JSON.parse(result.responseText),
+					lineItemKey: lineItemKey
+				};
+				resolve(response);
+			} catch (error) {
+				const errorResponse = {
+					error: error,
+					lineItemKey: lineItemKey
+				};
+				reject(errorResponse);
+			}
+		});
+	}
+
+	function createNewOrder(postData) {
+		return new Promise(async (resolve, reject) => { 
+			const request = { 
+        url: BASE_URL + CREATE_ORDER,
+        headers: { [MOPUB_API_AUTH_HEADER]: apiKeyManager.getActiveApiKey().key },
 				data: postData
       };
 
@@ -181,18 +270,69 @@ var moPubApi = (function(global) {
 				reject(error);
 			}
 		});
-	}
+	}	
 
-	function updateLineItem(putData, lineItemKey) {
+	function updateLineItem(changeData, lineItemKey) {
 		return new Promise(async (resolve, reject) => { 
+			const putData = {
+				op: "set",
+				data: changeData
+			};
 			const request = { 
         url: BASE_URL + UPDATE_LINE_ITEM + "/" + lineItemKey,
-        headers: { [MOPUB_API_AUTH_HEADER]: MOPUB_API_KEY },
+        headers: { [MOPUB_API_AUTH_HEADER]: apiKeyManager.getActiveApiKey().key },
 				data: putData
       };
 
 			try {
 				const result = await http.putRequest(request);
+				const response = {
+					mopubResponse: JSON.parse(result.responseText),
+					lineItemKey: lineItemKey
+				};
+				resolve(response);
+			} catch (error) {
+				const errorResponse = {
+					error: error,
+					lineItemKey: lineItemKey
+				};
+				reject(errorResponse);
+			}
+		});
+	}
+
+	function copyLineItem(postData) {
+		return new Promise(async (resolve, reject) => { 
+			const lineItemKey = postData.key;
+			const request = { 
+        url: COPY_LINE_ITEM,
+				headers: { "Content-Type": "application/json; charset=utf-8" },
+				data: postData
+      };
+
+			try {
+				const result = await http.postRequest(request);
+				const response = JSON.parse(result.responseText);
+				resolve(response);
+			} catch (error) {
+				const errorResponse = {
+					error: error,
+					lineItemKey: lineItemKey
+				};
+				reject(errorResponse)
+			}
+		});
+	}
+
+	function getAbLineItemsByAdUnit(adUnitKey) {
+		return new Promise(async (resolve, reject) => { 
+			const request = { 
+        url: BASE_URL + GET_AB_LINE_ITEMS + `/${adUnitKey}`,
+        headers: { [MOPUB_API_AUTH_HEADER]: apiKeyManager.getActiveApiKey().key }
+      };
+
+			try {
+				const result = await http.getRequest(request);
 				const response = JSON.parse(result.responseText);
 				resolve(response);
 			} catch (error) {
@@ -201,11 +341,30 @@ var moPubApi = (function(global) {
 		});
 	}
 
+	function getUsers() {
+		return new Promise(async (resolve, reject) => { 
+			let request = { url: GET_USERS };
+			try {
+				const result = await http.getRequest(request);
+				const response = JSON.parse(result.responseText);
+				resolve(response);
+			} catch(error) {
+				reject(error);
+			}
+		});
+	}
+
   return {
 		getAdUnits: getAdUnits,
-		getLineItems: getLineItems,
+		getLineItemsByAdUnit: getLineItemsByAdUnit,
+		getAbLineItemsByAdUnit: getAbLineItemsByAdUnit,
+		getLineItemsByOrder: getLineItemsByOrder,
+		getLineItemsByOrders: getLineItemsByOrders,
 		getOrders: getOrders,
 		createNewLineItem: createNewLineItem,
-		updateLineItem: updateLineItem
+		createNewOrder: createNewOrder,
+		updateLineItem: updateLineItem,
+		copyLineItem: copyLineItem,
+		getUsers: getUsers
   }
 })(this);

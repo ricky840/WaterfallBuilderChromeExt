@@ -1,7 +1,7 @@
 {
-  "name": "TEST",
-  "version": "0.0.26",
-  "description": "A tool help you managing line items in MoPub UI",
+  "name": "Publisher UI Extension for MoPub",
+  "version": "0.1.0",
+  "description": "Help you to manage line items in MoPub UI",
   "manifest_version": 2,
   "background": {
     "persistent": true,
@@ -9,7 +9,7 @@
       "lib/jquery-3.4.1.min.js",
       "lib/lodash-core.js",
       "lib/http.js",
-			"js/utils.js",
+			"js/helper/utils.js",
       "js/backgrounds/backgroundStatic.js",
       "js/backgrounds/notificationManager.js",
       "js/backgrounds/badgeManager.js",

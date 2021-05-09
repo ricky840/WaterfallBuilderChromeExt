@@ -1,66 +1,74 @@
 class LineItem {
   constructor(lineItem, newlyCreated) {
     // Most Frequently Used
-    this._key = lineItem.key;
-    this._name = lineItem.name; // Edit Supported
-    this._bid = lineItem.bid;   // Edit Supported
-    this._adUnitKeys = lineItem.adUnitKeys; // Edit Supported
-    this._includeGeoTargeting = lineItem.includeGeoTargeting; // Edit Supported
-    this._keywords = lineItem.keywords; // Edit Supported
-    this._disallowAutoCpm = lineItem.disallowAutoCpm; // Edit Supported
-    this._networkType = lineItem.networkType;
-    this._orderKey = lineItem.orderKey;
-    this._orderName = lineItem.orderName;
-    this._priority = lineItem.priority; // Not Supported? (need to check)
-    this._autoCpm = lineItem.autoCpm;
-    this._status = lineItem.status; // Edit Supported (enabled, archived)
-    this._targetedCountries = lineItem.targetedCountries; // Edit Supported
-    this._type = lineItem.type;
-    this._enableOverrides = lineItem.enableOverrides; // Edit Supported
-    this._overrideFields = lineItem.overrideFields; // Edit Supported
+    this._key = lineItem.key; // string
+    this._name = lineItem.name; // string
+    this._bid = lineItem.bid;   // double
+    this._adUnitKeys = this.cloneArray(lineItem.adUnitKeys); // string array
+    this._includeGeoTargeting = lineItem.includeGeoTargeting; // string
+    this._keywords = this.cloneArray(lineItem.keywords); // string array
+    this._disallowAutoCpm = lineItem.disallowAutoCpm; // boolean
+    this._networkType = lineItem.networkType; // string
+    this._orderKey = lineItem.orderKey; // string
+    this._orderName = lineItem.orderName; // string
+    this._priority = lineItem.priority; // int
+    this._autoCpm = lineItem.autoCpm; // double
+    this._status = lineItem.status; // string
+    this._targetedCountries = this.cloneArray(lineItem.targetedCountries); // string array
+    this._type = lineItem.type; // string
+    this._enableOverrides = lineItem.enableOverrides; // boolean
+    this._overrideFields = clearEmpties(this.cloneObject(lineItem.overrideFields)); // object
 
     // Device + Carrier + App Targetings + Budget
-    this._budget = lineItem.budget; // Edit Supported
-    this._budgetStrategy = lineItem.budgetStrategy; // Edit Supported
-    this._budgetType = lineItem.budgetType; // Edit Supported
-    this._dayParts = lineItem.dayParts;
-    this._dayPartTargeting = lineItem.dayPartTargeting;
-    this._deviceTargeting = lineItem.deviceTargeting;
-    this._maxAndroidVersion = lineItem.maxAndroidVersion;
-    this._minAndroidVersion = lineItem.minAndroidVersion;
-    this._maxIosVersion = lineItem.maxIosVersion;
-    this._minIosVersion = lineItem.minIosVersion;
-    this._targetAndroid = lineItem.targetAndroid;
-    this._targetIos = lineItem.targetIos;
-    this._targetIphone= lineItem.targetIphone;
-    this._targetIpad = lineItem.targetIpad;
-    this._targetIpod = lineItem.targetIpod;
-    this._includeConnectivityTargeting = lineItem.includeConnectivityTargeting;
-    this._targetedCarriers = lineItem.targetedCarriers;
-    this._targetedRegions = lineItem.targetedRegions;
-    this._targetedCities = lineItem.targetedCities; 
-    this._targetedZipCodes = lineItem.targetedZipCodes;
-    this._userAppsTargeting= lineItem.userAppsTargeting;
-    this._userAppsTargetingList = lineItem.userAppsTargetingList;
+    this._budget = lineItem.budget; // string
+    this._budgetStrategy = lineItem.budgetStrategy; // string
+    this._budgetType = lineItem.budgetType; // string
+    this._dayParts = this.cloneArray(lineItem.dayParts); // string array
+    this._dayPartTargeting = lineItem.dayPartTargeting; // string
+    this._deviceTargeting = lineItem.deviceTargeting; // boolean
+    this._maxAndroidVersion = lineItem.maxAndroidVersion; // int
+    this._minAndroidVersion = lineItem.minAndroidVersion; // double
+    this._maxIosVersion = lineItem.maxIosVersion; // int
+    this._minIosVersion = lineItem.minIosVersion; // double
+    this._targetAndroid = lineItem.targetAndroid; // boolean
+    this._targetIos = lineItem.targetIos; // boolean
+    this._targetIphone= lineItem.targetIphone; // boolean
+    this._targetIpad = lineItem.targetIpad; // boolean
+    this._targetIpod = lineItem.targetIpod; // boolean
+    this._includeConnectivityTargeting = lineItem.includeConnectivityTargeting; // string
+    this._targetedCarriers = this.cloneArray(lineItem.targetedCarriers); // string array
+    this._targetedRegions = this.cloneArray(lineItem.targetedRegions); // string array
+    this._targetedCities = this.cloneArray(lineItem.targetedCities); // string array
+    this._targetedZipCodes = this.cloneArray(lineItem.targetedZipCodes); // string array
+    this._userAppsTargeting= this.cloneArray(lineItem.userAppsTargeting); // string array
+    this._userAppsTargetingList = this.cloneArray(lineItem.userAppsTargetingList); // string array
 
     // Frequncy Cap
-    this._frequencyCaps = lineItem.frequencyCaps; // Edit Supported
-    this._frequencyCapsEnabled= lineItem.frequencyCapsEnabled; // Edit Supported
+    this._frequencyCaps = this.cloneArray(lineItem.frequencyCaps); // string array
+    this._frequencyCapsEnabled= lineItem.frequencyCapsEnabled; // boolean
 
     // Start and End
-    this._start = lineItem.start;
-    this._end = lineItem.end;
+    this._start = lineItem.start; // time
+    this._end = lineItem.end; // time
 
     // Extra
-    this._advertiser = lineItem.advertiser;
-    this._allocationPercentage = lineItem.allocationPercentage;
-    this._refreshInterval = lineItem.refreshInterval;
+    this._advertiser = lineItem.advertiser; // string
+    this._allocationPercentage = lineItem.allocationPercentage; // int
+    this._refreshInterval = lineItem.refreshInterval; // int
 
     // To track change
     this._changes = {};
 
-    // Indicator: if this is a new line item or existing
+    // Indicator: if this is a new line item or existing line item
     this._newlyCreated = newlyCreated;
+  }
+
+  cloneObject(object) {
+    return (object == undefined || object == null) ? object : $.extend(true, {}, object);
+  }
+
+  cloneArray(array) {
+    return (array == undefined || array == null) ? array : $.extend(true, [], array);
   }
 
   recordChange(field, oldValue, newValue) {
@@ -73,8 +81,10 @@ class LineItem {
         newValue: newValue
       }
     }
-    // If the newValue is back to original value, then there is no change
-    if (this._changes[field].orgValue == this._changes[field].newValue) delete this._changes[field];
+    // If the newValue is back to original value, then there is no change (used isEqual for deep comparison)
+    if (_.isEqual(this._changes[field].orgValue, this._changes[field].newValue)) {
+      delete this._changes[field];
+    }
   }
 
   getChanges() {
@@ -95,6 +105,10 @@ class LineItem {
     }
   }
 
+  // getChangesForOnlySupportedFields
+  // duplicate
+  // 
+
   isUpdated() {
     return _.isEmpty(this._changes) ? false : true;
   }
@@ -103,7 +117,7 @@ class LineItem {
     return this._newlyCreated;
   }
 
-  // Update line item. Supported (editable) fields only)
+  // Update line item. Supported fields only.
   updateLineItem(lineItem) {
     this.setName(lineItem.name);
     this.setBid(lineItem.bid);
@@ -123,7 +137,7 @@ class LineItem {
   }
 
   /*
-    Setters 
+    Setters (supported field only)
   */
 
   // Fiend: name
@@ -140,11 +154,14 @@ class LineItem {
     this._bid = newBid; 
   }
 
-  // Field: adUnitKeys
+  // Field: adUnitKeys (array)
   setAdUnitKeys(newAdUnitKeys) { 
-    if (this._adUnitKeys == newAdUnitKeys) return;
-    this.recordChange("adUnitKeys", this._adUnitKeys, newAdUnitKeys);
-    this._adUnitKeys = newAdUnitKeys; 
+    const clone = this.cloneArray(newAdUnitKeys);
+    if (!_.isEmpty(this._adUnitKeys) && !_.isEmpty(clone)) {
+      if (_.isEqual(this._adUnitKeys.sort(), clone.sort())) return;
+    }
+    this.recordChange("adUnitKeys", this._adUnitKeys, clone);
+    this._adUnitKeys = clone;
   }
 
   // Field: includeGeoTargeting
@@ -154,11 +171,14 @@ class LineItem {
     this._includeGeoTargeting = newIncludeGeoTargeting; 
   }
 
-  // Field: keywords
-  setKeywords(newKeywords) { 
-    if (this._keywords == newKeywords) return;
-    this.recordChange("keywords", this._keywords, newKeywords);
-    this._keywords = newKeywords; 
+  // Field: keywords (array)
+  setKeywords(newKeywords) {
+    const clone = this.cloneArray(newKeywords);
+    if (!_.isEmpty(this._keywords) && !_.isEmpty(clone)) {
+      if (_.isEqual(this._keywords.sort(), clone.sort())) return;
+    }
+    this.recordChange("keywords", this._keywords, clone);
+    this._keywords = clone; 
   }
 
   // Field: disallowAutoCpm
@@ -182,11 +202,14 @@ class LineItem {
     this._status = newStatus; 
   }
 
-  // Field: targetedCountries
+  // Field: targetedCountries (array)
   setTargetedCountries(newTargetedCountries) { 
-    if (this._targetedCountries == newTargetedCountries) return;
-    this.recordChange("targetedCountries", this._targetedCountries, newTargetedCountries);
-    this._targetedCountries = newTargetedCountries; 
+    const clone = this.cloneArray(newTargetedCountries);
+    if (!_.isEmpty(this._targetedCountries) && !_.isEmpty(clone)) {
+      if (_.isEqual(this._targetedCountries.sort(), clone.sort())) return;
+    }
+    this.recordChange("targetedCountries", this._targetedCountries, clone);
+    this._targetedCountries = clone; 
   }
 
   // Field: enableOverrides
@@ -196,11 +219,12 @@ class LineItem {
     this._enableOverrides = newEnableOverrides; 
   }
 
-  // Field: overrideFields
+  // Field: overrideFields (object)
   setOverrideFields(newOverrideFields) { 
-    if (this._overrideFields == newOverrideFields) return;
-    this.recordChange("overrideFields", this._overrideFields, newOverrideFields);
-    this._overrideFields = newOverrideFields; 
+    const clone = clearEmpties(this.cloneObject(newOverrideFields));
+    if (_.isEqual(this._overrideFields, clone)) return;
+    this.recordChange("overrideFields", this._overrideFields, clone);
+    this._overrideFields = clone;
   }
 
   // Field: budgetStrategy
@@ -217,11 +241,14 @@ class LineItem {
     this._budgetType = newBudgetType; 
   }
 
-  // Field: frequencyCaps
-  setFrequencyCaps(newFrequencyCaps) { 
-    if (this._frequencyCaps == newFrequencyCaps) return;
-    this.recordChange("frequencyCaps", this._frequencyCaps, newFrequencyCaps);
-    this._frequencyCaps = newFrequencyCaps; 
+  // Field: frequencyCaps (array)
+  setFrequencyCaps(newFrequencyCaps) {
+    const clone = this.cloneArray(newFrequencyCaps);
+    if (!_.isEmpty(this._frequencyCaps) && !_.isEmpty(clone)) {
+      if (_.isEqual(this._frequencyCaps.sort(), clone.sort())) return;
+    }
+    this.recordChange("frequencyCaps", this._frequencyCaps, clone);
+    this._frequencyCaps = clone; 
   }
 
   // Field: frequencyCapsEnabled

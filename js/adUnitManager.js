@@ -1,7 +1,8 @@
 var adUnitManager = (function(global) {
 	"use strict";
 
-	let originalResponse = {};
+	let adUnitList = [];
+	let currentAdUnitKey = "";
 
 	function dropDownFormatter(adUnits) {
 		let formatted = [];
@@ -30,37 +31,83 @@ var adUnitManager = (function(global) {
 		return formatted;
 	}
 
-	// formatOption = list-name-id | raw
-	function loadAdUnits(formatOption, useCache, callback) {
+	function dropDownFormatterWithoutFormat(adUnits) {
+		let formatted = [];
+		for (let i=0; i < adUnits.length; i++) {
+			let os = (adUnits[i].appType == "ios") ? "iOS" : "AOS";
+			let ostag = (os == "iOS") ? "ios" : "aos";
+			let appName = adUnits[i].appName.capitalize();
+			let adUnitName = adUnits[i].name.capitalize();
+			let format = adUnits[i].format.capitalize();
+			let key = adUnits[i].key;
 
-		// Load from cache if exists
-		if (useCache && !_.isEmpty(originalResponse)) {
-			console.log("Loading ad units from cache");
-			(formatOption == "list-name-id") ? callback(listFormat(originalResponse)) : callback(originalResponse);
-		} else {
-			let url = BASE_URL + GET_ADUNITS;
-			let request = { url: url };
+			let value = `<${ostag}>${os}</${ostag}>`;
+			value += `<unitformatnofloat>${format}</unitformatnofloat>`;
+			value += `<unitname>${adUnitName}</unitname>`;
+			value += `<appname>${appName}</appname>`;
+			value += `<unitkey>(${key})</unitkey>`;
 
-			console.log("Loading ad units from MoPub");
-			http.getRequest(request).then(function(result) {
-				let adUnits = JSON.parse(result.responseText);
-				originalResponse = adUnits;
-				console.log("Ad units were loaded");
-				(formatOption == "list-name-id") ? callback(listFormat(adUnits)) : callback(adUnits);
-			}).catch(function(error) {
-				callback([]);
-				notifier.show({
-					header:	"Error loading ad units",
-					message: `Please login to MoPub UI. If you keep seeing this error, try to refresh this page or logout and login in MoPub UI. ${error.responseText}`,
-					type: "negative"
-				});
-				console.log(error);
+			formatted.push({
+				name: value,
+				value: key
 			});
+		}
+
+		return formatted;
+	}
+
+	function loadAdUnits() {
+		return new Promise(async function(resolve, reject) { 
+			const adUnits = await moPubApi.getAdUnits();
+			adUnitList = adUnits;
+			resolve(adUnits);
+		}).catch(function(error) {
+			reject(error);
+		});
+	}
+
+	function saveCurrentAdUnit(key) {
+		currentAdUnitKey = key;
+		console.log(`Selected Ad Unit Key: ${currentAdUnitKey}`);
+		console.log(`Selected Ad Unit Name: ${getCurrentAdUnitName()}`);
+	}
+
+	function getCurrentAdUnitKey() {
+		return currentAdUnitKey;
+	}
+
+	function getCurrentAdUnitName() {
+		for (const adunit of adUnitList) {
+			if (adunit.key == currentAdUnitKey) {
+				return adunit.name;
+			}
+		}
+	}
+
+	function getAdUnitNameByKey(key) {
+		for (const adunit of adUnitList) {
+			if (adunit.key == key) {
+				return adunit.name;
+			}
+		}
+	}
+
+	function getAdUnit(key) {
+		for (const adunit of adUnitList) {
+			if (adunit.key == key) {
+				return adunit;
+			}
 		}
 	}
 
   return {
 		loadAdUnits: loadAdUnits,
-		dropDownFormatter: dropDownFormatter
+		saveCurrentAdUnit: saveCurrentAdUnit,
+		getCurrentAdUnitKey: getCurrentAdUnitKey,
+		getCurrentAdUnitName: getCurrentAdUnitName,
+		getAdUnitNameByKey: getAdUnitNameByKey,
+		getAdUnit: getAdUnit,
+		dropDownFormatter: dropDownFormatter,
+		dropDownFormatterWithoutFormat: dropDownFormatterWithoutFormat
   }
 })(this);

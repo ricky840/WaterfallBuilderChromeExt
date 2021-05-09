@@ -77,10 +77,14 @@ function validateAdUnitKey(key) {
   return (keyRegex.test(key)) ? true : false;
 }
 
-function isEmptyValue(value) {
-  return value === undefined 
-  || value === null 
-  || value === NaN 
-  || (typeof value === 'object' && Object.keys(value).length === 0) 
-  || (typeof value === 'string' && value.trim().length() === 0);
+// function isEmptyValue(value) {
+//   return value === undefined 
+//   || value === null 
+//   || value === NaN 
+//   || (typeof value === 'object' && Object.keys(value).length === 0) 
+//   || (typeof value === 'string' && value.trim().length() === 0);
+// }
+
+function copyObject(obj) {
+  return JSON.parse(JSON.stringify(obj));
 }

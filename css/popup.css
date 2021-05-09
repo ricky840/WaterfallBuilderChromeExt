@@ -6,8 +6,8 @@
 }
 
 ::-webkit-scrollbar {
-  width: 7px !important;
-  height: 7px !important;
+  width: 0px !important;
+  height: 0px !important;
 }
 
 .no-padding {
@@ -324,19 +324,26 @@
 	text-align: right !important;
 }
 
-/* table line item */
+/* line item type */
 .lineitem-name {
-	/* color: #1da1f2; */
 	font-weight: bold;
+}
+.lineitem-key {
+	color: #657786;
+}
+.tabulator-unselectable .lineitem-key {
+	color: #D0D0D0 !important;
 }
 .lineitem-ordername {
 	color: #657786;
 }
-.lineitem-networktype {
-	color: #657786;
-}
 .tabulator-unselectable .lineitem-ordername {
 	color: #D0D0D0 !important;
+}
+.lineitem-networktype {
+	/* color: #1da1f2; */
+	color: #657786;
+	text-transform: capitalize !important;
 }
 .tabulator-unselectable .lineitem-networktype {
 	color: #D0D0D0 !important;
@@ -378,11 +385,10 @@
 
 /* Log in the menu */
 .mopub-logo-menu {
-	overflow: hidden;
 	background: url(/img/main_mopug_logo.svg) 0 no-repeat;
-	width: 80px;
-	height: 29px;
-	margin-left: 8px;
+	width: 7.5em;
+	height: 1.8em;
+	margin-left: 1.4em;
 }
 
 /* Logged in as label */
@@ -421,7 +427,7 @@
 	margin: 0px !important;
 }
 
-/* for adunit list in main menu */
+/* for adunit list dropdown */
 .adunit-select.dropdown > .search {
 	height: 100% !important;
 }
@@ -495,7 +501,6 @@ unitformat {
 	background-color: #767676 !important;
 	border-color: #767676 !important;
 
-	background-color: #e8e8e8;
 	display: inline-block;
 	line-height: 1;
 	vertical-align: baseline;
@@ -510,6 +515,30 @@ unitformat {
 	-webkit-transition: background .1s ease;
 	transition: background .1s ease;
 	color: #fff!important;
+}
+unitformatnofloat {
+	/* width: 30px !important; */
+	padding: 5px 4px 5px 4px !important;
+	font-size: 0.7em !important;
+	text-align: center !important;
+	margin-right: 1em !important;
+	background-color: #767676 !important;
+	border-color: #767676 !important;
+
+	display: inline-block;
+	line-height: 1;
+	vertical-align: baseline;
+	/* margin: 0.14285714em; */
+	background-image: none;
+	padding: .5833em .833em;
+	color: rgba(0,0,0,.6);
+	text-transform: none;
+	font-weight: 700;
+	border: 0 solid transparent;
+	border-radius: .28571429rem;
+	-webkit-transition: background .1s ease;
+	transition: background .1s ease;
+	color: #fff!important;;
 }
 appname {
 	font-size: 0.9em !important;
@@ -573,12 +602,20 @@ unitstatusinactive {
   vertical-align: middle !important;
 }
 
+/**
+	* body 
+	* https://d2.naver.com/helloworld/8540176#ch2
+	*/
+body {
+	display: flex;
+	flex-direction: column;
+}
+
 /* Footer */
 .page-footer {
+	margin-top: auto;
 	text-align: center;
 	color: #657786; 
-	padding: 0.6em;
-	padding-bottom: 1em;
 	width: 100%;
 	font-size: 0.9em;
 	background-color: white;
@@ -587,11 +624,6 @@ unitstatusinactive {
 /* Version number */
 .wb-version {
 	color: #1da1f2;
-}
-
-/* For footer */
-.body-wrapper {
-  min-height: calc(100vh - 30px);
 }
 
 /* no-margin-row */
@@ -670,12 +702,6 @@ unitstatusinactive {
 	font-weight: bold;
 }
 
-/* export-only-selected-count */
-.export-only-selected-count {
-	margin-left: 5px;
-	color: #1da1f2;
-	font-weight: bold;
-}
 
 /* reload ad unit button */
 .reload-adunit-button {
@@ -698,11 +724,6 @@ unitstatusinactive {
 	text-decoration: underline !important;
 } */
 
-/* ad unit id link in main page */
-#info-adunit-id:hover {
-	color: #1da1f2 !important;
-	text-decoration: underline !important;
-}
 
 /* Column header height (give space at the bottom to adjust width easy) */
 .tabulator .tabulator-header .tabulator-col {
@@ -725,4 +746,67 @@ unitstatusinactive {
 
 .full-height-segment {
 	height: 100%;
+	padding: 0.3em !important;
+}
+
+
+/**
+	Values in Cell. This is for formatters
+	*/
+
+/* boolean value */
+.cell-boolean-val {
+	text-transform: capitalize !important;	
+}
+.tabulator-unselectable .cell-boolean-val {
+	color: #D0D0D0 !important;
+}
+
+/* string value */
+.cell-string-val {
+	text-transform: capitalize !important;	
+}
+.tabulator-unselectable .cell-string-val {
+	color: #D0D0D0 !important;
+}
+
+
+/**
+	* update result click
+	*/
+.mopub-update-results {
+	text-decoration: underline;
+}
+.mopub-update-results:hover {
+	cursor: pointer;
+}
+.mopub-update-result-pre {
+	background: aliceblue;
+}
+
+
+
+/**
+	* Information panels
+  */
+#info-adunit-format {
+	text-transform: capitalize;
+}
+
+#info-adunit-id:hover {
+	color: #1da1f2 !important;
+	/* text-decoration: underline !important; */
+	cursor: pointer;
+}
+.info-panel .column {
+	/* padding-left: 0.2em !important;
+	padding-right: 0.2em !important; */
+}
+
+.info-panel-label {
+	width: 7em;
+}
+.info-panel-value {
+	text-align: center;
+	padding-top: 1em;
 }

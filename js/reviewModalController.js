@@ -24,11 +24,22 @@ var reviewModalController = (function(global) {
 				networkType = NETWORK_TYPE_NAME[lineItem.getNetworkType()];
 			}
 
+			// Ahh.. I don't like this but to show the actual change that we'll be sending to the server 
+			// for the new line item 
+			let actualPostBodyToSend = "";
+			if (lineItem.isNewlyCreated()) {
+				actualPostBodyToSend = moPubUpdator.createPostDataForNewLineItem(lineItem.getChanges());
+			} else {
+				actualPostBodyToSend = lineItem.getChanges();
+			}
+
 			html += `
 				<tr>
 					<td>
-						<div>${lineItem.getName()}</div>
-						<div>${lineItem.getKey()}</div>
+						<h5 class="ui header">
+							${lineItem.getName()}
+							<div class="sub header">${lineItem.getKey()}</div>
+						</h5>
 					</td>
 					<td style="font-weight: bold;">
 						${(lineItem.isNewlyCreated()) ? "Create" : "Update"}
@@ -38,7 +49,7 @@ var reviewModalController = (function(global) {
 						<div class="lineitem-networktype">${networkType}</div>
 					</td>
 					<td>
-						<pre class="change-pre">${formatter(lineItem.getChanges())}</pre>
+						<pre class="change-pre">${formatter(actualPostBodyToSend)}</pre>
 					</td>
 				</tr>`;	
 		});

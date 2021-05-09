@@ -2,15 +2,54 @@ var moPubUpdator = (function(global) {
 	"use strict";
 
   function createPostDataForNewLineItem(change) {
+    // For new, running is a default status. Don't need to specify.
+    delete change.status; 
+
+    /**
+     * Remove fields that are not allowed in CREATE
+     */
     delete change.key;
     delete change.orderName;
-    delete change.status; // For new, running is a default status. Don't need to specify.
+    delete change.dayParts;
+    delete change.dayPartTargeting;
+    delete change.deviceTargeting;
+    delete change.maxAndroidVersion;
+    delete change.minAndroidVersion;
+    delete change.maxIosVersion;
+    delete change.minIosVersion;
+    delete change.targetAndroid;
+    delete change.targetIos;
+    delete change.targetIphone;
+    delete change.targetIpad;
+    delete change.targetIpod;
+    delete change.includeConnectivityTargeting;
+    delete change.targetedCarriers;
+    delete change.targetedRegions;
+    delete change.targetedCities;
+    delete change.targetedZipCodes;
+    delete change.userAppsTargeting;
+    delete change.userAppsTargetingList;
+    delete change.advertiser;
+    delete change.allocationPercentage;
+    delete change.refreshInterval;
+    delete change.frequencyCaps;
+
+    // Start new line item always
     change.startImmediately = true;
     return change;
   }
 
   function createPutDataForUpdatedLineItem(change) {
+    /**
+     * We don't have to specify all fields that needs to be removed.
+     * Since fields that can be updated is already limited.
+     * All fields that were updated are should already be allowed.
+     */
+
+    // Key was added to pass the line item key to create the API end point.
+    // This wasn't from the change object originally.
     delete change.key;
+
     // Status uses enabled + archived instead
     if ("status" in change) {
       const status = change.status;
@@ -40,11 +79,7 @@ var moPubUpdator = (function(global) {
           delete change.status;
       }
     }
-    const putData = {
-      op: "set",
-      data: change
-    };
-    return putData;
+    return change;
   }
 
   function applyToMoPub() {
@@ -56,7 +91,7 @@ var moPubUpdator = (function(global) {
       lineItems.forEach((lineItem) => {
         if (lineItem.isNewlyCreated()) { 
           // New Line Item
-          changesForNewLineItems.push(lineItem.getChanges()) ;
+          changesForNewLineItems.push(lineItem.getChanges());
         } else {
           // Updated Line Item
           const changes = lineItem.getChanges();
@@ -73,8 +108,9 @@ var moPubUpdator = (function(global) {
       let promiseTasks = [];
 
       changesForNewLineItems.forEach((eachChange) => {
+        const lineItemKey = eachChange.key;
         const postData = createPostDataForNewLineItem(eachChange);
-        promiseTasks.push(moPubApi.createNewLineItem(postData));
+        promiseTasks.push(moPubApi.createNewLineItem(postData, lineItemKey));
       });
 
       changesForUpdateLineItems.forEach((eachChange) => {
@@ -83,7 +119,7 @@ var moPubUpdator = (function(global) {
         promiseTasks.push(moPubApi.updateLineItem(putData, lineItemKey));
       });
 
-      // Making requests
+      // Make requests
       Promise.allSettled(promiseTasks).then((results) => {
         resolve(results);
       });
@@ -91,6 +127,8 @@ var moPubUpdator = (function(global) {
   }
 
   return {
-    applyToMoPub: applyToMoPub
+    applyToMoPub: applyToMoPub,
+    createPostDataForNewLineItem: createPostDataForNewLineItem,
+    createPutDataForUpdatedLineItem: createPutDataForUpdatedLineItem
   }
 })(this);

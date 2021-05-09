@@ -1,7 +1,8 @@
 var lineItemStore = (function(global) {
   "use strict";
 
-  let lineItemObjStore = []; // Current line item store
+  // Current line item store. It stores line item instance
+  let lineItemObjStore = []; 
 
   // Accepts regular object
   function saveLineItem(lineItem, newlyCreated = false) {
@@ -10,6 +11,7 @@ var lineItemStore = (function(global) {
     // Debug
     // console.log(`new line item saved`);
     // console.log(lineItemObject);
+    // console.log("--------");
   }
 
   // Accepts regular objects
@@ -36,6 +38,7 @@ var lineItemStore = (function(global) {
     }
   }
 
+  // Returns line item object class instance
   function getLineItemByKey(key) {
     for (let i=0; i < lineItemObjStore.length; i++) {
       if (lineItemObjStore[i].getKey() == key) {
@@ -57,6 +60,7 @@ var lineItemStore = (function(global) {
     return lineItemObjStore;
   }
 
+  // Returns line item object class instances
   function getChangedLineItems() {
     let changedLineItems = [];
     lineItemObjStore.forEach((lineItem) => {

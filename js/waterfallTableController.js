@@ -1,33 +1,34 @@
 var waterfallTableController = (function(global) {
   "use strict";
 
-  let currentAdUnitKey = "";
-
   function loadLineItems(adUnitKey) {
     return new Promise(async (resolve, reject) => {
-      const lineItemList = await moPubApi.getLineItems(adUnitKey);
+      try {
+        const lineItemList = await moPubApi.getLineItemsByAdUnit(adUnitKey);
 
-      WaterfallTable.blockRedraw();
-      WaterfallTable.clearData();
-      await WaterfallTable.replaceData(lineItemList);
-      WaterfallTable.restoreRedraw();
+        WaterfallTable.blockRedraw();
+        await WaterfallTable.replaceData(lineItemList); // replaceData will not fire any table events
+        WaterfallTable.restoreRedraw();
 
-      currentAdUnitKey = adUnitKey;
-      lineItemStore.initLineItemStore(lineItemList);
+        // Save line items in the store
+        lineItemStore.initLineItemStore(lineItemList);
 
-      // [To-do] Init control buttons here
-
-      resolve(lineItemList);
-      return;
+        resolve(lineItemList);
+      } catch (error) {
+        reject(error);
+      }
     });
   }
 
-  function getCurrentAdUnitKey() {
-    return currentAdUnitKey;
+  function resetSorting() {
+    WaterfallTable.setSort([
+      { column: "bid", dir:"desc" },
+      { column: 'priority', dir:"asc" }
+    ]);
   }
 
   return {
 		loadLineItems: loadLineItems,
-    getCurrentAdUnitKey: getCurrentAdUnitKey
+    resetSorting: resetSorting
   }
 })(this);
