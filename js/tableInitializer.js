@@ -1,76 +1,85 @@
 var tableInitializer = (function(global) {
   "use strict";
 
-	let placeHolder = `<h4 class="ui header grey">No Data Available</h4>`;
-	let lineItemPlaceHolder = `<h4 class="ui header grey">Select order and load line items</h4>`;
-	let lineItemSearchInputHtml = `<span class="count-lineitems-wrapper"></span>`;
-	let orderSearchInputHtml = `<span class="count-orders-wrapper"></span>`;
-	let waterfallTableFooterHtml = `<span class="count-waterfall-wrapper"></span>`;
+	const placeHolder = `<h4 class="ui header grey">No data available</h4>`;
+	const lineItemPlaceHolder = `<h4 class="ui header grey">Select order and load line items</h4>`;
+	// const abPlaceHolder = `<h3 class="ui header grey">No data available</h3>`;
+	const lineItemSearchInputHtml = `<span class="count-lineitems-wrapper"></span>`;
+	const orderSearchInputHtml = `<span class="count-orders-wrapper"></span>`;
+	const waterfallTableFooterHtml = `<span class="count-waterfall-wrapper"></span>`;
+	const abTableFooterHtml = `<span class="count-ab-wrapper"></span>`;
+
+	const regexSupportedStatus = /^running$|^paused$|^archived$/;
+	const regexUnsupportedType = /advanced\_|pmp\_|segment/;
 
 	function init() {
 		initAdUnitWaterfallTable();
 		initOrderListTable();
 		initLineItemListTable();
+		initABTable();
 	}
 
-	function getWaterfallTable() {
-		return WaterfallTable;
+	function getVisibleColumns(tableName) {
+		let visibleColumns = [];
+		const colDefs = getColumnDefinitions(tableName);
+		colDefs.forEach(column => {
+			if (column["field"] && column.visible == true) visibleColumns.push(column.field);
+		});
+		return visibleColumns;
+	}
+
+	function getColumnDefinitions(tableName) {
+		switch(tableName) {
+			case "WaterfallTable":
+				return WaterfallTable.getColumnDefinitions();
+			case "OrderTable":
+				return OrderTable.getColumnDefinitions();
+			case "LineItemTable":
+				return LineItemTable.getColumnDefinitions();
+			default:
+				return WaterfallTable.getColumnDefinitions();
+		}
 	}
 
 	function updateNumberOfChangeButton() {
-		let changes = moPubUI.refineChanges(lineItemManager.getLineItemChanges());
-		let num = _.keys(changes).length;
-		if (num > 0) {
-			$("#copy-waterfall").hide();
-			$("#apply-waterfall").html(`Apply ${num} Changed Items`).show();
-		} else if (num == 0) {
-			$("#copy-waterfall").show();
-			$("#apply-waterfall").hide();
-		}
+		const count = lineItemStore.getTotalNumberOfChanges();
+		$(".total-change-count").html(count);
 	}
 
-	function addNewBadge(row) {
-		$(row.getElement()).addClass("add-new");
-		return true;
-	}
-
-	function addUpdateBadge(row) {
-		// event triggers even if the value is edited back to original value.
-		// so had to compare with original row and see if it was really changed.
-		let rowElement = row.getElement();
-		let orgLineItem = lineItemManager.getOrgLineItems();
-		if (!_.isEqual(orgLineItem[row.getData().key], row.getData())) { 
-			// Value changed, put update badge
-			if (!$(rowElement).hasClass("add-new")) {
-				$(rowElement).addClass("updated-row");
-				console.log("different");
-				console.log(orgLineItem[row.getData().key]);
-				console.log(row.getData());
-			}
+	function syncUpWithStore(row, event) {
+		const rowData = row.getData();
+		if (event == "new") {
+			lineItemStore.saveLineItem(rowData, true);
 		} else {
-			// Value unchanged, remove update badge
-			$(rowElement).removeClass("updated-row");
+			lineItemStore.updateLineItem(rowData);
 		}
 	}
 
-  function flashRow(row, status) {
-    let rowElement = row.getElement();
-		if (status == 'new') {
-			$(rowElement).addClass("flash");
-			notifier.show({
-				header: `New line item`,
-				message: `[New] Name: <b>${row.getData().name}</b> Key: <b>${row.getData().key}</b>`, 
-				type: "success", 
-				append: true
-			});
+	function addBadge(row) {
+		const rowData = row.getData();
+		const lineItem = lineItemStore.getLineItemByKey(rowData.key);
+
+		console.log("adding badge");
+		console.log(lineItem.isNewlyCreated());
+		console.log(lineItem.getChanges());
+
+		if (lineItem.isNewlyCreated()) {
+			row.getElement().classList.remove("updated-row");
+			row.getElement().classList.add("add-new");
+		} else if (lineItem.isUpdated() && !lineItem.isNewlyCreated()) {
+			row.getElement().classList.remove("add-new");
+			row.getElement().classList.add("updated-row");
+		} else if (lineItem.isUpdated() && lineItem.isNewlyCreated()) {
+			row.getElement().classList.remove("updated-row");
+			row.getElement().classList.add("add-new");
+		} else if (!lineItem.isUpdated() && !lineItem.isNewlyCreated()) {
+			row.getElement().classList.remove("updated-row");
+			row.getElement().classList.remove("add-new");
 		}
-		if (status == 'updated') {
-			$(rowElement).addClass("flash");
-		}
-  }
+	}
 
 	function updateWaterfallItemCount(count) {
-		let html = `<span class="count-waterfall-items">Total ${count} Line Items</span>`;
+		let html = `<span class="count-waterfall-items">${count} Items</span>`;
 		$(".count-waterfall-wrapper").html(html);
 	}
 
@@ -80,35 +89,38 @@ var tableInitializer = (function(global) {
 			data: [],
 			layout: "fitColumns",
 			index: "key", // To avoid duplicates in the table
-			tooltips: true,
-			placeholder: placeHolder,
-			// movableColumns: true,
+			// tooltips: true,
+			// placeholder: placeHolder,
+			movableColumns: true,
 
 			// Add new line item at the top
 			addRowPos: top,
 
 			// Row Change callbacks
       rowAdded: function(row) { 
-				flashRow(row, 'new');
 				updateWaterfallItemCount(WaterfallTable.getDataCount("active"));
-				addNewBadge(row);
+				syncUpWithStore(row, "new");
+				addBadge(row);
+				console.log("row added");
 			},
 
       rowUpdated: function(row) { 
-				flashRow(row, 'updated');
 				updateNumberOfChangeButton();
-				addUpdateBadge(row);
+				syncUpWithStore(row);
+				addBadge(row);
 				console.log("row updated");
 			},
 
 			cellEdited: function(cell) {
-				addUpdateBadge(cell.getRow());
+				updateNumberOfChangeButton();
+				syncUpWithStore(cell.getRow());
+				addBadge(cell.getRow());
 				console.log("cell edited");
 			},
 
-			dataEdited: function(data) {
+			dataChanged: function(data) {
 				updateNumberOfChangeButton();
-				console.log("data edited");
+				// console.log("data changed");
 			},
 
 			rowMoved: function(row) {
@@ -121,69 +133,43 @@ var tableInitializer = (function(global) {
 			},
 
 			rowSelectionChanged: function(data, rows) {
-				// Only show edit buttons when it is not in adding line item mode.
-				if ($(".network-add-buttons").attr("status") == "hidden") {
-					if (rows.length > 0) {
-						$("#edit-selected").html(`Edit (${rows.length})`).show();
-						$("#delete-selected").html(`Delete (${rows.length})`).show();
-						$("#copy-waterfall").html(`Duplicate (${rows.length})`);
-						$("#waterfall-download-csv").html(`Export (${rows.length})`);
-						$("#add-line-item-btn").hide();
-					} else {
-						$("#copy-waterfall").html(`Duplicate Waterfall`);
-						$("#waterfall-download-csv").html(`Export`);
-						$("#edit-selected").hide();
-						$("#delete-selected").hide();
-						$("#add-line-item-btn").show();
-					} 
+				rows.forEach((row) => {
+					const rowElementClassList = row.getElement().classList;
+					if (rowElementClassList.contains("tabulator-unselectable") && rowElementClassList.contains("tabulator-selected")) {
+						row.deselect();
+					}
+				});
+				if (rows.length > 0) {
+					controlBtnManager.updateLabels(WaterfallTable.getSelectedRows().length);
+				} else if (rows.length == 0) {
+					controlBtnManager.updateLabels(0);
 				}
 			},
 
 			rowSelected: function(row) {
-				row.reformat();				
+				// row.reformat();				
 			},
 
 			rowDeselected: function(row) {
-				row.reformat();				
+				// row.reformat();				
 			},
 
 			dataFiltered: function(filters, rows) {
 				updateWaterfallItemCount(rows.length);
 			},
-
-			// Manage Row Movement
-			movableRows: true,
-			// movableRowsReceiver: function(fromRow, toRow, fromTable) {
-			// 	let insertData = fromRow.getData();
-			// 	let searhResult = WaterfallTable.searchRows("key", "=", insertData.key);
-			// 	if (searhResult.length > 0) {
-			// 		notifier.clear();
-			// 		notifier.show({
-			// 			header: "Existing line item",
-			// 			type: "info",
-			// 			message: `<b>${insertData.name}</b> <b>${insertData.key}</b> already exists.`
-			// 		});
-			// 		return false;
-			// 	}
-			// 	if (!insertData.adUnitKeys.includes(AdUnitId)) {
-			// 		insertData.adUnitKeys.push(AdUnitId); // Connect to New AdUnit #Important! AdUnitId is global variable
-			// 		console.log(`Assigning adunit ${AdUnitId} for ${insertData.key}`);
-			// 	}
-			// 	WaterfallTable.updateOrAddData([insertData]);
-			// 	return true;
-			// },
 		
 			// Grouping config
 			groupBy: "priority",
-			groupToggleElement: false,
+			groupToggleElement: true,
 			groupHeader: function(value, count, data, group) {
-				let html = `Priority ${value} (${count} line items)`;
-				// let html = `Priority <a class="ui gray circular label">${value}</a>`;
+				const html = `Priority ${value}`;
+				// let html = `Priority ${value} (${count} line items)`;
+				// let html = `Priority <a class="ui blue basic circular label">${value}</a>`;
 				return html;
 			},
 
 			// Download config
-			downloadConfig:{
+			downloadConfig: {
         columnGroups: false, //include column groups in column headers for download
         rowGroups: false, //do not include row groups in download
         columnCalcs: false, //do not include column calculation rows in download
@@ -199,8 +185,8 @@ var tableInitializer = (function(global) {
 				let regexStatus = /^running$|^paused$|^archived$/;
 				let regexType = /advanced\_|pmp\_|segment/;
 				if (!regexStatus.test(status) || regexType.test(type)) {
-					let rowElement = row.getElement();
-					$(rowElement).addClass('tabulator-unselectable');
+					// let rowElement = row.getElement();
+					// $(rowElement).addClass('tabulator-unselectable');
 					return false;	
 				}
 				return true;
@@ -218,66 +204,126 @@ var tableInitializer = (function(global) {
 		});
 	}
 
-	function initLineItemListTable() {
-		LineItemTable = new Tabulator("#lineitem-list", {
-			height: LINEITEM_TABLE_HEIGHT,
+	function initOrderListTable() {
+		OrderTable = new Tabulator("#order-table", {
+			// height: ORDER_TABLE_HEIGHT,
 			data: [],
 			layout: "fitColumns",
-			tooltips: true,
-			placeholder: lineItemPlaceHolder,
-			index: "key", // To avoid dup in the table
-
-			// Movable Row Config
-			// movableRows: true,
-			// movableRowsConnectedTables: "#waterfall-adunit",
-			// movableRowsSender: "delete",
+			placeholder: placeHolder,
 
 			// Pagination
 			pagination: "local",
-			paginationSize: LINEITEM_PAGINATION_SIZE,
+			paginationSize: ORDER_PAGINATION_SIZE,
 
-			rowAdded: function(row) {
-				let html = `<span class="count-lineitems">${LineItemTable.getDataCount()} Items</span>`;
-				$(".count-lineitems-wrapper").html(html);
-			},
-
-			rowSelectionChanged:function(data, rows){
-				if (rows.length > 0) {
-					$(".lineitem-action-buttons[action='duplicate']").html(`Duplicate (${rows.length}) items`).show();
-					$(".lineitem-action-buttons[action='assign']").html(`Assign (${rows.length}) items`).show();
-					$(".lineitem-filter").hide();
-				} else {
-					$(".lineitem-action-buttons").hide();
-					$(".lineitem-filter").show();
-				} 
+			rowSelectionChanged:function(data, rows) {
+				$(".selected-order-count").html(rows.length);
 			},
 
 			rowSelected: function(row) {
-				row.reformat();				
+				// row.reformat();				
 			},
 
 			rowDeselected: function(row) {
-				row.reformat();				
+				// row.reformat();				
 			},
 
+			selectableCheck: function(row) {
+				const status = row.getData().status;
+				const type = row.getData().type;
+				if (!regexSupportedStatus.test(status) || regexUnsupportedType.test(type)) return false;
+				return true;
+			},
+	
+			dataLoaded: function(data) {
+				const html = `<span class="count-orders">${data.length} Items</span>`;
+				$(".count-orders-wrapper").html(html);
+			},
+			
 			dataFiltered: function(filters, rows) {
-				let html = `<span class="count-lineitems">${rows.length} Items</span>`;
+				const html = `<span class="count-orders">${rows.length} Items</span>`;
+				$(".count-orders-wrapper").html(html);
+			},
+
+			columns: tableColumnDef.getColumnDef("OrderTable"),
+
+			initialSort:[
+				{ column:"activeLineItemCount", dir:"desc" }
+			],
+
+			// Footer Search
+			footerElement: orderSearchInputHtml
+		});
+	}
+
+	function initABTable() {
+		ABTable = new Tabulator("#ab-table", {
+			// height: AB_TABLE_HEIGHT,
+			data: [],
+			layout: "fitColumns",
+			movableRows: true,
+			// placeholder: abPlaceHolder,
+			columns: tableColumnDef.getColumnDef("ABTable"),
+
+			dataLoaded: function(data) {
+				const html = `<span class="count-orders">${data.length} Items</span>`;
+				$(".count-ab-wrapper").html(html);
+			},
+
+			// footerElement: abTableFooterHtml
+		});
+	}
+
+	function initLineItemListTable() {
+		LineItemTable = new Tabulator("#lineitem-table", {
+			height: LINEITEM_TABLE_HEIGHT,
+			data: [],
+			layout: "fitColumns",
+			// placeholder: lineItemPlaceHolder,
+			index: "key", // To avoid dup in the table
+			pagination: "local",
+			paginationSize: LINEITEM_PAGINATION_SIZE,
+
+			rowSelectionChanged: function(data, rows) {
+				rows.forEach((row) => {
+					const rowElementClassList = row.getElement().classList;
+					if (rowElementClassList.contains("tabulator-unselectable") && rowElementClassList.contains("tabulator-selected")) {
+						row.deselect();
+					}
+				});
+				if (rows.length > 0) {
+					$(".selected-line-item-count").html(LineItemTable.getSelectedRows().length);
+				} else {
+					$(".selected-line-item-count").html(0);
+				}
+			},
+
+			rowSelected: function(row) {
+				// row.reformat();				
+			},
+
+			rowDeselected: function(row) {
+				// row.reformat();				
+			},
+
+			rowAdded: function(row) {
+				// let html = `<span class="count-lineitems">${LineItemTable.getDataCount()} Items</span>`;
+				// $(".count-lineitems-wrapper").html(html);
+			},
+
+			dataLoaded: function(data) {
+				const html = `<span class="count-lineitems">${data.length} Items</span>`;
 				$(".count-lineitems-wrapper").html(html);
 			},
 
-			// Disable line items that doesn't supported for now.
-			selectableCheck: function(row) {
-				let status = row.getData().status;
-				let type = row.getData().type;
+			dataFiltered: function(filters, rows) {
+				const html = `<span class="count-lineitems">${rows.length} Items</span>`;
+				$(".count-lineitems-wrapper").html(html);
+			},
 
-				// let regex = /campaign\-|segment\-|scheduled/;
-				let regexStatus = /^running$|^paused$|^archived$/;
-				let regexType = /advanced\_|pmp\_|segment/;
-				if (!regexStatus.test(status) || regexType.test(type)) {
-					let rowElement = row.getElement();
-					$(rowElement).addClass('tabulator-unselectable');
-					return false;	
-				}
+			selectableCheck: function(row) {
+				const status = row.getData().status;
+				const type = row.getData().type;
+				if (!regexSupportedStatus.test(status) || regexUnsupportedType.test(type)) return false;
 				return true;
 			},
 
@@ -294,69 +340,9 @@ var tableInitializer = (function(global) {
 		});
 	}
 
-	function initOrderListTable() {
-		OrderTable = new Tabulator("#order-list", {
-			height: ORDER_TABLE_HEIGHT,
-			data: [],
-			layout: "fitColumns",
-			tooltips: true,
-			placeholder: placeHolder,
-
-			// Pagination
-			pagination: "local",
-			paginationSize: ORDER_PAGINATION_SIZE,
-
-			rowSelectionChanged:function(data, rows){
-				if (rows.length > 0) {
-					$("#load-lineitem-btn").html(`Load (${rows.length}) orders`).show();
-					$(".order-filter").hide();
-				} else {
-					$("#load-lineitem-btn").hide();
-					$(".order-filter").show();
-				} 
-			},
-
-			rowSelected: function(row) {
-				row.reformat();				
-			},
-
-			rowDeselected: function(row) {
-				row.reformat();				
-			},
-
-			// selectable Check for Status
-			selectableCheck: function(row) {
-				let status = row.getData().status;
-				if (status != "running") {
-					let rowElement = row.getElement();
-					$(rowElement).addClass('tabulator-unselectable');
-					return false;	
-				}
-				return true;
-			},
-	
-			dataLoaded: function(data) {
-				let html = `<span class="count-orders">${data.length} Items</span>`;
-				$(".count-orders-wrapper").html(html);
-			},
-			
-			dataFiltered: function(filters, rows) {
-				let html = `<span class="count-orders">${rows.length} Items</span>`;
-				$(".count-orders-wrapper").html(html);
-			},
-
-			columns: tableColumnDef.getColumnDef("OrderTable"),
-
-			initialSort:[
-				{ column:"activeLineItemCount", dir:"desc" }
-			],
-
-			// Footer Search
-			footerElement: orderSearchInputHtml
-		});
-	}
-
   return {
-    init: init
+    init: init,
+		getColumnDefinitions: getColumnDefinitions,
+		getVisibleColumns: getVisibleColumns
   }
 })(this);

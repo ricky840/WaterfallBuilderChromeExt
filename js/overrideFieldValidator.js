@@ -18,7 +18,7 @@ var overrideFieldValidator = (function(global) {
 		switch(networkType) {
 			case "admob_native":
 				if (_.isEmpty(value.network_adunit_id)) {
-					throw new Error(`${networkName} requires <b>network_adunit_id</b>`);
+					throw new Error(`${networkName} requires network_adunit_id`);
 				} else {
 					overrideFields.network_adunit_id = value.network_adunit_id; // required
 					delete overrideFields.network_account_id;
@@ -27,7 +27,7 @@ var overrideFieldValidator = (function(global) {
 				break;
 			case "applovin_sdk":
 				if (_.isEmpty(value.network_app_id)) {
-					throw new Error(`${networkName} requires <b>network_app_id (app id)</b>`);
+					throw new Error(`${networkName} requires network_app_id (app id)`);
 				} else {
 					overrideFields.network_adunit_id = (_.isEmpty(value.network_adunit_id)) ? '' : value.network_adunit_id; // zone id optional
 					overrideFields.network_app_id = value.network_app_id; // required
@@ -36,7 +36,7 @@ var overrideFieldValidator = (function(global) {
 				break;
 			case "adcolony":
 				if (_.isEmpty(value.network_app_id) || _.isEmpty(value.network_adunit_id)) {
-					throw new Error(`${networkName} requires <b>network_app_id</b> and <b>network_adunit_id (zone id)</b>`);
+					throw new Error(`${networkName} requires network_app_id and network_adunit_id (zone id)`);
 				} else {
 					overrideFields.network_adunit_id = value.network_adunit_id; // zone id required
 					overrideFields.network_app_id = value.network_app_id; // required
@@ -45,7 +45,7 @@ var overrideFieldValidator = (function(global) {
 				break;
 			case "chartboost":
 				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.app_signature)) {
-					throw new Error(`${networkName} requires <b>network_app_id</b> and <b>app_signature</b>`);
+					throw new Error(`${networkName} requires network_app_id and app_signature`);
 				} else {
 					overrideFields.network_adunit_id = value.network_adunit_id; // MoPub UI shows app id but it is actually ad unit id. Required.
 					overrideFields.app_signature = value.app_signature; // required
@@ -56,7 +56,7 @@ var overrideFieldValidator = (function(global) {
 				break;
 			case "facebook":
 				if (_.isEmpty(value.network_adunit_id)) {
-					throw new Error(`${networkName} requires <b>network_adunit_id (placement id)</b>`);
+					throw new Error(`${networkName} requires network_adunit_id (placement id)`);
 				} else {
 					overrideFields.network_adunit_id = value.network_adunit_id; // required
 					delete overrideFields.network_app_id;
@@ -65,7 +65,7 @@ var overrideFieldValidator = (function(global) {
 				break;
 			case "ironsource":
 				if (_.isEmpty(value.network_app_id)) {
-					throw new Error(`${networkName} requires <b>network_app_id (app key)</b>`);
+					throw new Error(`${networkName} requires network_app_id (app key)`);
 				} else {
 					overrideFields.network_app_id = value.network_app_id; // required
 					overrideFields.network_adunit_id = (_.isEmpty(value.network_adunit_id)) ? '' : value.network_adunit_id; // optional
@@ -74,7 +74,7 @@ var overrideFieldValidator = (function(global) {
 				break;
 			case "tapjoy":
 				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
-					throw new Error(`${networkName} requires <b>network_adunit_id (placement id)</b> and <b>network_app_id (sdk key)</b>`);
+					throw new Error(`${networkName} requires network_adunit_id (placement id) and network_app_id (sdk key)`);
 				} else {
 					overrideFields.network_adunit_id = value.network_adunit_id; // required
 					overrideFields.network_app_id = value.network_app_id; // required
@@ -83,7 +83,7 @@ var overrideFieldValidator = (function(global) {
 				break;
 			case "vungle":
 				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
-					throw new Error(`${networkName} requires <b>network_adunit_id (placement id)</b> and <b>network_app_id (app id)</b>`);
+					throw new Error(`${networkName} requires network_adunit_id (placement id) and network_app_id (app id)`);
 				} else {
 					overrideFields.network_adunit_id = value.network_adunit_id; // required
 					overrideFields.network_app_id = value.network_app_id; // required
@@ -92,7 +92,7 @@ var overrideFieldValidator = (function(global) {
 				break;
 			case "pangle":
 				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
-					throw new Error(`${networkName} requires <b>network_adunit_id (placement id)</b>, <b>network_app_id (game id)</b>`);
+					throw new Error(`${networkName} requires network_adunit_id (placement id), network_app_id (game id)`);
 				} else {
 					overrideFields.network_adunit_id = value.network_adunit_id; // required
 					overrideFields.network_app_id = value.network_app_id; // required
@@ -101,7 +101,7 @@ var overrideFieldValidator = (function(global) {
 				break;
 			case "snap":
 				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
-					throw new Error(`${networkName} requires <b>network_adunit_id (slot id)</b>, <b>network_app_id (app id)</b>`);
+					throw new Error(`${networkName} requires network_adunit_id (slot id), network_app_id (app id)`);
 				} else {
 					overrideFields.network_adunit_id = value.network_adunit_id; // required
 					overrideFields.network_app_id = value.network_app_id; // required
@@ -110,7 +110,7 @@ var overrideFieldValidator = (function(global) {
 				break;
 			case "unity":
 				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
-					throw new Error(`${networkName} requires <b>network_adunit_id (placement id)</b>, <b>network_app_id (game id)</b>`);
+					throw new Error(`${networkName} requires network_adunit_id (placement id), network_app_id (game id)`);
 				} else {
 					overrideFields.network_adunit_id = value.network_adunit_id; // required
 					overrideFields.network_app_id = value.network_app_id; // required
@@ -119,7 +119,7 @@ var overrideFieldValidator = (function(global) {
 				break;
 			case "verizon":
 				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
-					throw new Error(`${networkName} requires <b>network_adunit_id (placement id)</b>, <b>network_app_id (site id)</b>`);
+					throw new Error(`${networkName} requires network_adunit_id (placement id), network_app_id (site id)`);
 				} else {
 					overrideFields.network_adunit_id = value.network_adunit_id; // required
 					overrideFields.network_app_id = value.network_app_id; // required
@@ -128,7 +128,7 @@ var overrideFieldValidator = (function(global) {
 				break;
 			case "yahoo":
 				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
-					throw new Error(`${networkName} requires <b>network_adunit_id (adunit)</b>, <b>network_app_id (api key)</b>`);
+					throw new Error(`${networkName} requires network_adunit_id (adunit), network_app_id (api key)`);
 				} else {
 					overrideFields.network_adunit_id = value.network_adunit_id; // required
 					overrideFields.network_app_id = value.network_app_id; // required
@@ -137,7 +137,7 @@ var overrideFieldValidator = (function(global) {
 				break;
 			case "custom_native":
 				if (_.isEmpty(value.custom_event_class_name) || _.isEmpty(value.custom_event_class_data)) {
-					throw new Error(`${networkName} requires <b>custom_event_class_name</b> and <b>custom_event_class_data</b>`);
+					throw new Error(`${networkName} requires custom_event_class_name, custom_event_class_data`);
 				} else {
 					overrideFields.custom_event_class_name = value.custom_event_class_name; // required
 					overrideFields.custom_event_class_data = value.custom_event_class_data; // required

@@ -1,7 +1,7 @@
-var addNewLineItem = (function(global) {
+var newLineItemFactory = (function(global) {
   "use strict";
 	
-	let templateNetwork = {
+	const templateNetwork = {
 		adUnitKeys: [],
 		bid: 1,
 		name: NEW_NETWORK_LINEITEM_NAME,
@@ -13,29 +13,27 @@ var addNewLineItem = (function(global) {
 		enableOverrides: true
 	};
 
-	let templateDirect = {
+	const templateDirect = {
 		adUnitKeys: [],
 		bid: 1,
 		name: NEW_DIRECT_LINEITEM_NAME,
 		priority: 12,
-		startImmediately: true,
 		type: "gtee",
 		status: "running",
 		includeGeoTargeting: "all"
 	};
 
-	let templateMPX = {
+	const templateMPX = {
 		adUnitKeys: [],
 		bid: 1,
 		name: NEW_MPX_LINEITEM_NAME,
 		priority: 12,
-		startImmediately: true,
 		type: "mpx_line_item",
 		status: "running",
 		includeGeoTargeting: "all"
 	};
 
-	let overrideFieldsTemplate = {
+	const overrideFieldsTemplate = {
 		network_account_id: "Network account id",
 		network_app_id: "Network app id",
 		network_adunit_id: "Network ad unit id",
@@ -46,7 +44,7 @@ var addNewLineItem = (function(global) {
 		custom_event_class_data: "Custom event class data"
 	};
 
-	function add(type, order) {
+	function add(type, order, adUnitKey) {
 		let	newLineItem;
 
 		switch(type) {
@@ -142,18 +140,16 @@ var addNewLineItem = (function(global) {
 			default:
 				break;
 		}
+
 		// Add order Info (Name will be removed in the api call)
-		newLineItem.orderKey = order.orderKey;
-		newLineItem.orderName = order.orderName;
+		newLineItem.orderKey = order.key;
+		newLineItem.orderName = order.name;
 
 		// Add Ad Unit key
-		newLineItem.adUnitKeys.push(AdUnitId);
+		newLineItem.adUnitKeys.push(adUnitKey);
 
 		// Assign Temp Key
 		newLineItem.key = `temp-${stringGen(32)}`;
-
-		console.log("New line item created");
-		console.log(newLineItem);
 
 		// Add to the Waterfall
 		WaterfallTable.addData([newLineItem], true);

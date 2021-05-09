@@ -1,125 +1,249 @@
-$(document).ready(function() { 
+// Show loader as soon as it opens up
+loaders.show("body");
 
+// Extension version
+$(".page-footer .extension-version").html(`v${chrome.runtime.getManifest().version}`);
+
+// Once document is ready
+$(document).ready(async function() { 
+
+	const initResult = await initialize();
+
+	if (!initResult) {
+		console.log("Initialization failed");
+		loaders.hide("body");
+		return false;
+	}	
+
+	// Remove loader
+	loaders.hide("body");
+
+  // Show notification if the extension was updated
+	wasExtUpdated();
+});
+
+async function initialize() {
+
+	// Init tables
 	tableInitializer.init();
 
-	// Init Loading Indicator Bar
-	loadingIndicator.init($("#loader-bar"));
+	// See if there is API key first
+	try {
+		await initApiKey();
+	} catch (error) {
+		notifier.show(NOTIFICATIONS.activeApiKeyNotAvailable);
+		console.log(error);
+		return;
+	}
 
-	// Hide line item bar first
-	$("#add-adsource").trigger('click');
+	// Load ad units and orders
+	let adUnits, orders;
+	try {
+		[adUnits, orders] = await loadAdUnitsAndOrdersAndAccount();
+	} catch (error) {
+		console.log(error);
+		return false;
+	}
 
-	// Load Ad Units
-	adUnitManager.loadAdUnits("list-name-id", false, function(adUnitList) {
-		if (adUnitList) {
-			$("#info-adunit-name").html("Select ad unit");
-			let adUnitData = [];
-			for (let i=0; i < adUnitList.length; i++) {
-				adUnitData.push({
-					name: adUnitList[i].value,
-					value: adUnitList[i].key
-				});
+	// Init ad unit dropdowns
+	initAdUnitListDropDowns(adUnits);
+
+	// Init order dropdowns
+	initOrderDropDowns(orders);
+
+	// Init column selectors and dropdowns
+	initColumnSelectors();
+
+	// Init "Type" filters
+	initTypeFilters();
+
+	// Init "Status" filters
+	initStatusFilters();
+
+	// Init edit form
+	editFormManager.initForm();
+
+	// Init dropdowns in copy modal
+	initCopyModeDropDown();
+
+	// Init add direct serve item dropdown
+	initAddDirectServeItemDropDown();
+
+	return true;
+}
+
+function initApiKey() {
+	return new Promise(async (resolve, reject) => {
+		try {
+			await apiKeyManager.loadApiKeys();
+			apiKeyManager.updateActiveApiKeyHtml();
+		} catch (error) {
+			reject("API Key is not available");
+		}
+		resolve();
+	});
+}
+
+function initAdUnitListDropDowns(adUnits) {
+
+	const	listInFullFormat = adUnitManager.dropDownFormatter(adUnits);
+	const	listWithoutAdFormat = adUnitManager.dropDownFormatterWithoutFormat(adUnits);
+
+	// Dropdown in menu bar
+	$(".menu-adunit-dropdown").dropdown({
+		placeholder: "Search ad unit name or key",
+		values: listInFullFormat,
+		fullTextSearch: "exact",
+		sortSelect: true,
+		onChange: async function (value, text, element) {
+			if (validateAdUnitKey(value)) {
+				loaders.show("adunit");
+				adUnitManager.saveCurrentAdUnit(value);
+				infoPanelManager.update(adUnitManager.getAdUnit(value));
+				$(".ab-table-section").hide();
+				try {
+					await loadWaterfallAndBidders(value);
+					// Enable control buttons
+					$(".control-btn").removeClass("disabled");
+				} catch (error) {
+					console.log(error);
+				}
+				loaders.hide("adunit");
+			} else {
+				console.log(`Invalid Ad Unit Key: ${value}`);
 			}
-			// ad unit list in main menu
-			$(".adunit-select").dropdown({
-				clearable: true,
-				placeholder: "Search ad unit or key..",
-				values: adUnitData,
-				fullTextSearch: "exact",
-				sortSelect: true,
-				onChange: function (value, text, element) {
-					// Validate Id
-					let keyRegex = /^[0-9|a-z]{32}$/;
-					if (keyRegex.test(value)) {
-						$($(this)[0]).find("input").blur();
-						console.log(`Loading waterfall for ad unit ${value}`);
-						loadWaterfall(value, function(result) {
-							if (result) {
-								$(".button, .search-table-wrapper").removeClass('disabled');
-								console.log("Eanbling all buttons");
-							}
-						});
-					}				
-				}
-			});
-			// ad unit list in copy form
-			$(".adunit-select-copy-form").dropdown({
-				clearable: true,
-				placeholder: "Search ad unit or key..",
-				values: adUnitData,
-				fullTextSearch: "exact",
-				sortSelect: true,
-				direction: "upward",
-				onShow: function() {
-					$($(this)[0]).removeClass("error");
-				},
-				onChange: function (value, text, element) {
-					dropdownDomJObj = $($(this)[0]);
-					// Validate Id
-					let keyRegex = /^[0-9|a-z]{32}$/;
-					if (keyRegex.test(value)) {
-						dropdownDomJObj.find("input").blur();
-					} else {
-						if (!dropdownDomJObj.dropdown('is visible')) {
-							dropdownDomJObj.addClass("error");
-						}
-					}
-				}
-			});
 		}
 	});
 
-	// Load Account Info
-	accountManager.updateHtmlEmail();
+	// Dropdown in edit modal
+	$(".edit-adunit-dropdown").dropdown({
+		placeholder: "Search ad unit name or key",
+		values: listWithoutAdFormat,
+		fullTextSearch: "exact",
+		sortSelect: true,
+		clearable: true,
+		direction: "upward"
+	});
 
-	// Version Update
-	document.title += ` v${chrome.runtime.getManifest().version}`;
+	// Dropdown in copy modal
+	$(".copy-adunit-dropdown").dropdown({
+		placeholder: "Search ad unit or key..",
+		values: listInFullFormat,
+		fullTextSearch: "exact",
+		sortSelect: true,
+		direction: "upward"
+	});
+}
 
-  // Update Notification
-  chrome.storage.local.get("extUpdated", function(result) {
-    if(result["extUpdated"]) {
-      let manifest = chrome.runtime.getManifest();
-      notifier.show({
-        header: "Extension Updated",
-        type: "info",
-        message: `Waterfall Builder was updated to ${manifest.version} See <a href="https://github.com/ricky840/WaterfallBuilderChromeExt/releases" target="_blank">change logs</a> for more details. :)`
-      });
-    }
-    chrome.storage.local.set({"extUpdated": false});
-  });
-
-	// Column Selector
-	let colDefs = WaterfallTable.getColumnDefinitions(); // Get column definition array
-	for(let i =0; i < colDefs.length; i++) {
-		if (colDefs[i]["field"]) {
-			let checked = colDefs[i].visible == true ? "checked" : "";
-			let html = ` 
-			<div class="ui item checkbox tiny" data-value="${colDefs[i].field}">
-        <input type="checkbox" name="${colDefs[i].field}" ${checked}>
-        <label>${colDefs[i].title}</label>
-      </div>`;
-			$(".column.scrolling.menu").append(html);
+function initOrderDropDowns(orders) {
+	let dropdownData = [];
+	if (!_.isEmpty(orders)) {
+		// let response = JSON.parse(responseText);
+		let status;
+		for (let i=0; i < orders.length; i++) {
+			switch (orders[i].status) {
+				case "running":
+					status = `<a class="ui green empty circular label tiny"></a>`;
+					break;
+				case "paused":
+					status = `<a class="ui yellow empty circular label tiny"></a>`;
+					break;
+				default:
+					status = `<a class="ui gray empty circular label mini"></a>`;
+					break;
+			}
+			dropdownData.push({
+				name: `${status}${orders[i].name}`,
+				value: orders[i].key
+			});
 		}
 	}
+	// order list in new line item add
+	$(".add-item-order-list").dropdown({
+		clearable: false,
+		placeholder: "Search..",
+		values: dropdownData,
+		onChange: function (value, text, element) {
+			if (value) {
+				$(".add-item-order-list").removeClass('error');
+			}
+		}
+	});
+	// order list in copy form
+	$(".copy-form-order-list").dropdown({
+		clearable: false,
+		placeholder: "Search..",
+		values: dropdownData,
+		onChange: function (value, text, element) {
+			if (value) {
+				$(".copy-form-order-list").removeClass('error');
+			}
+		}
+	});
+}
 
-	// Column Select
-	$("#column-selector").dropdown({
-		action: function(text, value, element) {
-			WaterfallTable.toggleColumn(value);
+function initColumnSelectors() {
+	// Create html for column selectors
+	const colDefs = tableInitializer.getColumnDefinitions("WaterfallTable");
+	colDefs.forEach(column => {
+		if (column["field"]) {
+			const html = `<option value="${column.field}">${column.title}</option>`;
+			$(".column-selector").append(html);
+		}
+	});
+
+	// Init column selector dropdowns (waterfall table)
+	$(".column-selector.waterfall-cols").dropdown({
+		direction: "upward",
+		onAdd: function(value, text, element) {
+			WaterfallTable.showColumn(value);
+			WaterfallTable.redraw(true);
+		},
+		onRemove: function(value, text, element) {
+			WaterfallTable.hideColumn(value);
 			WaterfallTable.redraw(true);
 		}
 	});
 
-	// Type Filter Init
+	// Init column selector dropdowns (line item table)
+	$(".column-selector.lineitem-table-cols").dropdown({
+		direction: "upward",
+		onAdd: function(value, text, element) {
+			LineItemTable.showColumn(value);
+			LineItemTable.redraw(true);
+		},
+		onRemove: function(value, text, element) {
+			LineItemTable.hideColumn(value);
+			LineItemTable.redraw(true);
+		}
+	});
+
+	// Load saved column list
+	chrome.storage.local.get("columnList", function(result) {
+		const columnList = result["columnList"];
+		if (_.isEmpty(columnList)) {
+			$(".column-selector.waterfall-cols").dropdown("set selected", DEFAULT_COLUMN_SET);
+			$(".column-selector.lineitem-table-cols").dropdown("set selected", DEFAULT_COLUMN_SET);
+		} else {
+			$(".column-selector.waterfall-cols").dropdown("set selected", columnList);
+			$(".column-selector.lineitem-table-cols").dropdown("set selected", columnList);
+		}
+	});
+}
+
+function initTypeFilters() {
+	// Line item type
 	for (let key in TYPE_NAME) {
-		let html = `<div class="item" data-value="${key}">${TYPE_NAME[key]}</div>`;
+		const html = `<div class="item" data-value="${key}">${TYPE_NAME[key]}</div>`;
 		$(html).insertAfter($(".header.item-type"));
 	}
+	// Network type
 	for (let key in NETWORK_TYPE_NAME) {
-		let html = `<div class="item" data-value="${key}">${NETWORK_TYPE_NAME[key]}</div>`;
+		const html = `<div class="item" data-value="${key}">${NETWORK_TYPE_NAME[key]}</div>`;
 		$(html).insertBefore($(".divider.line-item-type"));
 	}
 
-	// Type Filter Action
+	// Init type filter dropdowns
 	$("#type-filter, #type-filter-lineitem").dropdown({
 		onChange: function(value, text, selectedItem) {	
 			let table;
@@ -160,38 +284,24 @@ $(document).ready(function() {
 			if (filterType == "item-type") {
 				filters.push({field: "type", type: "=", value: value});
 				table.setFilter(filters);
+				$(`#${id}`).addClass("brown");
 			} else if (filterType == "network-type") {
 				filters.push({field: "networkType", type: "=", value: value});
 				table.setFilter(filters);
+				$(`#${id}`).addClass("brown");
 			} else if (filterType == "clear-filter") {
 				table.setFilter(filters);
 				$(`#${id}`).dropdown('restore defaults');
+				$(`#${id}`).removeClass("brown");
 			} else {
 				// do nothing
 			}
 			table.restoreRedraw();
 		}
 	});
+}
 
-	// Init entire screen loader
-	$(".all-content-wrapper").dimmer({duration: 200});
-
-	// Init Checkboxes
-	$('.ui.checkbox').checkbox();
-
-	// Show Key Check Box (LineItem Table)
-	$(".ui.checkbox.show-key-checkbox").checkbox({
-    onChecked: function() {
-			LineItemTable.showColumn("key");
-    },
-    onUnchecked: function() {
-			LineItemTable.hideColumn("key");
-    }
-	});
-
-	// Init Edit Form
-	editFormManager.initForm();
-	
+function initCopyModeDropDown() {
 	// Copy(Duplicate) Mode (In Copy waterfall form)
 	$("#copy-mode").dropdown({ 
 		showOnFocus: false,
@@ -203,34 +313,29 @@ $(document).ready(function() {
 			}
     }
 	});
+}
 
+function initAddDirectServeItemDropDown() {
 	// Add line item direct button
 	$("#add-direct").dropdown({
 		onChange: function (value, text, choice) {
 			let orderKey = $(".add-item-order-list.dropdown").dropdown('get value');
 			if (_.isEmpty(orderKey.trim())) {
-				notifier.show({
-					header: "Order Required",
-					type: "negative",
-					message: "New line item requires order. Please select order."
-				});
+				toast.show(NOTIFICATIONS.orderRequired);
 				return false;
 			}
-			let orderName = $(".add-item-order-list.dropdown").dropdown('get text');
-			// Clear notifiation
-			notifier.clear();
-			addNewLineItem.add(value, {orderName: orderName, orderKey: orderKey});
+			const type = value;
+			const order = orderTableController.getOrderByKey(orderKey);
+			const adUnitKey = adUnitManager.getCurrentAdUnitKey();
+		
+			newLineItemFactory.add(type, order, adUnitKey);	
 		}
 	});
+}
 
-	// Disable all buttons
-	if (AdUnitId == undefined) {
-		$(".button, .search-table-wrapper").addClass('disabled');
-		console.log("Disabling all buttons");
-	}
-
-	// Status Filter Init
-	$('#status-filter, #status-filter-lineitem, #status-filter-order').dropdown({
+function initStatusFilters() {
+	// Status Filter Action
+	$('#status-filter, #status-filter-lineitem').dropdown({
 		onChange: function(value, text, element) {
 			let table;
 
@@ -280,7 +385,9 @@ $(document).ready(function() {
 			if (!_.isEmpty(statusFilter)) {
 				filters.push(statusFilter);
 				table.setFilter(filters);
+				$(`#${id}`).addClass("brown");
 			} else {
+				$(`#${id}`).removeClass("brown");
 				if (filters.length == 0) {
 					table.clearFilter(true);
 				} else {
@@ -292,8 +399,61 @@ $(document).ready(function() {
 		}
 	});
 
+	// Set default status filter
 	// $("#status-filter-order").dropdown('set selected', "running");
-	
-});
+}
 
+function loadWaterfallAndBidders(adUnitKey) {
+	return new Promise(async (resolve, reject) => {
+		const tasks = [
+			waterfallTableController.loadLineItems(adUnitKey),
+			abTableController.loadBidders(adUnitKey)
+		];
+		// The order is preserved so..
+		Promise.allSettled(tasks).then((results) => {
+			if (results[0].status == "rejected") {
+				// Failed to get the list of line items
+				reject(results[0].reason);
+				return;
+			}
+			// Show AB table based on the result (API returns 400 if AB enabled is not enabled for the ad unit)
+			(results[1].status == "fulfilled") ? $(".ab-table-section").show() : $(".ab-table-section").hide();
 
+			resolve(results);
+		});
+	});
+}
+
+function loadAdUnitsAndOrdersAndAccount() {
+	return new Promise(async (resolve, reject) => {
+		const tasks = [
+			adUnitManager.loadAdUnits(),
+			orderTableController.loadOrders(),
+			accountManager.loadAccountInfo()
+		];
+
+		// The order is preserved so..
+		Promise.allSettled(tasks).then((results) => {
+			results.forEach(result => {
+				if (result.status == "rejected") {
+					reject(result.reason);
+					return;
+				}
+			});
+			resolve([
+				results[0].value,
+				results[1].value,
+				results[2].value
+			]);
+		});
+	});
+}
+
+function wasExtUpdated() {
+	chrome.storage.local.get("extUpdated", function(result) {
+    if(result["extUpdated"]) {
+      notifier.show(NOTIFICATIONS.extensionUpdated);
+    }
+    chrome.storage.local.set({"extUpdated": false});
+  });
+}

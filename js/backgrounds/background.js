@@ -18,6 +18,18 @@ var initStorage = function() {
       initSession();
     }
   });
+
+  chrome.storage.local.get("columnList", function(result) {
+    if(_.isUndefined(result['columnList'])) {
+      chrome.storage.local.set({ columnList: [] });
+    }
+  });
+
+  chrome.storage.local.get("apiKeys", function(result) {
+    if(_.isUndefined(result['apiKeys'])) {
+      chrome.storage.local.set({ apiKeys: [] });
+    }
+  });
 }
 
 // Popup Window, open only when the badge is up
@@ -236,6 +248,7 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
       "https://app.mopub.com/web-client/api/ad-units/update-ad-source*",
       "https://app.mopub.com/web-client/api/line-items/update*",
       "https://app.mopub.com/web-client/api/line-items/create*",
+      "https://app.mopub.com/web-client/api/line-items/copy*",
 			"https://app.mopub.com/web-client/api/orders/create*"
     ]
   },

@@ -1,31 +1,27 @@
-const API_DOMAIN = "app.mopub.com";
-const BASE_URL = `https://${API_DOMAIN}`;
-const GET_ADUNIT = "/web-client/api/ad-units/get";
-const GET_ORDERS = "/web-client/api/orders/query";
-const GET_ORDER = "/web-client/api/orders/get";
-const GET_LINEITEM = "/web-client/api/line-items/get";
-const UPDATE_LINEITEM = "/web-client/api/line-items/update";
-const UPDATE_ADSOURCE = "/web-client/api/ad-units/update-ad-source";
-const CREATE_LINEITEM = "/web-client/api/line-items/create";
-const CREATE_ORDER = "/web-client/api/orders/create";
-const GET_APPS = "/web-client/api/apps/query";
-const GET_ADUNITS = "/web-client/api/ad-units/query";
-const GET_ACCOUNT = "/web-client/api/users/query";
+// MoPub URLs
+const ADUNIT_PAGE_URL = "https://app.mopub.com/ad-unit?key=";
+const APP_PAGE_URL = "https://app.mopub.com/app?key=";
+const ACCOUNT_URL = "https://app.mopub.com/account";
+const LINE_ITEM_PAGE_URL = "https://app.mopub.com/line-item?key=";
+const LINE_ITEM_EDIT_PAGE_URL = "https://app.mopub.com/edit-line-item?key=";
 
-// Tabulator Objects
-var WaterfallTable, LineItemTable, OrderTable;
+// Change log URL
+const CHANGE_LOG_URL = "https://github.com/ricky840/WaterfallBuilderChromeExt/releases";
 
-// Current Ad Unit Id
-var AdUnitId;
+// Extension Version
+const EXTENSION_VERSION = chrome.runtime.getManifest().version;
 
-// Current Ad Unit Name (Waterfall Name)
-var AdUnitName;
-
-// WaterfallTable Grouping Option Flag
-WaterfallGrouping = true;
-
-// Number of changed line items
-var NumberOfUpdatedLineItems = 0;
+// Default column set for column selectors
+const DEFAULT_COLUMN_SET = [
+	"name",
+	"type",
+	"overrideFields",
+	"includeGeoTargeting",
+	"targetedCountries",
+	"bid",
+	"status",
+	"priority"
+];
 
 // When Create New Order
 const NEW_ORDER_NAME_POSTFIX = " (Created by WBExt)";
@@ -35,18 +31,13 @@ const NEW_ORDER_DESC = "Created by WaterfallBuilder Chrome Ext";
 // When Create New Line Item (Suffix Default)
 const NEW_LINE_ITEM_NAME_SUFFIX = " (New)";
 
-// Duplicated Line Item Name Suffix
-var LineItemNameSuffix = NEW_LINE_ITEM_NAME_SUFFIX;
-
-// New Order Name Suffix
-var OrderNameSuffix = NEW_ORDER_NAME_POSTFIX;
-
-// Table Heights and P
+// Table Heights and Pagination
 const WATERFALL_TABLE_HEIGHT = 700;
 const LINEITEM_TABLE_HEIGHT = 504;
-const ORDER_TABLE_HEIGHT = 504; 
+const AB_TABLE_HEIGHT = 300;
+// const ORDER_TABLE_HEIGHT = 300; 
 const LINEITEM_PAGINATION_SIZE = 7;
-const ORDER_PAGINATION_SIZE = 7;
+const ORDER_PAGINATION_SIZE = 4;
 
 // Line Item Type Name
 const TYPE_NAME = {
@@ -58,10 +49,10 @@ const TYPE_NAME = {
 	network: "Network",
 	advanced_bidding_mpx: "AB MPX",
 	advanced_bidding_network: "AB Network",
-	marketplace: "Default MPX",
+	marketplace: "Marketplace Tab",
   pmp_line_item: "Private Marketplace",
   segment: "Segment"
-}
+};
 
 // Network Type Name
 const NETWORK_TYPE_NAME = {
@@ -78,9 +69,11 @@ const NETWORK_TYPE_NAME = {
 	yahoo: "Yahoo",
 	pangle: "Pangle",
 	snap: "Snap",
-	custom_html: "Custom JS",
-	custom_native: "Custom SDK"
-}
+	inmobi_sdk: "InMobi",
+	custom: "Custom JS",
+	custom_native: "Custom SDK",
+	marketplace: "Marketplace"
+};
 
 // New Line Item Name
 const NEW_NETWORK_LINEITEM_NAME = "New Network Line Item";

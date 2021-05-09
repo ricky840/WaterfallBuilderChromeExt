@@ -71,3 +71,20 @@ function escapeDoubleQuote(string) {
 String.prototype.capitalize = function() {
 	return this.replace(/(?:^|\s)\S/g, function(a) { return a.toUpperCase(); });
 };
+
+function validateAdUnitKey(key) {
+  const keyRegex = /^[0-9|a-z]{32}$/;
+  return (keyRegex.test(key)) ? true : false;
+}
+
+// function isEmptyValue(value) {
+//   return value === undefined 
+//   || value === null 
+//   || value === NaN 
+//   || (typeof value === 'object' && Object.keys(value).length === 0) 
+//   || (typeof value === 'string' && value.trim().length() === 0);
+// }
+
+function copyObject(obj) {
+  return JSON.parse(JSON.stringify(obj));
+}

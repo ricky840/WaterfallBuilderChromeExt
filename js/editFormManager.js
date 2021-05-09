@@ -8,17 +8,19 @@ var editFormManager = (function(global) {
 		priorityId: "edit-priority-select",
 		statusId: "edit-status-select",
 		autocpmId: "edit-disallow-autocpm-select",
-		idfaTargetgId: "edit-idfa-targeting-select",
+		// idfaTargetgId: "edit-idfa-targeting-select",
 		targetModeId: "target-mode",
 		targetCountryId: "target-country",
-		tagifyKeywords: "tagify-keywords"
+		tagifyKeywords: "tagify-keywords",
+		assignAdUnitKey: "edit-adunit-dropdown",
+		removeAllKeywords: "chkbox-remove-keywords"
 	};
 
 	function initForm(notification) {
 		$(`#${DOM_ID.priorityId}`).dropdown({ clearable: true });	
 		$(`#${DOM_ID.statusId}`).dropdown({ clearable: true });	
 		$(`#${DOM_ID.autocpmId}`).dropdown({ clearable: true });	
-		$(`#${DOM_ID.idfaTargetgId}`).dropdown({ clearable: true });	
+		// $(`#${DOM_ID.idfaTargetgId}`).dropdown({ clearable: true });	
 		$(`#${DOM_ID.targetCountryId} .menu`).html(createCountryMenuListHtml());
 		$(`#${DOM_ID.targetCountryId}`).dropdown({
 			onChange: function(value, text, element) {
@@ -38,6 +40,18 @@ var editFormManager = (function(global) {
 		});
 		let input = $(`#${DOM_ID.tagifyKeywords}`)[0];
 		keywordTagify = new Tagify(input);
+
+		// Remove all keywords
+		$(`#${DOM_ID.removeAllKeywords}`).checkbox({
+			onChecked: function() {
+				$(".keywords-field").addClass('disabled');	
+			},
+			onUnchecked: function() {
+				$(".keywords-field").removeClass('disabled');	
+			}
+		});
+
+		// Ad Unit list will be inited separately
 	}
 
 	// load values for selected row (only when there is one row selected)
@@ -51,14 +65,15 @@ var editFormManager = (function(global) {
 		keywordTagify.addTags(rowData.keywords);
 		// disallowautocpm
 		if ("disallowAutoCpm" in rowData && rowData.disallowAutoCpm == true) {
-			$(`#${DOM_ID.autocpmId}`).dropdown('set selected', "yes");
+			$(`#${DOM_ID.autocpmId}`).dropdown('set selected', "true");
 		} else if ("disallowAutoCpm" in rowData && rowData.disallowAutoCpm == false) {
-			$(`#${DOM_ID.autocpmId}`).dropdown('set selected', "no");
+			$(`#${DOM_ID.autocpmId}`).dropdown('set selected', "false");
 		} else {
 			$(`#${DOM_ID.autocpmId}`).dropdown('restore defaults');
 		}
 		//Idfa Targeting (does not work currently)
-		$(`#${DOM_ID.idfaTargetgId}`).dropdown('set selected', rowData.idfaTargeting);
+		// $(`#${DOM_ID.idfaTargetgId}`).dropdown('set selected', rowData.idfaTargeting);
+		$(`#${DOM_ID.assignAdUnitKey}`).dropdown('set exactly', rowData.adUnitKeys);
 	}
 
 	function updateNetworkInput(rowData) {
@@ -72,76 +87,99 @@ var editFormManager = (function(global) {
 			console.log(`Updated network info ${overrideFields}`);
 			rowData.overrideFields = overrideFields;
 			WaterfallTable.updateData([rowData]);
-			WaterfallTable.redraw(true); // rerender everything (for the case where additinoal network fields)
 			return true;
 		} catch(error) {
-			notifier.editNetworkFormShow({message: error, type: "negative"});
+			NOTIFICATIONS.overrideFieldInputError.message = error;
+			toast.show(NOTIFICATIONS.overrideFieldInputError);
 			console.log(error);
 			return false;
 		}
 	}
 		
 	function parseInput(formData) {
-		let cpm, priority, status, targetMode, targetCountries, keywords, disallowAutoCpm, idfaTargeting; 
-		// Parse data
-		for (let i=0; i < formData.length; i++) {
-			switch (formData[i].name) {
+		let userData = {};
+
+		formData.forEach(data => {
+			switch (data.name) {
 				case "cpm":
-					cpm = parseFloat(formData[i].value.trim());
+					const cpm = parseFloat(data.value.trim());
+					if (cpm > 0.01 && cpm < 9999) userData["bid"] = cpm;
 					break;
+
 				case "priority":
-					priority = formData[i].value.trim();
+					const priority = parseInt(data.value);
+					if (priority > 0 && priority < 17) userData["priority"] = priority;
 					break;
+
 				case "status":
-					status = formData[i].value.trim();
+					const status = data.value;
+					if (!_.isEmpty(status)) userData["status"] = status;
 					break;
+
 				case "target_mode":
-					targetMode = formData[i].value.trim();
+					const targetMode = data.value;
+					if (!_.isEmpty(targetMode)) userData["targetMode"] = targetMode;
 					break;
+
 				case "target_country":
-					targetCountries = formData[i].value.trim();
+					const targetCountries = data.value;
+					if (_.isEmpty(targetCountries)) {
+						userData["targetCountries"] = []; // Should be able to send empty array
+					} else {
+						userData["targetCountries"] = targetCountries.split(",").sort(); // Should be able to send empty array
+					}
 					break;
-				case "idfa_targeting":
-					idfaTargeting = formData[i].value.trim();
-					if (_.isEmpty(idfaTargeting)) idfaTargeting = "";
-					break;
+
+				// case "idfa_targeting":
+				// 	const idfaTargeting = data.value.trim();
+				// 	if (!_.isEmpty(idfaTargeting)) userData["idfaTargeting"] = idfaTargeting;
+				// 	break;
+
 				case "disallow_autocpm":
-					let disallowAutoUpdate = formData[i].value.trim();
-					if (disallowAutoUpdate == "yes") {
+					let disallowAutoCpm = data.value.trim();
+					if (disallowAutoCpm == "true") {
 						disallowAutoCpm = true;
-					} else if (disallowAutoUpdate == "no") {
+					} else if (disallowAutoCpm == "false") {
 						disallowAutoCpm = false;
 					} else {
-						disallowAutoCpm = "";
+						disallowAutoCpm = undefined;
 					}
+					if (disallowAutoCpm != undefined) userData["disallowAutoCpm"] = disallowAutoCpm;
 					break;
+
 				case "keywords":
-					try {
-						let parsed = JSON.parse(formData[i].value);
-						let values = [];
-						for (let i=0; i < parsed.length; i++) {
-							values.push(parsed[i].value);	
+					// If empty, then don't update keyword. If remove-keywords is checked, then remove all keywords
+					const removeKeywords = $(`#${DOM_ID.removeAllKeywords}`).checkbox("is checked");
+					if (removeKeywords) {
+						userData["keywords"] = [];
+					} else {
+						try {
+							const keywords = JSON.parse(data.value);
+							let keywordList = [];
+							keywords.forEach(keyword => {
+								keywordList.push(keyword.value);
+							});
+							userData["keywords"] = keywordList;
+						} catch (e) {
+							console.log("Keyword not selected");
 						}
-						keywords = values.join(",");
-						console.log(keywords);
-					} catch (e) {
-						console.log("Keyword not selected");
 					}
 					break;
+
+				case "assign_adunit_key":
+					// If there was no input, then don't update.
+					const adUnitKeys = data.value.split(",");
+					if (!_.isEmpty(data.value)) {
+						userData["adUnitKeys"] = adUnitKeys;
+					}
+					break;
+
 				default:
 					break;
-			}
-		}
-		return {
-			"cpm": cpm,
-			"priority": priority,
-			"status": status,
-			"targetMode": targetMode,
-			"targetCountries": targetCountries,
-			"keywords": keywords,
-			"disallowAutoCpm": disallowAutoCpm,
-			"idfaTargeting": idfaTargeting
-		}
+			}	
+		});
+	
+		return userData;
 	}
 
 	function resetForm() {
@@ -152,6 +190,8 @@ var editFormManager = (function(global) {
 		$(`#${DOM_ID.autocpmId}`).dropdown('clear');
 		$(`#${DOM_ID.targetModeId}`).dropdown('clear');
 		$(`#${DOM_ID.targetCountryId}`).dropdown('clear');
+		$(`#${DOM_ID.assignAdUnitKey}`).dropdown('clear');
+		$(`#${DOM_ID.removeAllKeywords}`).checkbox('uncheck');
 		keywordTagify.removeAllTags();
 		notifier.clearEditForm();
 	}
