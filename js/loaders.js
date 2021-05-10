@@ -8,10 +8,11 @@ var loaders = (function(global) {
   };
 
 	function show(location) {
+    $(`.${classNames[location]} .text`).html("");
     $(`.${classNames[location]}`).removeClass("disabled").addClass("active");
     setTimeout(() => { 
-      $(`.${classNames[location]} .text`).html("Still working..");
-    }, 5000);
+      $(`.${classNames[location]} .text`).html("Please wait..");
+    }, 6000);
     return;
 	}
 

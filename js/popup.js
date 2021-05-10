@@ -11,6 +11,7 @@ $(document).ready(async function() {
 
 	if (!initResult) {
 		console.log("Initialization failed");
+		notifier.show(NOTIFICATIONS.initFailed);
 		loaders.hide("body");
 		return false;
 	}	

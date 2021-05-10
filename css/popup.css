@@ -810,3 +810,11 @@ body {
 	text-align: center;
 	padding-top: 1em;
 }
+
+
+/**
+* QRCode related
+*/
+.qrcode-wrapper {
+	cursor: pointer;
+}

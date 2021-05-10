@@ -193,7 +193,6 @@ var editFormManager = (function(global) {
 		$(`#${DOM_ID.assignAdUnitKey}`).dropdown('clear');
 		$(`#${DOM_ID.removeAllKeywords}`).checkbox('uncheck');
 		keywordTagify.removeAllTags();
-		notifier.clearEditForm();
 	}
 
 	function createCountryMenuListHtml() {
@@ -280,6 +279,17 @@ var editFormManager = (function(global) {
 						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
 					</div>`;
 				break;
+			case "inmobi_sdk":
+					html = `
+						<div class="field required">
+							<label>Account Id</label>
+							<input type="text" name="network_account_id" value="${network_account_id}">
+						</div>
+						<div class="field required">
+							<label>Placement Id</label>
+							<input type="text" name="network_adunit_id" value="${network_adunit_id}">
+						</div>`;
+					break;
 			case "tapjoy":
 				html = `
 					<div class="field required">
@@ -335,7 +345,6 @@ var editFormManager = (function(global) {
 						<input type="text" name="network_app_id" value="${network_app_id}">
 					</div>`;
 				break;
-
 			case "verizon":
 				html = `
 					<div class="field required">

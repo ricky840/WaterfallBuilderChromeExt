@@ -84,5 +84,10 @@ var NOTIFICATIONS = {
     "type": "negative",
     "header": "Error",
     "message": "" // dynamic
+  },
+  "initFailed": {
+    "type": "negative",
+    "header": "Initialization Failed",
+    "message": "Something went wrong during the initialzation. Please try again."
   }
 };

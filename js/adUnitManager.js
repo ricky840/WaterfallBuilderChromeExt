@@ -72,6 +72,10 @@ var adUnitManager = (function(global) {
 		console.log(`Selected Ad Unit Name: ${getCurrentAdUnitName()}`);
 	}
 
+	function getCurrentAdUnit() {
+		return getAdUnit(currentAdUnitKey);
+	}
+
 	function getCurrentAdUnitKey() {
 		return currentAdUnitKey;
 	}
@@ -103,6 +107,7 @@ var adUnitManager = (function(global) {
   return {
 		loadAdUnits: loadAdUnits,
 		saveCurrentAdUnit: saveCurrentAdUnit,
+		getCurrentAdUnit: getCurrentAdUnit,
 		getCurrentAdUnitKey: getCurrentAdUnitKey,
 		getCurrentAdUnitName: getCurrentAdUnitName,
 		getAdUnitNameByKey: getAdUnitNameByKey,

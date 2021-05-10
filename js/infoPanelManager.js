@@ -1,41 +1,59 @@
 var infoPanelManager = (function(global) {
 	"use strict";
 
-  function qrCodeGen(key, format) {
-    let AdFormat = "";
-
+  function findFormat(format) {
+    let adFormat = "";
     switch(format) {
       case "banner":
-        AdFormat = "Banner";
+        adFormat = "Banner";
         break;
       case "medium_rectangle":
-        AdFormat = "MediumRectangle";
+        adFormat = "MediumRectangle";
         break;
       case "fullscreen":
-        AdFormat = "Interstitial";
+        adFormat = "Interstitial";
         break;
       case "native":
-        AdFormat = "Native";
+        adFormat = "Native";
         break;
       case "rewarded_video":
-        AdFormat = "Rewarded";
+        adFormat = "Rewarded";
         break;
       case "rewarded":
-        AdFormat = "Rewarded";
+        adFormat = "Rewarded";
         break;
       default:
         return; // Error return
         break;
     }
+    return adFormat;
+  }
+
+  function qrCodeGen(key, format) {
+    const adFormat = findFormat(format);
    
     $("#qrcode").empty();
     let div = $("#qrcode")[0];
-    const testName = `${AdFormat}_${new Date().getTime()}`;
-    const url = `mopub://load?adUnitId=${key}&format=${AdFormat}&name=${testName}`;
+    const testName = `${adFormat}_${new Date().getTime()}`;
+    const url = `mopub://load?adUnitId=${key}&format=${adFormat}&name=${testName}`;
     const qrcode = new QRCode(div, {
       text: url,
       width: 100,
       height: 100
+    });
+  }
+
+  function qrCodeGenForModal(adUnit) {
+    const adFormat = findFormat(adUnit.format);
+   
+    $("#qrcode-big").empty();
+    let div = $("#qrcode-big")[0];
+    const testName = `${adFormat}_${new Date().getTime()}`;
+    const url = `mopub://load?adUnitId=${adUnit.key}&format=${adFormat}&name=${testName}`;
+    const qrcode = new QRCode(div, {
+      text: url,
+      width: 200,
+      height: 200
     });
   }
 
@@ -59,6 +77,7 @@ var infoPanelManager = (function(global) {
   }
  
   return {
-    update: update
+    update: update,
+    qrCodeGenForModal: qrCodeGenForModal
   }
 })(this);

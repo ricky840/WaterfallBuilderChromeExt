@@ -72,6 +72,15 @@ var overrideFieldValidator = (function(global) {
 					delete overrideFields.network_account_id;
 				}
 				break;
+			case "inmobi_sdk":
+				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_account_id)) {
+					throw new Error(`${networkName} requires network_adunit_id (placement id) and network_account_id`);
+				} else {
+					overrideFields.network_adunit_id = value.network_adunit_id; // required
+					overrideFields.network_account_id = value.network_account_id; // required
+					delete overrideFields.network_app_id;
+				}
+				break;
 			case "tapjoy":
 				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
 					throw new Error(`${networkName} requires network_adunit_id (placement id) and network_app_id (sdk key)`);
