@@ -13,6 +13,9 @@ var loaders = (function(global) {
     setTimeout(() => { 
       $(`.${classNames[location]} .text`).html("Please wait..");
     }, 6000);
+    setTimeout(() => { 
+      $(`.${classNames[location]} .text`).html("Still working..");
+    }, 12000);
     return;
 	}
 

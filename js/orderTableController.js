@@ -3,11 +3,14 @@ var orderTableController = (function(global) {
 
   function loadOrders() {
     return new Promise(async (resolve, reject) => {
-      const orderList = await moPubApi.getOrders();
-      OrderTable.clearData();
-      await OrderTable.replaceData(orderList);
-      resolve(orderList);
-      return;
+      try {
+        const orderList = await moPubApi.getOrders();
+        await OrderTable.replaceData(orderList);
+        resolve(orderList);
+      } catch (error) {
+        reject(error);
+        return;
+      }
     });
   }
 

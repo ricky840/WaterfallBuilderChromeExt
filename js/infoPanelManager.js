@@ -59,12 +59,12 @@ var infoPanelManager = (function(global) {
 
   function update(adUnit) {
     $("#info-adunit-format").html(adUnit.format);
-    $("#info-app-name").html(adUnit.appName);
+    // $("#info-app-key").html(adUnit.appKey);
 
     const adUnitKeyHtml = `<a href="${ADUNIT_PAGE_URL + adUnit.key}" target="_blank">${adUnit.key}</a>`;
-    const appKeyHtml = `<a href="${APP_PAGE_URL + adUnit.appKey}" target="_blank">${adUnit.appKey}</a>`;
+    const appNameHtml = `<a href="${APP_PAGE_URL + adUnit.appKey}" target="_blank">${adUnit.appName}</a>`;
     $("#info-adunit-key").html(adUnitKeyHtml);
-    $("#info-app-key").html(appKeyHtml);
+    $("#info-app-name").html(appNameHtml);
 
     const dailyCap = (adUnit.dailyImpressionCap == 0) ? "Unlimited" : adUnit.dailyImpressionCap;
     const hourlyCap = (adUnit.hourlyImpressionCap == 0) ? "Unlimited" : adUnit.hourlyImpressionCap;
@@ -75,9 +75,18 @@ var infoPanelManager = (function(global) {
 
     qrCodeGen(adUnit.key, adUnit.format);
   }
+
+  function updateABStatus(status) {
+    if (status) {
+      $("#info-ab-status").html(`<span class="ui green text">Enabled</span>`);
+    } else {
+      $("#info-ab-status").html(`<span class="ui disabled text">Disabled</span>`);
+    }
+  }
  
   return {
     update: update,
+    updateABStatus: updateABStatus,
     qrCodeGenForModal: qrCodeGenForModal
   }
 })(this);

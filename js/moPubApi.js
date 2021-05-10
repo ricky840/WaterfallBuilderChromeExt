@@ -17,6 +17,8 @@ var moPubApi = (function(global) {
 	// Internal APIs, should be updated later on
 	const COPY_LINE_ITEM = "https://app.mopub.com/web-client/api/line-items/copy";
 	const GET_USERS = "https://app.mopub.com/web-client/api/users/query";
+	const CREATE_LINE_ITEM_INTERNAL = "https://app.mopub.com/web-client/api/line-items/create"; // POST
+	const UPDATE_LINE_ITEM_INTERNAL = "https://app.mopub.com/web-client/api/line-items/update?key=4e38ada8d07542d4af66c78c32f20460"; // POST
 
 	function mergeResponseData(responses) {
 		let finalData = [];
@@ -85,7 +87,6 @@ var moPubApi = (function(global) {
 
 				let pageResponses = [];
 				const pageResults = await getAllPageResult(request.url, currentPageNum, lastPageNum);
-				console.log(pageResults);
 				pageResults.forEach(eachResult => {
 					const response = JSON.parse(eachResult.responseText);
 					pageResponses.push(response);
@@ -214,7 +215,6 @@ var moPubApi = (function(global) {
 
 				let pageResponses = [];
 				const pageResults = await getAllPageResult(request.url, currentPageNum, lastPageNum);
-				console.log(pageResults);
 				pageResults.forEach(eachResult => {
 					const response = JSON.parse(eachResult.responseText);
 					pageResponses.push(response);
@@ -234,6 +234,31 @@ var moPubApi = (function(global) {
 			const request = { 
         url: BASE_URL + CREATE_LINE_ITEM,
         headers: { [MOPUB_API_AUTH_HEADER]: apiKeyManager.getActiveApiKey().key },
+				data: postData
+      };
+
+			try {
+				const result = await http.postRequest(request);
+				const response = {
+					mopubResponse: JSON.parse(result.responseText),
+					lineItemKey: lineItemKey
+				};
+				resolve(response);
+			} catch (error) {
+				const errorResponse = {
+					error: error,
+					lineItemKey: lineItemKey
+				};
+				reject(errorResponse);
+			}
+		});
+	}
+
+	function createNewLineItemViaOldApi(postData, lineItemKey) {
+		return new Promise(async (resolve, reject) => { 
+			const request = { 
+        url: CREATE_LINE_ITEM_INTERNAL,
+				headers: { "Content-Type": "application/json; charset=utf-8" },
 				data: postData
       };
 
@@ -365,6 +390,7 @@ var moPubApi = (function(global) {
 		createNewOrder: createNewOrder,
 		updateLineItem: updateLineItem,
 		copyLineItem: copyLineItem,
-		getUsers: getUsers
+		getUsers: getUsers,
+		createNewLineItemViaOldApi: createNewLineItemViaOldApi
   }
 })(this);

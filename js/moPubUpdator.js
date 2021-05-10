@@ -2,7 +2,7 @@ var moPubUpdator = (function(global) {
 	"use strict";
 
   function createPostDataForNewLineItem(change) {
-    // For new, running is a default status. Don't need to specify.
+    // For a new line item, running is a default status. Don't need to specify.
     delete change.status; 
 
     /**
@@ -93,7 +93,7 @@ var moPubUpdator = (function(global) {
           // New Line Item
           changesForNewLineItems.push(lineItem.getChanges());
         } else {
-          // Updated Line Item
+          // Updated Line Item, remove "org" values. Create "changes" object with newValues only.
           const changes = lineItem.getChanges();
           let changesWithOutOrgValue = {};
           for (const field in changes) {
@@ -110,7 +110,18 @@ var moPubUpdator = (function(global) {
       changesForNewLineItems.forEach((eachChange) => {
         const lineItemKey = eachChange.key;
         const postData = createPostDataForNewLineItem(eachChange);
-        promiseTasks.push(moPubApi.createNewLineItem(postData, lineItemKey));
+
+        /**
+         * For direct serve line items (gtee, non_gtee, promo, backfill_promo)
+         * User internal API to create them. Current public API doesn't support direct serve items.
+         * "Change" object will include "type" field
+         */ 
+        const directServeItems = ["gtee", "non_gtee", "promo", "backfill_promo"];
+        if (directServeItems.includes(eachChange.type)) {
+          promiseTasks.push(moPubApi.createNewLineItemViaOldApi(postData, lineItemKey));
+        } else {
+          promiseTasks.push(moPubApi.createNewLineItem(postData, lineItemKey));
+        }
       });
 
       changesForUpdateLineItems.forEach((eachChange) => {

@@ -73,7 +73,7 @@ var NOTIFICATIONS = {
   "columnListSaved": {
     "type": "positive",
     "header": "Success",
-    "message": "Column list was saved successfuly"
+    "message": "Column list was saved successfully"
   },
   "orderRequired": {
     "type": "negative",

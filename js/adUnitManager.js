@@ -58,11 +58,13 @@ var adUnitManager = (function(global) {
 
 	function loadAdUnits() {
 		return new Promise(async function(resolve, reject) { 
-			const adUnits = await moPubApi.getAdUnits();
-			adUnitList = adUnits;
-			resolve(adUnits);
-		}).catch(function(error) {
-			reject(error);
+			try {
+				const adUnits = await moPubApi.getAdUnits();
+				adUnitList = adUnits;
+				resolve(adUnits);
+			} catch (error) {
+				reject(error);
+			}
 		});
 	}
 

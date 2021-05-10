@@ -122,6 +122,22 @@ var tableFormatters = (function(global) {
 		return html;
 	}
 
+	// frequencyCaps Formatter [{"cap": 20, "duration": "hour", "numDuration": 1}]
+	function frequencyCapsFormatter(cell, formatterParams, onRendered) {
+		const cellValue = cell.getValue();
+		if (_.isEmpty(cellValue)) return cellValue;
+
+		let html = "";
+		cellValue.forEach(each => {
+			html += `
+				<div>
+					<span class="cell-format-value">${each.cap} imp per ${each.numDuration} ${each.duration}</span>
+				</div>
+			`;	
+		});
+		return html;
+	}
+
 	// Status formatter
 	function statusFormatter(cell, formatterParams, onRendered) {
 		const cellValue = cell.getValue();
@@ -267,6 +283,7 @@ var tableFormatters = (function(global) {
 		geoTargetModeFormatter: geoTargetModeFormatter,
 		adUnitKeysFormatter: adUnitKeysFormatter,
 		disallowAutoCpmFormatter: disallowAutoCpmFormatter,
+		frequencyCapsFormatter: frequencyCapsFormatter,
 		overrideFieldFormatter: overrideFieldFormatter,
 		orderNameFormatter: orderNameFormatter,
 		labelListFormatter: labelListFormatter,
