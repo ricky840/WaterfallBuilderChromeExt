@@ -354,7 +354,7 @@ var tableColumnDef = (function(global) {
 			visible: false, 
 			download: true, 
 			sorter: 'string', 
-			formatter: f.stringArrayFormatter 
+			formatter: f.frequencyCapsFormatter 
 		},
 		// Advertiser field (string)
 		{ 

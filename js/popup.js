@@ -11,6 +11,7 @@ $(document).ready(async function() {
 
 	if (!initResult) {
 		console.log("Initialization failed");
+		notifier.show(NOTIFICATIONS.initFailed);
 		loaders.hide("body");
 		return false;
 	}	
@@ -417,7 +418,13 @@ function loadWaterfallAndBidders(adUnitKey) {
 				return;
 			}
 			// Show AB table based on the result (API returns 400 if AB enabled is not enabled for the ad unit)
-			(results[1].status == "fulfilled") ? $(".ab-table-section").show() : $(".ab-table-section").hide();
+			if (results[1].status == "fulfilled") {
+				$(".ab-table-section").show(); 
+				infoPanelManager.updateABStatus(true);
+			} else {
+				$(".ab-table-section").hide();
+				infoPanelManager.updateABStatus(false);
+			}
 
 			resolve(results);
 		});

@@ -5,7 +5,6 @@ var waterfallTableController = (function(global) {
     return new Promise(async (resolve, reject) => {
       try {
         const lineItemList = await moPubApi.getLineItemsByAdUnit(adUnitKey);
-
         WaterfallTable.blockRedraw();
         await WaterfallTable.replaceData(lineItemList); // replaceData will not fire any table events
         WaterfallTable.restoreRedraw();
@@ -16,6 +15,7 @@ var waterfallTableController = (function(global) {
         resolve(lineItemList);
       } catch (error) {
         reject(error);
+        return;
       }
     });
   }

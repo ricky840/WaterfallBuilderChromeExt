@@ -69,6 +69,7 @@ const NETWORK_TYPE_NAME = {
 	yahoo: "Yahoo",
 	pangle: "Pangle",
 	snap: "Snap",
+	mintegral: "Mintegral",
 	inmobi_sdk: "InMobi",
 	custom: "Custom JS",
 	custom_native: "Custom SDK",

@@ -395,6 +395,19 @@ $("#waterfall-search, #order-search, #line-item-search").keyup(function() {
 
 
 /**
+ * QRCode
+ */
+
+$(".qrcode-wrapper").click(function() {
+	$(".qrcode-modal").modal({
+		onShow: function() {
+			infoPanelManager.qrCodeGenForModal(adUnitManager.getCurrentAdUnit());
+		}
+	}).modal("show");
+});
+
+
+/**
  * Notification dialog dismiss and update result pop up click
  */
 

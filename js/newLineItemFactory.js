@@ -81,6 +81,11 @@ var newLineItemFactory = (function(global) {
 				newLineItem.networkType = "ironsource";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
 				break;
+			case "add-inmobi":
+				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
+				newLineItem.networkType = "inmobi_sdk";
+				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
+				break
 			case "add-tapjoy":
 				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
 				newLineItem.networkType = "tapjoy";

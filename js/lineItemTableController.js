@@ -8,7 +8,7 @@ async function loadLineItems(orderKeys) {
       try {
         results = await moPubApi.getLineItemsByOrders(orderKeys);
       } catch (error) {
-        reject();
+        reject(error);
       }
 
       LineItemTable.clearData();

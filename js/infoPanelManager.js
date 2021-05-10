@@ -1,37 +1,41 @@
 var infoPanelManager = (function(global) {
 	"use strict";
 
-  function qrCodeGen(key, format) {
-    let AdFormat = "";
-
+  function findFormat(format) {
+    let adFormat = "";
     switch(format) {
       case "banner":
-        AdFormat = "Banner";
+        adFormat = "Banner";
         break;
       case "medium_rectangle":
-        AdFormat = "MediumRectangle";
+        adFormat = "MediumRectangle";
         break;
       case "fullscreen":
-        AdFormat = "Interstitial";
+        adFormat = "Interstitial";
         break;
       case "native":
-        AdFormat = "Native";
+        adFormat = "Native";
         break;
       case "rewarded_video":
-        AdFormat = "Rewarded";
+        adFormat = "Rewarded";
         break;
       case "rewarded":
-        AdFormat = "Rewarded";
+        adFormat = "Rewarded";
         break;
       default:
         return; // Error return
         break;
     }
+    return adFormat;
+  }
+
+  function qrCodeGen(key, format) {
+    const adFormat = findFormat(format);
    
     $("#qrcode").empty();
     let div = $("#qrcode")[0];
-    const testName = `${AdFormat}_${new Date().getTime()}`;
-    const url = `mopub://load?adUnitId=${key}&format=${AdFormat}&name=${testName}`;
+    const testName = `${adFormat}_${new Date().getTime()}`;
+    const url = `mopub://load?adUnitId=${key}&format=${adFormat}&name=${testName}`;
     const qrcode = new QRCode(div, {
       text: url,
       width: 100,
@@ -39,14 +43,28 @@ var infoPanelManager = (function(global) {
     });
   }
 
+  function qrCodeGenForModal(adUnit) {
+    const adFormat = findFormat(adUnit.format);
+   
+    $("#qrcode-big").empty();
+    let div = $("#qrcode-big")[0];
+    const testName = `${adFormat}_${new Date().getTime()}`;
+    const url = `mopub://load?adUnitId=${adUnit.key}&format=${adFormat}&name=${testName}`;
+    const qrcode = new QRCode(div, {
+      text: url,
+      width: 200,
+      height: 200
+    });
+  }
+
   function update(adUnit) {
     $("#info-adunit-format").html(adUnit.format);
-    $("#info-app-name").html(adUnit.appName);
+    // $("#info-app-key").html(adUnit.appKey);
 
     const adUnitKeyHtml = `<a href="${ADUNIT_PAGE_URL + adUnit.key}" target="_blank">${adUnit.key}</a>`;
-    const appKeyHtml = `<a href="${APP_PAGE_URL + adUnit.appKey}" target="_blank">${adUnit.appKey}</a>`;
+    const appNameHtml = `<a href="${APP_PAGE_URL + adUnit.appKey}" target="_blank">${adUnit.appName}</a>`;
     $("#info-adunit-key").html(adUnitKeyHtml);
-    $("#info-app-key").html(appKeyHtml);
+    $("#info-app-name").html(appNameHtml);
 
     const dailyCap = (adUnit.dailyImpressionCap == 0) ? "Unlimited" : adUnit.dailyImpressionCap;
     const hourlyCap = (adUnit.hourlyImpressionCap == 0) ? "Unlimited" : adUnit.hourlyImpressionCap;
@@ -57,8 +75,18 @@ var infoPanelManager = (function(global) {
 
     qrCodeGen(adUnit.key, adUnit.format);
   }
+
+  function updateABStatus(status) {
+    if (status) {
+      $("#info-ab-status").html(`<span class="ui green text">Enabled</span>`);
+    } else {
+      $("#info-ab-status").html(`<span class="ui disabled text">Disabled</span>`);
+    }
+  }
  
   return {
-    update: update
+    update: update,
+    updateABStatus: updateABStatus,
+    qrCodeGenForModal: qrCodeGenForModal
   }
 })(this);

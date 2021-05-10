@@ -130,7 +130,7 @@
 
   <!-- Entire body loader -->
 	<div class="ui inverted dimmer loader-entire-body">
-		<div class="ui blue text loader">Initializing..</div>
+		<div class="ui blue text loader"></div>
 	</div>
 
 	<!-- Body contents -->
@@ -189,13 +189,17 @@
 													<div class="ui basic horizontal tiny label info-panel-label">AdUnit Key</div>
 													<span id="info-adunit-key"></span>
 												</div>
-												<div class="item">
+												<!-- <div class="item">
 													<div class="ui basic horizontal tiny label info-panel-label">App Key</div>
 													<span id="info-app-key"></span>
-												</div>
+												</div> -->
 												<div class="item">
 													<div class="ui basic horizontal tiny label info-panel-label">App Name</div>
 													<span id="info-app-name"></span>
+												</div>
+												<div class="item">
+													<div class="ui basic horizontal tiny label info-panel-label">AB Bidding</div>
+													<span id="info-ab-status"></span>
 												</div>
 											</div>
 									</div>
@@ -356,6 +360,11 @@
 								<div class="item">
 									<button id="add-snap" class="ui compact small blue basic button circular add-network add-item">
 										<i class="plus icon"></i>Snap
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-inmobi" class="ui compact small blue basic button circular add-network add-item">
+										<i class="plus icon"></i>InMobi
 									</button>
 								</div>
 								<div class="item">
@@ -840,23 +849,31 @@
 			</div>
 			<div class="ui relaxed selection list"></div>
 		</div>
-
-
-
-
-
-
-
-
-
-
-
 		<div class="actions">
 			<div class="ui small deny button blue circular">Close</div>
 		</div>
 	</div>
 	<!-- API Key Manage Modal End -->
 
+	<!-- QRcode Modal -->
+	<div class="ui modal tiny qrcode-modal">
+		<i class="close icon"></i>
+		<div class="ui header">
+			QRCode
+		</div>
+		<div class="content">
+			<div class="ui info message">
+				<p>Scan QRCode to test the adunit in MoPub sample app. The sample app is available in app stores.</p>
+			</div>
+			<div class="qrcode-big-wrapper" style="text-align: -webkit-center;">
+				<div id="qrcode-big"></div>
+			</div>
+		</div>
+		<div class="actions">
+			<div class="ui small deny button blue circular">Close</div>
+		</div>
+	</div>
+	<!-- QRcode Modal End -->
 
 	<!-- Footer -->
 	<div class="ui hidden divider"></div>

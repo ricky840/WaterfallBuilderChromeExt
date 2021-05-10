@@ -292,7 +292,7 @@ var csvManager = (function(global) {
 				}
 				break;
 			case "networkType":
-				regex = /^admob_native$|^applovin_sdk$|^adcolony$|^chartboost$|^facebook$|^ironsource$|^tapjoy$|^vungle$|^pangle$|^snap$|^unity$|^verizon$|^yahoo$|^custom_native$/i;
+				regex = /^admob_native$|^applovin_sdk$|^adcolony$|^chartboost$|^facebook$|^ironsource$|^inmobi_sdk$|^tapjoy$|^vungle$|^pangle$|^snap$|^unity$|^verizon$|^yahoo$|^custom_native$/i;
 				if (regex.test(value)) {
 					returnValue = value.toLowerCase();
 				} else {

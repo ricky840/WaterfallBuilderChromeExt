@@ -58,11 +58,13 @@ var adUnitManager = (function(global) {
 
 	function loadAdUnits() {
 		return new Promise(async function(resolve, reject) { 
-			const adUnits = await moPubApi.getAdUnits();
-			adUnitList = adUnits;
-			resolve(adUnits);
-		}).catch(function(error) {
-			reject(error);
+			try {
+				const adUnits = await moPubApi.getAdUnits();
+				adUnitList = adUnits;
+				resolve(adUnits);
+			} catch (error) {
+				reject(error);
+			}
 		});
 	}
 
@@ -70,6 +72,10 @@ var adUnitManager = (function(global) {
 		currentAdUnitKey = key;
 		console.log(`Selected Ad Unit Key: ${currentAdUnitKey}`);
 		console.log(`Selected Ad Unit Name: ${getCurrentAdUnitName()}`);
+	}
+
+	function getCurrentAdUnit() {
+		return getAdUnit(currentAdUnitKey);
 	}
 
 	function getCurrentAdUnitKey() {
@@ -103,6 +109,7 @@ var adUnitManager = (function(global) {
   return {
 		loadAdUnits: loadAdUnits,
 		saveCurrentAdUnit: saveCurrentAdUnit,
+		getCurrentAdUnit: getCurrentAdUnit,
 		getCurrentAdUnitKey: getCurrentAdUnitKey,
 		getCurrentAdUnitName: getCurrentAdUnitName,
 		getAdUnitNameByKey: getAdUnitNameByKey,
