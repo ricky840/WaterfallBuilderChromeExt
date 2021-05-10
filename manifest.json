@@ -1,7 +1,7 @@
 {
   "name": "Publisher UI Extension for MoPub",
   "version": "0.1.0",
-  "description": "Help you to manage line items in MoPub UI",
+  "description": "Manage line items in MoPub dashboard",
   "manifest_version": 2,
   "background": {
     "persistent": true,
