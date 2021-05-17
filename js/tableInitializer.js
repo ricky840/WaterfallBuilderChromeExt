@@ -215,7 +215,7 @@ var tableInitializer = (function(global) {
 			pagination: "local",
 			paginationSize: ORDER_PAGINATION_SIZE,
 
-			rowSelectionChanged:function(data, rows) {
+			rowSelectionChanged: function(data, rows) {
 				$(".selected-order-count").html(rows.length);
 			},
 
@@ -247,7 +247,7 @@ var tableInitializer = (function(global) {
 			columns: tableColumnDef.getColumnDef("OrderTable"),
 
 			initialSort:[
-				{ column:"activeLineItemCount", dir:"desc" }
+				{ column:"name", dir:"desc" }
 			],
 
 			// Footer Search
@@ -260,7 +260,7 @@ var tableInitializer = (function(global) {
 			// height: AB_TABLE_HEIGHT,
 			data: [],
 			layout: "fitColumns",
-			movableRows: true,
+			// movableRows: true,
 			// placeholder: abPlaceHolder,
 			columns: tableColumnDef.getColumnDef("ABTable"),
 

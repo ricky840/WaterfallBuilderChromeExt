@@ -13,7 +13,10 @@ var tableColumnDef = (function(global) {
 			headerSort: false, 
 			width: 30, 
 			formatter: "rowSelection", 
-			hozAlign: "center" 
+			hozAlign: "center",
+			titleFormatterParams: {
+				rowRange: "active"
+			}
 		},
 		// Name field (string)
 		{ 
@@ -489,7 +492,10 @@ var tableColumnDef = (function(global) {
 			headerSort: false,
 			width: 30,
 			formatter: "rowSelection",
-			hozAlign: "center" 
+			hozAlign: "center",
+			titleFormatterParams: {
+				rowRange: "active"
+			}
 		},
 		{ 
 			field: 'name',
@@ -524,11 +530,13 @@ var tableColumnDef = (function(global) {
 
 	const abColumns = [
 		{
+			rowHandle: true,
 			headerSort: false, 
 			formatter: "handle",
 			width: 35,
+			maxWidth: 35,
 			minWidth: 35,
-			fronzen: true
+			frozen: true
 		},
 		// Network Type (string)
 		{ 

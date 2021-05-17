@@ -18,7 +18,6 @@ var moPubApi = (function(global) {
 	const COPY_LINE_ITEM = "https://app.mopub.com/web-client/api/line-items/copy";
 	const GET_USERS = "https://app.mopub.com/web-client/api/users/query";
 	const CREATE_LINE_ITEM_INTERNAL = "https://app.mopub.com/web-client/api/line-items/create"; // POST
-	const UPDATE_LINE_ITEM_INTERNAL = "https://app.mopub.com/web-client/api/line-items/update?key=4e38ada8d07542d4af66c78c32f20460"; // POST
 
 	function mergeResponseData(responses) {
 		let finalData = [];

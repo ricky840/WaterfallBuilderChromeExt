@@ -125,7 +125,7 @@ var tableFormatters = (function(global) {
 	// frequencyCaps Formatter [{"cap": 20, "duration": "hour", "numDuration": 1}]
 	function frequencyCapsFormatter(cell, formatterParams, onRendered) {
 		const cellValue = cell.getValue();
-		if (_.isEmpty(cellValue)) return cellValue;
+		if (_.isEmpty(cellValue)) return;
 
 		let html = "";
 		cellValue.forEach(each => {
@@ -169,7 +169,7 @@ var tableFormatters = (function(global) {
 	function adUnitKeysFormatter(cell, formatterParams, onRendered) {
 		makeEditableCell(cell);
 		const adUnitKeys = cell.getValue();
-		if (_.isEmpty(adUnitKeys)) return false;
+		if (_.isEmpty(adUnitKeys)) return;
 
 		let html = "";
 		adUnitKeys.forEach(key => {
