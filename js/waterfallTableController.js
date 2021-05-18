@@ -5,19 +5,31 @@ var waterfallTableController = (function(global) {
     return new Promise(async (resolve, reject) => {
       try {
         const lineItemList = await moPubApi.getLineItemsByAdUnit(adUnitKey);
+        const lineItemListWithoutTestModeItems = filterTestModeLineItems(lineItemList); // Temp
+
         WaterfallTable.blockRedraw();
-        await WaterfallTable.replaceData(lineItemList); // replaceData will not fire any table events
+        await WaterfallTable.replaceData(lineItemListWithoutTestModeItems); // replaceData will not fire any table events
         WaterfallTable.restoreRedraw();
 
         // Save line items in the store
-        lineItemStore.initLineItemStore(lineItemList);
+        lineItemStore.initLineItemStore(lineItemListWithoutTestModeItems);
 
-        resolve(lineItemList);
+        resolve(lineItemListWithoutTestModeItems);
       } catch (error) {
         reject(error);
         return;
       }
     });
+  }
+
+  /**
+   *  This is temporary. API returns SDK Test Mode line items. It will be updated in the future
+   */
+  function filterTestModeLineItems(allLineItems) {
+    const result = allLineItems.filter(lineItem => {
+      return (lineItem.advertiser != "SDK Test Mode" && lineItem.orderName != "SDK Test Mode");
+    });
+    return result;
   }
 
   function resetSorting() {
