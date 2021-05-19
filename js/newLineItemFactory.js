@@ -76,6 +76,11 @@ var newLineItemFactory = (function(global) {
 				newLineItem.networkType = "facebook";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
 				break;
+			case "add-fyber":
+				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
+				newLineItem.networkType = "fyber";
+				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
+				break;
 			case "add-ironsource":
 				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
 				newLineItem.networkType = "ironsource";

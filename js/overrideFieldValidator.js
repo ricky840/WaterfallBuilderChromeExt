@@ -63,6 +63,15 @@ var overrideFieldValidator = (function(global) {
 					delete overrideFields.network_account_id;
 				}
 				break;
+			case "fyber":
+				if (_.isEmpty(value.network_adunit_id) || _.isEmpty(value.network_app_id)) {
+					throw new Error(`${networkName} requires network_app_id and network_adunit_id (spot id)`);
+				} else {
+					overrideFields.network_app_id = value.network_app_id; // required
+					overrideFields.network_adunit_id = value.network_adunit_id; // required
+					delete overrideFields.network_account_id;
+				}
+				break;
 			case "ironsource":
 				if (_.isEmpty(value.network_app_id)) {
 					throw new Error(`${networkName} requires network_app_id (app key)`);

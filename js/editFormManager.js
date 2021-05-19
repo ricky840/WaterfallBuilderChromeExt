@@ -268,6 +268,17 @@ var editFormManager = (function(global) {
 						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
 					</div>`;
 				break;
+			case "fyber":
+				html = `
+					<div class="field required">
+						<label>Spot Id</label>
+						<input type="text" name="network_adunit_id" value="${network_adunit_id}">
+					</div>
+					<div class="field required">
+						<label>App Id</label>
+						<input type="text" name="network_app_id" value="${network_app_id}">
+					</div>`;
+				break;
 			case "ironsource":
 				html = `
 					<div class="field required">

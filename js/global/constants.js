@@ -71,6 +71,7 @@ const NETWORK_TYPE_NAME = {
 	snap: "Snap",
 	mintegral: "Mintegral",
 	inmobi_sdk: "InMobi",
+	fyber: "Fyber",
 	custom: "Custom JS",
 	custom_native: "Custom SDK",
 	marketplace: "Marketplace"
