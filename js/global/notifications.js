@@ -88,7 +88,7 @@ var NOTIFICATIONS = {
   "initFailed": {
     "type": "negative",
     "header": "Initialization Failed",
-    "message": "Something went wrong during the initialzation. Please make sure that you're logged in Publisher UI."
+    "message": "Something went wrong during the initialization. Please make sure that you're logged in Publisher UI and using the right API Key."
   },
   "countryPresetUpdateFailed": {
     "type": "negative",
