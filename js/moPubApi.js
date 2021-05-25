@@ -17,7 +17,12 @@ var moPubApi = (function(global) {
 	// Internal APIs, should be updated later on
 	const COPY_LINE_ITEM = "https://app.mopub.com/web-client/api/line-items/copy";
 	const GET_USERS = "https://app.mopub.com/web-client/api/users/query";
+	const GET_ACCOUNT = "https://app.mopub.com/web-client/api/account/get";
 	const CREATE_LINE_ITEM_INTERNAL = "https://app.mopub.com/web-client/api/line-items/create"; // POST
+	const LOAD_COUNTRY_PRESET = "https://app.mopub.com/web-client/api/country-presets/all?orderBy=name";
+	const CREATE_COUNTRY_PRESET = "https://app.mopub.com/web-client/api/country-presets/create";
+	const DELETE_COUNTRY_PRESET = "https://app.mopub.com/web-client/api/country-presets/delete"; // POST
+	const UPDATE_COUNTRY_PRESET = "https://app.mopub.com/web-client/api/country-presets/update";
 
 	function mergeResponseData(responses) {
 		let finalData = [];
@@ -378,6 +383,88 @@ var moPubApi = (function(global) {
 		});
 	}
 
+	function getAccount() {
+		return new Promise(async (resolve, reject) => { 
+			let request = { url: GET_ACCOUNT };
+			try {
+				const result = await http.getRequest(request);
+				const response = JSON.parse(result.responseText);
+				resolve(response);
+			} catch(error) {
+				reject(error);
+			}
+		});
+	}
+
+	function getCountryPreset() {
+		return new Promise(async (resolve, reject) => { 
+			let request = { url: LOAD_COUNTRY_PRESET };
+			try {
+				const result = await http.getRequest(request);
+				const response = JSON.parse(result.responseText);
+				resolve(response);
+			} catch(error) {
+				reject(error);
+			}
+		});
+	}
+
+	function deleteCountryPreset(postData) {
+		return new Promise(async (resolve, reject) => { 
+			const request = { 
+        url: DELETE_COUNTRY_PRESET,
+				headers: { "Content-Type": "application/json; charset=utf-8" },
+				data: postData
+      };
+
+			try {
+				const result = await http.postRequest(request);
+				// This API returns nothing when success
+				// const response = JSON.parse(result.responseText);
+				resolve(result);
+			} catch (error) {
+				reject(error);
+			}
+		});
+	}
+	
+	function updateCountryPreset(postData) {
+		return new Promise(async (resolve, reject) => { 
+			const request = { 
+        url: UPDATE_COUNTRY_PRESET,
+				headers: { "Content-Type": "application/json; charset=utf-8" },
+				data: postData
+      };
+
+			try {
+				const result = await http.postRequest(request);
+				// This API returns nothing when success
+				// const response = JSON.parse(result.responseText);
+				resolve(result);
+			} catch (error) {
+				reject(error);
+			}
+		});
+	}
+
+	function createCountryPreset(postData) {
+		return new Promise(async (resolve, reject) => { 
+			const request = { 
+        url: CREATE_COUNTRY_PRESET,
+				headers: { "Content-Type": "application/json; charset=utf-8" },
+				data: postData
+      };
+
+			try {
+				const result = await http.postRequest(request);
+				const response = JSON.parse(result.responseText);
+				resolve(response);
+			} catch (error) {
+				reject(error);
+			}
+		});
+	}
+
   return {
 		getAdUnits: getAdUnits,
 		getLineItemsByAdUnit: getLineItemsByAdUnit,
@@ -390,6 +477,11 @@ var moPubApi = (function(global) {
 		updateLineItem: updateLineItem,
 		copyLineItem: copyLineItem,
 		getUsers: getUsers,
-		createNewLineItemViaOldApi: createNewLineItemViaOldApi
+		getAccount: getAccount,
+		createNewLineItemViaOldApi: createNewLineItemViaOldApi,
+		getCountryPreset: getCountryPreset,
+		deleteCountryPreset: deleteCountryPreset,
+		updateCountryPreset: updateCountryPreset,
+		createCountryPreset: createCountryPreset
   }
 })(this);

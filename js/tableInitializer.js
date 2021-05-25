@@ -60,8 +60,8 @@ var tableInitializer = (function(global) {
 		const lineItem = lineItemStore.getLineItemByKey(rowData.key);
 
 		console.log("adding badge");
-		console.log(lineItem.isNewlyCreated());
-		console.log(lineItem.getChanges());
+		// console.log(lineItem.isNewlyCreated());
+		// console.log(lineItem.getChanges());
 
 		if (lineItem.isNewlyCreated()) {
 			row.getElement().classList.remove("updated-row");

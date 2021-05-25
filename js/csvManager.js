@@ -175,15 +175,15 @@ var csvManager = (function(global) {
 			try {
 				rowObj = {
 					'name': csvFieldValidator('name', name),
-					'key': (key.toString().trim() == "") ? null : csvFieldValidator('key', key),
+					'key': (key.toString().trim() == "") ? undefined : csvFieldValidator('key', key),
 					'orderName': csvFieldValidator('orderName', orderName),
 					'orderKey': csvFieldValidator('orderKey', orderKey), 
 					'adUnitKeys': csvFieldValidator('adUnitKeys', adUnitKeys),
 					'priority': csvFieldValidator('priority', priority),
 					'bid': csvFieldValidator('bid', bid),
 					'type': csvFieldValidator('type', type),
-					'networkType': (type == "network") ? csvFieldValidator('networkType', networkType) : null,
-					'overrideFields': (type == "network") ? overrideFieldValidator.validate(networkType, overrideFields) : {}, // unified overridesfield form
+					'networkType': (type == "network") ? csvFieldValidator('networkType', networkType) : undefined,
+					'overrideFields': (type == "network") ? overrideFieldValidator.validate(networkType, overrideFields) : undefined, // unified overridesfield form
 					'status': csvFieldValidator('status', status),
 					'keywords': csvFieldValidator('keywords', keywords),
 					'includeGeoTargeting': csvFieldValidator('includeGeoTargeting', geoMode),
@@ -240,7 +240,8 @@ var csvManager = (function(global) {
 			case "adUnitKeys":
 				regex = /^[0-9|a-z]{32}$/;
 				const adUnitKeys = value.split(",");
-				let newAdUnitKeys = [];
+				// Make sure to include the current ad unit key in adUnitKeys when import CSV (IMPORTANT)
+				let newAdUnitKeys = [adUnitManager.getCurrentAdUnitKey()];
 				adUnitKeys.forEach(key => {
 					if (_.isEmpty(key.trim()) || !regex.test(key.trim())) {
 						throw new Error(`Ad unit key is not in the right format. <b>${value}</b>`);

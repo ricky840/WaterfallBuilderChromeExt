@@ -88,6 +88,46 @@ var NOTIFICATIONS = {
   "initFailed": {
     "type": "negative",
     "header": "Initialization Failed",
-    "message": "Something went wrong during the initialzation. Please try again."
+    "message": "Something went wrong during the initialzation. Please make sure that you're logged in Publisher UI."
+  },
+  "countryPresetUpdateFailed": {
+    "type": "negative",
+    "header": "Update Failed",
+    "message": "Error in updating preset"
+  },
+  "countryPresetUpdateSuccess": {
+    "type": "positive",
+    "header": "Update Success",
+    "message": "Preset updated successfully"
+  },
+  "countryPresetDeleteSuccess": {
+    "type": "positive",
+    "header": "Delete Success",
+    "message": "Preset removed successfully"
+  },
+  "countryPresetDeleteFailed": {
+    "type": "negative",
+    "header": "Delete Failed",
+    "message": "Error deleting preset"
+  },
+  "countryPresetSaveEmptyName": {
+    "type": "negative",
+    "header": "Save Failed",
+    "message": "Name cannot be empty"
+  },
+  "countryPresetSaveSuccess": {
+    "type": "positive",
+    "header": "Save Success",
+    "message": "Preset saved successfully"
+  },
+  "countryPresetSaveFailedGeneric": {
+    "type": "negative",
+    "header": "Save Failed",
+    "message": "Error saving preset"
+  },
+  "countryPresetSaveFailed": {
+    "type": "negative",
+    "header": "Save Failed",
+    "message": "" // dynamic
   }
 };

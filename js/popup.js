@@ -436,6 +436,7 @@ function loadAdUnitsAndOrdersAndAccount() {
 		const tasks = [
 			adUnitManager.loadAdUnits(),
 			orderTableController.loadOrders(),
+			accountManager.loadUserInfo(),
 			accountManager.loadAccountInfo()
 		];
 
@@ -450,7 +451,8 @@ function loadAdUnitsAndOrdersAndAccount() {
 			resolve([
 				results[0].value,
 				results[1].value,
-				results[2].value
+				results[2].value,
+				results[3].value
 			]);
 		});
 	});

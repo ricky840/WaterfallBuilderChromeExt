@@ -38,8 +38,8 @@ var infoPanelManager = (function(global) {
     const url = `mopub://load?adUnitId=${key}&format=${adFormat}&name=${testName}`;
     const qrcode = new QRCode(div, {
       text: url,
-      width: 100,
-      height: 100
+      width: 120,
+      height: 120
     });
   }
 

@@ -93,6 +93,7 @@ const COUNTRY_LIST = [
 	{ country_code: "AO", country: "Angola" }, 
 	{ country_code: "AI", country: "Anguilla" }, 
 	{ country_code: "AG", country: "Antigua" }, 
+	{ country_code: "AQ", country: "Antarctica" }, 
 	{ country_code: "AR", country: "Argentina" }, 
 	{ country_code: "AM", country: "Armenia" }, 
 	{ country_code: "AW", country: "Aruba" }, 

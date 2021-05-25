@@ -24,7 +24,11 @@ var editFormManager = (function(global) {
 		$(`#${DOM_ID.targetCountryId} .menu`).html(createCountryMenuListHtml());
 		$(`#${DOM_ID.targetCountryId}`).dropdown({
 			onChange: function(value, text, element) {
-				$(`#${DOM_ID.targetCountryId}`).closest('.field').removeClass('error');
+				const field = $(`#${DOM_ID.targetCountryId}`).closest('.field');
+				field.removeClass("error");
+				// If nothing was selected, disable save preset button
+				const savePresetButton = field.find(".country-save-preset");
+				(_.isEmpty(value)) ? savePresetButton.addClass("disabled") : savePresetButton.removeClass("disabled");
 			}
 		});
 		$(`#${DOM_ID.targetModeId}`).dropdown({

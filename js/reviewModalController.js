@@ -38,7 +38,7 @@ var reviewModalController = (function(global) {
 					<td>
 						<h5 class="ui header">
 							${lineItem.getName()}
-							<div class="sub header">${lineItem.getKey()}</div>
+							<div class="sub header">${(lineItem.isNewlyCreated()) ? "New line item" : lineItem.getKey()}</div>
 						</h5>
 					</td>
 					<td style="font-weight: bold;">

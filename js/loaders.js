@@ -4,7 +4,8 @@ var loaders = (function(global) {
   const classNames = {
     adunit: "loader-except-menu-bar",
     body: "loader-entire-body",
-    lineItemTable: "loader-lineitem-table"
+    lineItemTable: "loader-lineitem-table",
+    countryPresetModal: "loader-country-preset"
   };
 
 	function show(location) {

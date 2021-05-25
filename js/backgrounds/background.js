@@ -249,7 +249,8 @@ chrome.webRequest.onBeforeSendHeaders.addListener(function(details) {
       "https://app.mopub.com/web-client/api/line-items/update*",
       "https://app.mopub.com/web-client/api/line-items/create*",
       "https://app.mopub.com/web-client/api/line-items/copy*",
-			"https://app.mopub.com/web-client/api/orders/create*"
+			"https://app.mopub.com/web-client/api/orders/create*",
+      "https://app.mopub.com/web-client/api/country-presets/*"
     ]
   },
   ["requestHeaders", "extraHeaders", "blocking"]

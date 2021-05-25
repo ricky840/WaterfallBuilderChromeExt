@@ -1,6 +1,6 @@
-/**
+/********************************************************
  * Handles control panel events
- */
+ ********************************************************/
 
 // Edit button 
 $(".control-btn-edit").click(function() {
@@ -12,6 +12,8 @@ $(".control-btn-edit").click(function() {
 
 	$('.ui.modal.edit-modal').modal({
 		duration: 300,
+		allowMultiple: true,
+		closable: false,
 		onApprove: function(element) {
 			return editHandler();
 		},
@@ -103,6 +105,7 @@ $(".control-btn-export").click(function() {
 	$("#export-only-selected-count").html(selectedRows.length);
 
 	$('.ui.modal.download-option-modal').modal({
+		duration: 300,
 		onHidden: function() {
 			WaterfallTable.deselectRow();
 		}	
@@ -155,6 +158,7 @@ $(".control-btn-apply-change").click(function() {
 	$(".review-change-table-body").html(html);
 	$(".review-change-count").html(`<b>Total ${numberOfChanges} changed line item(s)</b>`);
 	$('.ui.modal.review-change-modal').modal({
+		duration: 300,
 		onApprove: async function() {
 			loaders.show("adunit");
 			const results = await moPubUpdator.applyToMoPub();
@@ -168,13 +172,14 @@ $(".control-btn-apply-change").click(function() {
 });
 
 
-/**
+/********************************************************
  * Handles API key manage events
- */
+ ********************************************************/
 
 // API Key manage button in the menu bar
 $(".apikey-manage-btn").click(function() {
 	$(".apikey-manage-modal").modal({
+		duration: 300,
 		onHidden: function() {
 			$(".apikey-input-segment").hide();
 		}
@@ -218,9 +223,9 @@ $(".apikey-manage-submit").click(function() {
 });
 
 
-/**
+/********************************************************
  * Handles events in order list table
- */
+ ********************************************************/
 
 // Load line item button
 $(".load-lineitem-by-order-btn").click(async function() {
@@ -243,9 +248,9 @@ $(".load-lineitem-by-order-btn").click(async function() {
 });
 
 
-/**
+/********************************************************
  * Handles events in line item list table
-*/
+ ********************************************************/
 
 // Duplicate line item button (Hmm removed for now)
 // $(".lineitem-table-dup-btn").click(function() {
@@ -316,9 +321,9 @@ $(".lineitem-table-assign-btn").click(async function() {
 });
 
 
-/**
+/********************************************************
  * Handles search and sort buttons 
- */
+ ********************************************************/
  
 // Redraw table
 $("#colsize-reset").click(function() {
@@ -394,12 +399,117 @@ $("#waterfall-search, #order-search, #line-item-search").keyup(function() {
 });
 
 
-/**
+/********************************************************
+ * Handles country preset related
+ ********************************************************/
+
+// Save country preset button
+$(".edit-modal-save-country-preset").modal({
+	allowMultiple: true,
+	closable: false,
+	duration: 300,
+	onApprove: function() {
+		const input = $('.new-country-preset-form').serializeArray();
+		if (_.isEmpty(input)) return;
+	
+		let name = "";
+		input.forEach(each => {
+			if (each.name == "new-country-preset-name") name = each.value.trim();
+		});
+
+		if (_.isEmpty(name)) {
+			toast.show(NOTIFICATIONS.countryPresetSaveEmptyName);
+			return false;
+		}
+
+		const currentInput = $("#target-country").dropdown('get value');
+		const countryCodeList = currentInput.split(",");
+
+		countryPresetController.createCountryPreset(name, countryCodeList).then(result => {
+			toast.show(NOTIFICATIONS.countryPresetSaveSuccess);
+			$(".edit-modal-save-country-preset").modal("hide");
+		}).catch(error => {
+			try {
+				const mopubErrMsg = JSON.parse(error.responseText);
+				for (error of mopubErrMsg.errors) {
+					NOTIFICATIONS.countryPresetSaveFailed.message = error.message;
+					toast.show(NOTIFICATIONS.countryPresetSaveFailed);
+					break; // Show only the first one
+				}
+			} catch (error) {
+				toast.show(NOTIFICATIONS.countryPresetSaveFailedGeneric);
+			}
+		});
+
+		return false;
+	},
+	onHidden: function() {
+		countryPresetController.clear();
+	}
+});
+
+// Load country preset button
+$(".edit-modal-load-country-preset").modal({
+	allowMultiple: true,
+	closable: false,
+	duration: 300,
+	onShow: async function() {
+		try {
+			loaders.show("countryPresetModal");
+			await countryPresetController.load();
+			loaders.hide("countryPresetModal");
+		} catch(error)  {
+			// Error
+		}
+	},
+	onHidden: function() {
+		countryPresetController.clear();
+	}
+});
+
+// Preset load button
+$(".edit-modal-load-country-preset").on("click", ".country-preset-load", function() {
+	const presetKey = $(this).closest("tr").find("input.country-preset-list").attr("key");
+	if (_.isEmpty(presetKey)) return;
+
+	const countryCodes = countryPresetController.getCountryCodesByPresetKey(presetKey);
+	if (!_.isEmpty(countryCodes)) {
+		$("#target-country").dropdown('set exactly', countryCodes);	
+	}
+
+	$(".edit-modal-load-country-preset").modal("hide");
+});
+
+// Preset delete button
+$(".edit-modal-load-country-preset").on("click", ".country-preset-delete", async function() {
+	const tr = $(this).closest("tr");
+	const presetKey = tr.find("input.country-preset-list").attr("key");
+	if (_.isEmpty(presetKey)) return;
+
+	try {
+		// tr.remove();
+		loaders.show("countryPresetModal");
+		await countryPresetController.deleteCountryPreset(presetKey);
+		await countryPresetController.load();
+		loaders.hide("countryPresetModal");
+		toast.show(NOTIFICATIONS.countryPresetDeleteSuccess);
+	} catch(error) {
+		toast.show(NOTIFICATIONS.countryPresetDeleteFailed);
+	}
+});
+
+// Connect country prest modal to edit modal
+$(".edit-modal-save-country-preset").modal('attach events', '.ui.modal.edit-modal .country-save-preset');
+$(".edit-modal-load-country-preset").modal('attach events', '.ui.modal.edit-modal .country-load-preset');
+
+
+/********************************************************
  * QRCode
- */
+ ********************************************************/
 
 $(".qrcode-wrapper").click(function() {
 	$(".qrcode-modal").modal({
+		duration: 300,
 		onShow: function() {
 			infoPanelManager.qrCodeGenForModal(adUnitManager.getCurrentAdUnit());
 		}
@@ -407,9 +517,9 @@ $(".qrcode-wrapper").click(function() {
 });
 
 
-/**
+/********************************************************
  * Notification dialog dismiss and update result pop up click
- */
+ ********************************************************/
 
 $(".notification-box").on("click", ".message .close", function() {
   $(this).closest(".message").hide();
@@ -424,9 +534,9 @@ $("#notification").on('click', ".mopub-update-results", function() {
 });
 
 
-/**
+/********************************************************
  * Handlers 
- */
+ ********************************************************/
 
 function editHandler() {
 	const formData = $('#edit-form').serializeArray();
