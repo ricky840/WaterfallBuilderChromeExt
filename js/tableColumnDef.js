@@ -529,15 +529,18 @@ var tableColumnDef = (function(global) {
 	];
 
 	const abColumns = [
-		{
-			rowHandle: true,
-			headerSort: false, 
-			formatter: "handle",
-			width: 35,
-			maxWidth: 35,
-			minWidth: 35,
-			frozen: true
-		},
+		/**
+		 * Tara wanted to remove the handle.
+		 */
+		// {
+		// 	rowHandle: true,
+		// 	headerSort: false, 
+		// 	formatter: "handle",
+		// 	width: 35,
+		// 	maxWidth: 35,
+		// 	minWidth: 35,
+		// 	frozen: true
+		// },
 		// Network Type (string)
 		{ 
 			field: 'networkType',
@@ -555,6 +558,15 @@ var tableColumnDef = (function(global) {
 			visible: true, 
 			sorter: 'string',
 			formatter: f.objectFormatter
+		},
+		// Priority field (int)
+		{ 
+			field: 'priority', 
+			title: 'Priority', 
+			visible: true, 
+			download: true, 
+			sorter: "number",
+			formatter: f.priorityFormatterNotEditable
 		},
 		// Boolean
 		{

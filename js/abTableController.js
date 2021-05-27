@@ -10,17 +10,27 @@ var abTableController = (function(global) {
         const response = await moPubApi.getAbLineItemsByAdUnit(adUnitKey);
         const networkBidders = response.data.networks;
         const marketplace = response.data.marketplace;
+        const priority = response.data.priority;
         bidderList = networkBidders;
+        
+        /**
+         * marketplace's data keeps changing. So except for "enable" field
+         * everything else should just be showing up in overridesField.
+         */
+        let overrideFieldsForMarketPlace = jQuery.extend(true, {}, marketplace);
+        delete overrideFieldsForMarketPlace.enabled;
+
         bidderList.push({
           "enabled": marketplace.enabled,
           "networkType": "marketplace",
-          "overrideFields": {
-            "allowVideo": marketplace.allowVideo,
-            "videoSetting": marketplace.videoSetting,
-            "rewardedDisplayEnabled": marketplace.rewardedSettings.displayEnabled,
-            "rewardedPlayableEnabled": marketplace.rewardedSettings.playableEnabled
-          }
+          "overrideFields": overrideFieldsForMarketPlace
         });
+
+        // Add priority field for all bidders
+        bidderList.forEach(bidder => {
+          bidder.priority = priority; 
+        });
+
       } catch (error) {
         // do nothing for now
         reject(error);

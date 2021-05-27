@@ -120,6 +120,12 @@ var tableFormatters = (function(global) {
 		makeEditableCell(cell);
 		const html = `<span class="ui grey basic label small">${cell.getValue()}</span>`;
 		return html;
+	}	
+
+	// Priority formatter without edit support
+	function priorityFormatterNotEditable(cell, formatterParams, onRendered) {
+		const html = `<span class="ui grey basic label small">${cell.getValue()}</span>`;
+		return html;
 	}
 
 	// frequencyCaps Formatter [{"cap": 20, "duration": "hour", "numDuration": 1}]
@@ -279,6 +285,7 @@ var tableFormatters = (function(global) {
 		networkTypeNameFormatter: networkTypeNameFormatter,
 		cpmFormatter: cpmFormatter,
 		priorityFormatter: priorityFormatter,
+		priorityFormatterNotEditable: priorityFormatterNotEditable,
 		statusFormatter: statusFormatter,
 		geoTargetModeFormatter: geoTargetModeFormatter,
 		adUnitKeysFormatter: adUnitKeysFormatter,

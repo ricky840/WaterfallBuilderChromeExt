@@ -167,6 +167,9 @@ function initOrderDropDowns(orders) {
 		onChange: function (value, text, element) {
 			if (value) {
 				$(".add-item-order-list").removeClass('error');
+				$(".add-item-network-list").show();
+			} else {
+				$(".add-item-network-list").hide();
 			}
 		}
 	});

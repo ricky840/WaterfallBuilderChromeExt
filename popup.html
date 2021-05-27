@@ -153,12 +153,15 @@
 					<div class="menu"></div>
 				</div>
 			</div>
-			<!-- <div class="item" style="padding: 0px; margin: 0px;">
-				<div id="adunit-sync-btn">
-					<i class="sync alternate icon adunit-sync"></i>
-					<div class="ui active inline inverted loader tiny" style="display: none;"></div>
+			<div class="right menu">
+				<div class="item">
+					<a href="">
+						<button class="ui icon button small inverted basic blue">
+							<i class="sync alternate icon"></i>
+						</button>
+					</a>
 				</div>
-			</div> -->
+			</div>
 			<div class="right menu">
 				<div class="item">
 					<div class="ui button small inverted basic blue apikey-manage-btn">Manage API Keys</div>
@@ -323,7 +326,7 @@
 								<div class="text"></div>
 								<i class="dropdown icon"></i>
 							</div>
-							<div class="ui small horizontal list">
+							<div class="ui small horizontal list add-item-network-list" style="display: none;">
 								<div class="item">
 									<button id="add-mpx" class="ui compact small blue basic button circular add-network add-item">
 										<i class="plus icon"></i>Marketplace
@@ -492,7 +495,7 @@
 
 								<!-- Sort Reset -->
 								<div class="item">
-									<button id="save-columns" class="ui tiny button basic circular waterfall-filter">Save Columns</button>
+									<button id="save-columns" class="ui tiny button basic tertiary blue waterfall-filter">Save Columns</button>
 								</div>
 
 								<!-- Search items -->
@@ -682,7 +685,7 @@
 		<!-- buttons -->
 		<div class="actions">
 			<div class="ui deny small button circular basic grey">Cancel</div>
-			<div class="ui ok right small button circular blue">Edit</div>
+			<div class="ui ok right small button circular blue">Save</div>
 		</div>
 	</div>
 
@@ -872,7 +875,7 @@
 
 	<!-- API Key Manage Modal -->
 	<div class="ui modal large apikey-manage-modal">
-		<i class="close icon"></i>
+		<!-- <i class="close icon"></i> -->
 		<div class="ui header">
 			Manage API Keys
 			<button class="ui small blue tertiary button right floated apikey-manage-add">
@@ -903,7 +906,8 @@
 			<div class="ui relaxed selection list"></div>
 		</div>
 		<div class="actions">
-			<div class="ui small deny button blue circular">Close</div>
+			<div class="ui small deny button blue basic circular">Cancel</div>
+			<div class="ui small ok button blue circular">Apply</div>
 		</div>
 	</div>
 	<!-- API Key Manage Modal End -->
