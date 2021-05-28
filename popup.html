@@ -138,7 +138,7 @@
 		<!-- Menu bar -->
 		<div class="ui fixed menu inverted no-radius mopub-menu borderless">
 			<div class="item">
-				<a href="">
+				<a href=""  data-tooltip="Refresh page" data-position="bottom center" data-variation="tiny basic" data-inverted="">
 					<div class="mopub-logo-menu"></div>
 					<div>
 						<h6 class="ui header inverted grey" style="margin-top: 0.2em;">Publisher UI Extension</h6>
@@ -153,7 +153,7 @@
 					<div class="menu"></div>
 				</div>
 			</div>
-			<div class="right menu">
+			<!-- <div class="right menu">
 				<div class="item">
 					<a href="">
 						<button class="ui icon button small inverted basic blue">
@@ -161,7 +161,7 @@
 						</button>
 					</a>
 				</div>
-			</div>
+			</div> -->
 			<div class="right menu">
 				<div class="item">
 					<div class="ui button small inverted basic blue apikey-manage-btn">Manage API Keys</div>
@@ -495,7 +495,7 @@
 
 								<!-- Sort Reset -->
 								<div class="item">
-									<button id="save-columns" class="ui tiny button basic tertiary blue waterfall-filter">Save Columns</button>
+									<button id="save-columns" class="ui tiny button basic tertiary blue waterfall-filter">Save Column Set</button>
 								</div>
 
 								<!-- Search items -->
@@ -530,7 +530,7 @@
 				<!-- AB Table -->
 				<div class="row no-padding ab-table-section" style="display: none;">
 					<div class="sixteen wide column" id="waterfall-section">
-							<div id="ab-table"></div>
+							<div id="ab-table" style="margin-top: 0px;"></div>
 					</div>
 				</div>
 			</div> <!-- End of Grid -->
@@ -674,7 +674,7 @@
 
 	<!-- Edit overrideFields Modal -->
 	<div class="ui small modal edit-overridefields-modal">
-		<i class="close icon"></i>
+		<!-- <i class="close icon"></i> -->
 		<div id="network-type-title" class="ui header small"></div>
 		<!-- Body (form) -->
 		<div class="scrolling content">
@@ -776,7 +776,7 @@
 					<label>
 						<span>Country Trageting</span>
 						<span class="field-label-title ui blue text country-load-preset">Load Preset</span>
-						<span class="field-label-title ui blue text country-save-preset">Save Preset</span>
+						<span class="field-label-title ui blue text country-save-preset disabled">Save Preset</span>
 					</label>
 					<div id="target-country" class="ui fluid multiple search selection dropdown">
 						<input type="hidden" name="target_country">

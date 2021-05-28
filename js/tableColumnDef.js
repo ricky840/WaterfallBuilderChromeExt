@@ -12,6 +12,7 @@ var tableColumnDef = (function(global) {
 			resizable: false, 
 			headerSort: false, 
 			width: 30, 
+			download: false, 
 			formatter: "rowSelection", 
 			hozAlign: "center",
 			titleFormatterParams: {
@@ -548,6 +549,7 @@ var tableColumnDef = (function(global) {
 			visible: true,
 			download: true, 
 			sorter: 'string',
+			maxWidth: 300,
 			formatter: f.abNameFormatter
 		},
 		// OverrideField field (object)
@@ -566,6 +568,8 @@ var tableColumnDef = (function(global) {
 			visible: true, 
 			download: true, 
 			sorter: "number",
+			maxWidth: 120,
+			minWidth: 120,
 			formatter: f.priorityFormatterNotEditable
 		},
 		// Boolean
@@ -575,6 +579,8 @@ var tableColumnDef = (function(global) {
 			title: 'Enabled',
 			visible: true,
 			download: true,
+			maxWidth: 120,
+			minWidth: 120,
 			sorter: "boolean"
 		}
 	];

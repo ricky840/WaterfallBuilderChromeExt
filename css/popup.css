@@ -655,7 +655,7 @@ body {
 	color: red;
 	position: absolute;
 	font-weight: bold;
-	font-size: 0.8em;
+	font-size: 0.7em;
 	padding-top: 0px;
 	padding-bottom: 0px;
 	padding-left: 8px;
@@ -666,13 +666,13 @@ body {
 	background-color: #fff3f2;
 }
 .updated-row:before {
-	content: 'Updated';
+	content: 'Modified';
 	margin-top: 2.7em;
 	margin-left: 0.1em;
 	color: green;
 	position: absolute;
 	font-weight: bold;
-	font-size: 0.8em;
+	font-size: 0.7em;
 	padding-top: 0px;
 	padding-bottom: 0px;
 	padding-left: 1px;

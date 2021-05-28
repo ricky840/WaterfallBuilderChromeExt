@@ -47,10 +47,18 @@ var tableFormatters = (function(global) {
 		let	html = "";
 		for (let key in value) {
 			const betterKeyName = key.replace(/network_/g, "").replace(/_/g, " ");
+			let valueTemp = value[key];
+
+			try {
+				if (_.isObject(value[key])) valueTemp = JSON.stringify(value[key], null, 2);
+			} catch (error) {
+				console.log(error);
+			}
+
 			html += `
 			<div>
 				<span class="cell-header">${betterKeyName}</span>
-				<span class="cell-format-value">${value[key]}</span>
+				<span class="cell-format-value">${valueTemp}</span>
 			</div>`;
 		}
 		return html;

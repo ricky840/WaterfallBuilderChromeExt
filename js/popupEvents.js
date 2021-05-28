@@ -96,11 +96,6 @@ $(".add-network.add-item").click(function() {
 // Export button
 $(".control-btn-export").click(function() {
 	const selectedRows = WaterfallTable.getSelectedRows();
-	if (_.isEmpty(selectedRows)) {
-		toast.show(NOTIFICATIONS.zeroLineItemSelected);
-		return;
-	}
-	
 	$("#export-selected-box").show();
 	$("#export-only-selected-count").html(selectedRows.length);
 
@@ -176,10 +171,14 @@ $(".control-btn-apply-change").click(function() {
  * Handles API key manage events
  ********************************************************/
 
-// API Key manage button in the menu bar
+// API Key manage button in the menu bar (show modal)
 $(".apikey-manage-btn").click(function() {
 	$(".apikey-manage-modal").modal({
 		duration: 300,
+		onApprove: function () {
+			// Reload page, we have new API key in use
+			$(".mopub-logo-menu").trigger("click");
+		},
 		onHidden: function() {
 			$(".apikey-input-segment").hide();
 		}
@@ -645,11 +644,15 @@ function updateResultModalContent(results) {
 
 async function copyLineItem(validatedUserData) {
 	const rowDatas = WaterfallTable.getSelectedData();
+	const targetAdUnitKey = validatedUserData.adUnitKey;
+	const targetAdUnitName = adUnitManager.getAdUnitNameByKey(targetAdUnitKey);
 	loaders.show("adunit");
 
 	try {
 		await lineItemCopyManager.copy(rowDatas, validatedUserData);
-		NOTIFICATIONS.copyLineItemSuccess.message = `${rowDatas.length} line items were copied`;
+		let msg = `${rowDatas.length} line items were copied.`;
+		msg += ` See <a href="${ADUNIT_PAGE_URL+targetAdUnitKey}" target="_blank">${targetAdUnitName}</a> to verify the result.`
+		NOTIFICATIONS.copyLineItemSuccess.message = msg;
 		notifier.show(NOTIFICATIONS.copyLineItemSuccess);
 	} catch (error) {
 		NOTIFICATIONS.copyLineItemFail.message = `There was an error copying line items. ${error}`;

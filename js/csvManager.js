@@ -30,31 +30,43 @@ var csvManager = (function(global) {
 		const adUnitName = adUnitManager.getCurrentAdUnitName();
 		let exportImportableData = [];
 
-		for (let i=0; i < exportData.length; i++) {
-			let eachLineItem = exportData[i];
-			exportImportableData.push({
-				[colNames[0]]: eachLineItem.name,
-				[colNames[1]]: eachLineItem.key,
-				[colNames[2]]: eachLineItem.orderName,
-				[colNames[3]]: eachLineItem.orderKey,
-				[colNames[4]]: eachLineItem.adUnitKeys,
-				[colNames[5]]: eachLineItem.priority,
-				[colNames[6]]: eachLineItem.bid,
-				[colNames[7]]: eachLineItem.type,
-				[colNames[8]]: eachLineItem.networkType,
-				[colNames[9]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_account_id,
-				[colNames[10]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_adunit_id,
-				[colNames[11]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_app_id,
-				[colNames[12]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.placement_id,
-				[colNames[13]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.app_signature,
-				[colNames[14]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.location,
-				[colNames[15]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_name,
-				[colNames[16]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_data,
-				[colNames[17]]: eachLineItem.status,
-				[colNames[18]]: eachLineItem.keywords,
-				[colNames[19]]: eachLineItem.includeGeoTargeting,
-				[colNames[20]]: eachLineItem.targetedCountries
+		if (_.isEmpty(exportData)) {
+			/**
+			 * If there is nothing to export, export columns only
+			 * Feedback from Tara (5/28/2021)
+			 */
+			const titleRow = {};
+			colNames.forEach(column => {
+				titleRow[column] = "";
 			});
+			exportImportableData.push(titleRow);
+		} else {
+			for (let i=0; i < exportData.length; i++) {
+				let eachLineItem = exportData[i];
+				exportImportableData.push({
+					[colNames[0]]: eachLineItem.name,
+					[colNames[1]]: eachLineItem.key,
+					[colNames[2]]: eachLineItem.orderName,
+					[colNames[3]]: eachLineItem.orderKey,
+					[colNames[4]]: eachLineItem.adUnitKeys,
+					[colNames[5]]: eachLineItem.priority,
+					[colNames[6]]: eachLineItem.bid,
+					[colNames[7]]: eachLineItem.type,
+					[colNames[8]]: eachLineItem.networkType,
+					[colNames[9]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_account_id,
+					[colNames[10]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_adunit_id,
+					[colNames[11]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.network_app_id,
+					[colNames[12]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.placement_id,
+					[colNames[13]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.app_signature,
+					[colNames[14]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.location,
+					[colNames[15]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_name,
+					[colNames[16]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_data,
+					[colNames[17]]: eachLineItem.status,
+					[colNames[18]]: eachLineItem.keywords,
+					[colNames[19]]: eachLineItem.includeGeoTargeting,
+					[colNames[20]]: eachLineItem.targetedCountries
+				});
+			}
 		}
 		let exportCsv = Papa.unparse(exportImportableData);
 		let hiddenElement = document.createElement('a');
@@ -86,7 +98,6 @@ var csvManager = (function(global) {
 			if (lineItem.networkType == "custom") continue;
 			filteredData.push(lineItem);
 		}
-		if (_.isEmpty(filteredData)) return; // Nothing to export, show notification
 		exportToFile(filteredData);
 	}
 
