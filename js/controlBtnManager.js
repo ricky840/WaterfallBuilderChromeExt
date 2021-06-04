@@ -9,7 +9,26 @@ var controlBtnManager = (function(global) {
     }
   }
 
+  function enableControlBtns() {
+    $(".control-btn").removeClass("disabled");
+  }
+
+  function enableNetworkBtns() {
+    $(".add-network.add-item[network]").each(function(index) {
+      const network = $(this).attr("network");
+      if (supportedFormatValidator.supportCurrentFormat(network)) {
+        $(this).removeClass("grey").addClass("blue");
+        $(this).removeClass("disabled");
+      } else {
+        $(this).removeClass("blue").addClass("grey");
+        $(this).addClass("disabled");
+      }
+    });
+  }
+
   return {
-    updateLabels: updateLabels
+    updateLabels: updateLabels,
+    enableNetworkBtns: enableNetworkBtns,
+    enableControlBtns: enableControlBtns
   }
 })(this);

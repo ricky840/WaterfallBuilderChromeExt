@@ -328,82 +328,82 @@
 							</div>
 							<div class="ui small horizontal list add-item-network-list" style="display: none;">
 								<div class="item">
-									<button id="add-mpx" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-marketplace" class="ui compact small blue basic button circular add-network add-item">
 										<i class="plus icon"></i>Marketplace
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-admob" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-admob_native" class="ui compact small blue basic button circular add-network add-item disabled" network="admob_native">
 										<i class="plus icon"></i>AdMob
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-adcolony" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-adcolony" class="ui compact small blue basic button circular add-network add-item disabled" network="adcolony">
 										<i class="plus icon"></i>AdColony
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-applovin" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-applovin_sdk" class="ui compact small blue basic button circular add-network add-item disabled" network="applovin_sdk">
 										<i class="plus icon"></i>AppLovin
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-chartboost" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-chartboost" class="ui compact small blue basic button circular add-network add-item disabled" network="chartboost">
 										<i class="plus icon"></i>Chartboost
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-facebook" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-facebook" class="ui compact small blue basic button circular add-network add-item disabled" network="facebook">
 										<i class="plus icon"></i>Facebook
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-fyber" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-fyber" class="ui compact small blue basic button circular add-network add-item disabled" network="fyber">
 										<i class="plus icon"></i>Fyber
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-pangle" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-pangle" class="ui compact small blue basic button circular add-network add-item disabled" network="pangle">
 										<i class="plus icon"></i>Pangle
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-snap" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-snap" class="ui compact small blue basic button circular add-network add-item disabled" network="snap">
 										<i class="plus icon"></i>Snap
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-inmobi" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-inmobi_sdk" class="ui compact small blue basic button circular add-network add-item disabled" network="inmobi_sdk">
 										<i class="plus icon"></i>InMobi
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-ironsource" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-ironsource" class="ui compact small blue basic button circular add-network add-item disabled" network="ironsource">
 										<i class="plus icon"></i>IronSource
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-tapjoy" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-tapjoy" class="ui compact small blue basic button circular add-network add-item disabled" network="tapjoy">
 										<i class="plus icon"></i>TapJoy
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-unity" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-unity" class="ui compact small blue basic button circular add-network add-item disabled" network="unity">
 										<i class="plus icon"></i>Unity
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-vungle" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-vungle" class="ui compact small blue basic button circular add-network add-item disabled" network="vungle">
 										<i class="plus icon"></i>Vungle
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-verizon" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-verizon" class="ui compact small blue basic button circular add-network add-item disabled" network="verizon">
 										<i class="plus icon"></i>Verizon
 									</button>
 								</div>
 								<div class="item">
-									<button id="add-yahoo" class="ui compact small blue basic button circular add-network add-item">
+									<button id="add-yahoo" class="ui compact small blue basic button circular add-network add-item disabled" network="yahoo">
 										<i class="plus icon"></i>Yahoo
 									</button>
 								</div>
@@ -603,6 +603,14 @@
 
 				<div class="field required">
 					<label>Select Target Ad Unit</label>
+					<div class="ui message">
+						<ul class="list">
+							<li>If selected line item does not support target ad unit's format, it will not be copied.</li>
+							<li>If you would like to see which format is supported by each network, see 
+								<a href="supportedFormats.html" target="_blank">here.</a>
+							</li>
+						</ul>
+					</div>
 					<div class="ui fluid search selection scrolling dropdown copy-adunit-dropdown">
 						<input type="hidden" name="adunit-key">
 						<i class="dropdown icon"></i>
@@ -625,7 +633,9 @@
 		<i class="close icon"></i>
 		<div class="ui header">Export to CSV
 			<div class="sub header">
-				<span id="export-only-selected-count" class="export-only-selected-count"></span> Items
+				<span class="ui blue text">
+					<span id="export-only-selected-count" class="export-only-selected-count"></span> Items
+				</span>
 			</div>
 		</div>
 		<div class="content">
@@ -799,6 +809,14 @@
 				</div>
 
 				<h4 class="ui dividing header blue">Assign Ad Unit</h4>
+				<div class="ui message notification-box">
+					<ul class="list">
+						<li>Make sure you are assigning to an ad unit format that is supported by network. Otherwise, it will get an error.</li>
+						<li>Not all formats are supported by networks. If you would like to see which format is supported by each network, see 
+							<a href="supportedFormats.html" target="_blank">here.</a>
+						</li>
+					</ul>
+				</div>
 				<div class="field ">
 					<label>Leave blank if you don't want to update. Otherwise, this option will completely override the current assignment.</label>
 					<div id="edit-adunit-dropdown" class="ui fluid multiple search selection dropdown adunit-select edit-adunit-dropdown">
@@ -865,7 +883,7 @@
 	<!-- Update Result Modal -->
 	<div class="ui modal update-result-modal">
 		<i class="close icon"></i>
-		<div class="ui header">Update Results</div>
+		<div class="ui header">Results</div>
 		<div class="scrolling content"></div>
 		<!-- buttons -->
 		<div class="actions">
@@ -989,6 +1007,7 @@
 	<script type="text/javascript" src="js/infoPanelManager.js"></script>
 	<script type="text/javascript" src="js/apiKeyManager.js"></script>
 	<script type="text/javascript" src="js/countryPresetController.js"></script>
+	<script type="text/javascript" src="js/supportedFormatValidator.js"></script>
 
 	<script type="text/javascript" src="js/tableInitializer.js"></script>
 	<script type="text/javascript" src="js/waterfallTableController.js"></script>

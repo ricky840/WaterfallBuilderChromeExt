@@ -143,7 +143,7 @@ var lineItemCopyManager = (function(global) {
 				promiseTasks.push(moPubApi.copyLineItem(data));
 			});
 
-			// Copying line items. Make sure all promises are success
+			// Copying line items. Make sure all promises were success
 			Promise.all(promiseTasks).then(async (results) => {
 				console.log("Copying line items complete. See results below.");
 				console.log(results);

@@ -369,11 +369,10 @@
 /* Import Instruction */
 .import-instruction {
 	color: #1da1f2;
-	cursor: default;
+	cursor: pointer;
 }
 .import-instruction:hover {
 	text-decoration: underline;
-	cursor: default;
 }
 
 /* Changes Pre Tag */

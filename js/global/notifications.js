@@ -35,6 +35,11 @@ var NOTIFICATIONS = {
     "header": "Copy line item failed",
     "message": "" // dynamic
   },
+  "copyZeroLineItem": {
+    "type": "info",
+    "header": "No line items to copy",
+    "message": "There is no source line items to copy. Please make sure the target ad unit's format is supported by the network"
+  },
   "importUnsuccessful": {
     "type": "negative",
     "header": "Import Unsccessful",
@@ -58,6 +63,11 @@ var NOTIFICATIONS = {
   "assignedAlready": {
     "type": "info",
     "header": "Existing Line item",
+    "message": "" // dynamic
+  },
+  "assignedFailNotSupportedFormat": {
+    "type": "negative",
+    "header": "Assign Failed",
     "message": "" // dynamic
   },
   "zeroLineItemSelected": {

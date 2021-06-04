@@ -105,7 +105,8 @@ function initAdUnitListDropDowns(adUnits) {
 				try {
 					await loadWaterfallAndBidders(value);
 					// Enable control buttons
-					$(".control-btn").removeClass("disabled");
+					controlBtnManager.enableControlBtns();
+					controlBtnManager.enableNetworkBtns();
 				} catch (error) {
 					console.log(error);
 				}

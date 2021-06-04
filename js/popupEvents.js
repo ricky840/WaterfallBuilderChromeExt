@@ -288,8 +288,20 @@ $(".lineitem-table-assign-btn").click(async function() {
 	rowDatas.forEach(rowData => {
 		const searhResult = WaterfallTable.searchRows("key", "=", rowData.key);
 		if (searhResult.length == 0) {
-			targetLineItems.push(rowData);	
+			// If it is a network line item, include only when network supports the current ad unit format
+			if (rowData.type == "network") {
+				const result = supportedFormatValidator.supportCurrentFormat(rowData.networkType);
+				if (result) {
+					targetLineItems.push(rowData);	
+				} else {
+					NOTIFICATIONS.assignedFailNotSupportedFormat.message = `${rowData.name} (${rowData.networkType}) does not support the current ad unit format`;
+					toast.show(NOTIFICATIONS.assignedFailNotSupportedFormat);
+				}
+			} else {
+				targetLineItems.push(rowData);	
+			}
 		} else {
+			// Line item exists in the waterfall already
 			NOTIFICATIONS.assignedAlready.message = `${rowData.name} is already assigned`;
 			toast.show(NOTIFICATIONS.assignedAlready);
 		}
@@ -517,7 +529,7 @@ $(".qrcode-wrapper").click(function() {
 
 
 /********************************************************
- * Notification dialog dismiss and update result pop up click
+ * Notification dialog dismiss and update result modal
  ********************************************************/
 
 $(".notification-box").on("click", ".message .close", function() {
@@ -529,7 +541,11 @@ $(".notification-box").on("click", ".message .close", function() {
 });
 
 $("#notification").on('click', ".mopub-update-results", function() {
-	$('.update-result-modal').modal("show");
+	$('.update-result-modal').modal({
+		onHidden: function() {
+			$(".update-result-modal .content").html("");
+		}
+	}).modal("show");
 });
 
 
@@ -644,21 +660,64 @@ function updateResultModalContent(results) {
 
 async function copyLineItem(validatedUserData) {
 	const rowDatas = WaterfallTable.getSelectedData();
-	const targetAdUnitKey = validatedUserData.adUnitKey;
-	const targetAdUnitName = adUnitManager.getAdUnitNameByKey(targetAdUnitKey);
+	const targetAdUnit = adUnitManager.getAdUnit(validatedUserData.adUnitKey);
+	
+	// Validate if target ad unit format is supported by each line item
+	let sourceLineItems = [];
+	for (const lineItem of rowDatas) {
+		if (lineItem.type != "network") {
+			sourceLineItems.push(lineItem);
+			continue;
+		}
+		const result = supportedFormatValidator.isFormatSupportedByNetwork(lineItem.networkType, targetAdUnit.format);
+		if (result) sourceLineItems.push(lineItem);
+	}
+
+	// If there is no line items to copy
+	if (sourceLineItems.length == 0) {
+		toast.show(NOTIFICATIONS.copyZeroLineItem);
+		return;
+	}
+
 	loaders.show("adunit");
 
 	try {
-		await lineItemCopyManager.copy(rowDatas, validatedUserData);
-		let msg = `${rowDatas.length} line items were copied.`;
-		msg += ` See <a href="${ADUNIT_PAGE_URL+targetAdUnitKey}" target="_blank">${targetAdUnitName}</a> to verify the result.`
+		await lineItemCopyManager.copy(sourceLineItems, validatedUserData);
+		let msg = `${sourceLineItems.length} line items were copied.`;
+		msg += ` See <a href="${ADUNIT_PAGE_URL+targetAdUnit.key}" target="_blank">${targetAdUnit.name}</a> to verify the result.`
 		NOTIFICATIONS.copyLineItemSuccess.message = msg;
 		notifier.show(NOTIFICATIONS.copyLineItemSuccess);
 	} catch (error) {
-		NOTIFICATIONS.copyLineItemFail.message = `There was an error copying line items. ${error}`;
+		let msg = `There was an error copying line items.`;	
+		msg += ` Click <span class="mopub-update-results">here</span> for more details.`
+		showErrorMsgWithDetails(error);
+		NOTIFICATIONS.copyLineItemFail.message = msg;
 		notifier.show(NOTIFICATIONS.copyLineItemFail);
 	}
 
 	WaterfallTable.deselectRow();
 	loaders.hide("adunit");
+}
+
+/**
+ * Use this only if API returns error message in { error: server_response, lineItemKey: "" }
+ * Mostly for post APIs. This is to show entire error messages.
+ * [To-do] Entire logic for showing error message should be changed :-(
+ */
+function showErrorMsgWithDetails(errorObj, msg) {
+	let errorMessages = [];
+
+	try {
+		errorMessages.push({
+			"lineItemKey": errorObj.lineItemKey,
+			"response": JSON.parse(errorObj.error.responseText)
+		});
+	} catch (e) {
+		errorMessages.push({
+			"lineItemKey": errorObj.lineItemKey,
+			"response": errorObj.error.responseText
+		});
+	}
+
+	updateResultModalContent(errorMessages);
 }

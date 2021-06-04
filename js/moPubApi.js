@@ -296,7 +296,11 @@ var moPubApi = (function(global) {
 				const response = JSON.parse(result.responseText);
 				resolve(response);
 			} catch (error) {
-				reject(error);
+				const errorResponse = {
+					error: error,
+					lineItemKey: "" // There is no line item key for this
+				};
+				reject(errorResponse);
 			}
 		});
 	}	

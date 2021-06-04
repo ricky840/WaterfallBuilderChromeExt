@@ -77,6 +77,118 @@ const NETWORK_TYPE_NAME = {
 	marketplace: "Marketplace"
 };
 
+// Supported ad formats for each network
+const SUPPORTED_FORMAT_FOR_NETWORK = {
+	admob_native: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video",
+		"native"
+	],
+	adcolony: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video"
+	],
+	applovin_sdk: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video"
+	],
+	chartboost: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video"
+	],
+	facebook: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video",
+		"native"
+	],
+	fyber: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video"
+	],
+	inmobi_sdk: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video"
+	],
+	ironsource: [
+		"fullscreen",
+		"rewarded",
+		"rewarded_video"
+	],
+	mintegral: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video",
+		"native"
+	],
+	pangle: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video",
+		"native"
+	],
+	snap: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+	],
+	tapjoy: [
+		"fullscreen",
+		"rewarded",
+		"rewarded_video",
+	],
+	unity: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video"
+	],
+	verizon: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video",
+		"native"
+	],
+	vungle: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video",
+	],
+	yahoo: [
+		"fullscreen",
+		"native"
+	]
+};
+
 // New Line Item Name
 const NEW_NETWORK_LINEITEM_NAME = "New Network Line Item";
 const NEW_DIRECT_LINEITEM_NAME = "New Direct Line Item";

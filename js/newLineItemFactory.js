@@ -48,15 +48,15 @@ var newLineItemFactory = (function(global) {
 		let	newLineItem;
 
 		switch(type) {
-			case "add-mpx":
+			case "add-marketplace":
 				newLineItem = JSON.parse(JSON.stringify(templateMPX));
 				break;
-			case "add-admob":
+			case "add-admob_native":
 				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
 				newLineItem.networkType = "admob_native";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
 				break;
-			case "add-adcolony":
+			case "add-applovin_sdk":
 				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
 				newLineItem.networkType = "adcolony";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
@@ -86,7 +86,7 @@ var newLineItemFactory = (function(global) {
 				newLineItem.networkType = "ironsource";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
 				break;
-			case "add-inmobi":
+			case "add-inmobi_sdk":
 				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
 				newLineItem.networkType = "inmobi_sdk";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
