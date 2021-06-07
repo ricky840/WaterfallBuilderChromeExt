@@ -32,7 +32,6 @@ async function initialize() {
 	try {
 		await initApiKey();
 	} catch (error) {
-		notifier.show(NOTIFICATIONS.activeApiKeyNotAvailable);
 		console.log(error);
 		return;
 	}
@@ -107,6 +106,8 @@ function initAdUnitListDropDowns(adUnits) {
 					// Enable control buttons
 					controlBtnManager.enableControlBtns();
 					controlBtnManager.enableNetworkBtns();
+					// Show direct serve notification (temporary, need to be removed when api v2 comes out)
+					$(".temp-notification-message").show();
 				} catch (error) {
 					console.log(error);
 				}

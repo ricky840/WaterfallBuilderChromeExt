@@ -100,10 +100,10 @@ $(".control-btn-export").click(function() {
 	$("#export-only-selected-count").html(selectedRows.length);
 
 	$('.ui.modal.download-option-modal').modal({
-		duration: 300,
-		onHidden: function() {
-			WaterfallTable.deselectRow();
-		}	
+		duration: 300
+		// onHide: function() {
+		// 	WaterfallTable.deselectRow();
+		// }	
 	}).modal('show');
 });
 
@@ -137,6 +137,9 @@ $(".control-btn-duplicate").click(function() {
 			}
 			copyLineItem(validatedUserData);
 		},
+		// onHide: function() {
+		// 	WaterfallTable.deselectRow();
+		// },
 		onHidden: function() {
 			copyModalController.resetForm();
 		}
@@ -534,10 +537,10 @@ $(".qrcode-wrapper").click(function() {
 
 $(".notification-box").on("click", ".message .close", function() {
   $(this).closest(".message").hide();
-	$(this).siblings(".header").html("");
-	$(this).siblings(".content").html("");
+	// $(this).siblings(".header").html("");
+	// $(this).siblings(".content").html("");
 	// Clear existing notification
-	notifier.clear();
+	// notifier.clear();
 });
 
 $("#notification").on('click', ".mopub-update-results", function() {
@@ -675,7 +678,7 @@ async function copyLineItem(validatedUserData) {
 
 	// If there is no line items to copy
 	if (sourceLineItems.length == 0) {
-		toast.show(NOTIFICATIONS.copyZeroLineItem);
+		notifier.show(NOTIFICATIONS.copyZeroLineItem);
 		return;
 	}
 

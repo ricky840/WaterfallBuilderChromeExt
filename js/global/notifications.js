@@ -1,143 +1,192 @@
-// Type: success, negative, info
+// Type: success, negative, info, general
 var NOTIFICATIONS = {
   "extensionUpdated": {
-    "type": "info",
-    "header": `Extension Updated ${EXTENSION_VERSION}`,
-    "message": `See <a href="${CHANGE_LOG_URL}" target="_blank">here</a> for more details. :)`
-  },
-  "activeApiKeyNotAvailable": {
-    "type": "negative",
-    "header": "Publisher API Key is not available",
-    "message": "Please activate the API key from the 'Manage API Key' in the menu bar"
+    id: "extensionUpdated",
+    type: "general",
+    header: `Publisher UI Extension is updated to v${EXTENSION_VERSION}`,
+    message: `Click <a href="${CHANGE_LOG_URL}" target="_blank">here</a> for more details. <i class="surprise outline icon"></i><i class="thumbs up outline icon"></i>`,
+    onetime: true
   },
   "moPubUpdateSucess": {
-    "type": "success",
-    "header": "All line items were updated successfully",
-    "message": "" // dynamic
+    id: "moPubUpdateSucess",
+    type: "success",
+    header: "All line items were updated successfully",
+    message: "", // dynamic
+    onetime: false
   },
   "moPubUpdateFail": {
-    "type": "negative",
-    "header": "Some of the line item update failed",
-    "message": "" // dynamic
+    id: "moPubUpdateFail",
+    type: "negative",
+    header: "Some line items were failed to update",
+    message: "", // dynamic
+    onetime: false
   },
   "copyFormInputError": {
-    "type": "negative",
-    "header": "Some of the required fields are missing",
-    "message": "Please provide necessary inputs to proceed"
+    id: "copyFormInputError",
+    type: "negative",
+    header: "Missing required fields",
+    message: "Please enter all required fields",
+    onetime: false
   },
   "copyLineItemSuccess": {
-    "type": "success",
-    "header": "All line item were copied successfully",
-    "message": "" // dynamic
+    id: "copyLineItemSuccess",
+    type: "success",
+    header: "All line items were copied successfully",
+    message: "", // dynamic
+    onetime: false
   },
   "copyLineItemFail": {
-    "type": "negative",
-    "header": "Copy line item failed",
-    "message": "" // dynamic
+    id: "copyLineItemFail",
+    type: "negative",
+    header: "Copy incomplete due to an error",
+    message: "", // dynamic
+    onetime: false
   },
   "copyZeroLineItem": {
-    "type": "info",
-    "header": "No line items to copy",
-    "message": "There is no source line items to copy. Please make sure the target ad unit's format is supported by the network"
+    id: "copyZeroLineItem",
+    type: "info",
+    header: "Unable to copy line items",
+    message: "There is no source line items to copy. Please make sure the target ad unit's format is supported by the networks",
+    onetime: false
   },
   "importUnsuccessful": {
-    "type": "negative",
-    "header": "Import Unsccessful",
-    "message": "" // dynamic
+    id: "importUnsuccessful",
+    type: "negative",
+    header: "Import unsccessful",
+    message: "", // dynamic
+    onetime: false
   },
   "importValidationError": {
-    "type": "negative",
-    "header": "Import Validation Error",
-    "message": "" // dynamic
+    id: "importValidationError",
+    type: "negative",
+    header: "Import validation error",
+    message: "", // dynamic
+    onetime: false
   },
   "importSuccessful": {
-    "type": "positive",
-    "header": "Import Successful",
-    "message": "" // dynamic
+    id: "importSuccessful",
+    type: "positive",
+    header: "Import successful",
+    message: "", // dynamic
+    onetime: false
   },
   "assignSuccess": {
-    "type": "positive",
-    "header": "Success",
-    "message": "" // dynamic
+    id: "assignSuccess",
+    type: "positive",
+    header: "Assign successful",
+    message: "", // dynamic
+    onetime: false
   },
   "assignedAlready": {
-    "type": "info",
-    "header": "Existing Line item",
-    "message": "" // dynamic
+    id: "assignedAlready",
+    type: "info",
+    header: "Assign failed",
+    message: "", // dynamic
+    onetime: false
   },
   "assignedFailNotSupportedFormat": {
-    "type": "negative",
-    "header": "Assign Failed",
-    "message": "" // dynamic
+    id: "assignedFailNotSupportedFormat",
+    type: "negative",
+    header: "Assign failed",
+    message: "", // dynamic
+    onetime: false
   },
   "zeroLineItemSelected": {
-    "type": "negative",
-    "header": "No Line Item Selected",
-    "message": "Please select line items"
+    id: "zeroLineItemSelected",
+    type: "negative",
+    header: "",
+    message: "Please select line items first",
+    onetime: false
   },
   "requiredFieldMissing": {
-    "type": "negative",
-    "header": "Required Field Missing",
-    "message": "Please fill out all required fields"
+    id: "requiredFieldMissing",
+    type: "negative",
+    header: "Missing required fields",
+    message: "Please enter all required fields",
+    onetime: false
   },
   "columnListSaved": {
-    "type": "positive",
-    "header": "Success",
-    "message": "Column list was saved successfully"
+    id: "columnListSaved",
+    type: "positive",
+    header: "",
+    message: "Column list saved successfully",
+    onetime: false
   },
   "orderRequired": {
-    "type": "negative",
-    "header": "Order Required",
-    "message": "New line item requires the order"
+    id: "orderRequired",
+    type: "negative",
+    header: "Order assignment required",
+    message: "Please select an order to create new line item",
+    onetime: false
   },
   "overrideFieldInputError": {
-    "type": "negative",
-    "header": "Error",
-    "message": "" // dynamic
+    id: "overrideFieldInputError",
+    type: "negative",
+    header: "Missing fields",
+    message: "", // dynamic
+    onetime: false
   },
   "initFailed": {
-    "type": "negative",
-    "header": "Initialization Failed",
-    "message": "Something went wrong during the initialization. Please make sure that you're logged in Publisher UI and using the right API Key."
+    id: "initFailed",
+    type: "negative",
+    header: "Initialization Failed",
+    message: "Something went wrong during the initialization. Please make sure that you're logged in Publisher UI and using the right API Key.",
+    onetime: false
   },
   "countryPresetUpdateFailed": {
-    "type": "negative",
-    "header": "Update Failed",
-    "message": "Error in updating preset"
+    id: "countryPresetUpdateFailed",
+    type: "negative",
+    header: "Update failed",
+    message: "There was an error while updating the country preset",
+    onetime: false
   },
   "countryPresetUpdateSuccess": {
-    "type": "positive",
-    "header": "Update Success",
-    "message": "Preset updated successfully"
+    id: "countryPresetUpdateSuccess",
+    type: "positive",
+    header: "Update successful",
+    message: "Country preset was updated successfully",
+    onetime: false
   },
   "countryPresetDeleteSuccess": {
-    "type": "positive",
-    "header": "Delete Success",
-    "message": "Preset removed successfully"
+    id: "countryPresetDeleteSuccess",
+    type: "positive",
+    header: "Delete successful",
+    message: "Country preset was removed successfully",
+    onetime: false
   },
   "countryPresetDeleteFailed": {
-    "type": "negative",
-    "header": "Delete Failed",
-    "message": "Error deleting preset"
+    id: "countryPresetDeleteFailed",
+    type: "negative",
+    header: "Delete failed",
+    message: "There was an error while deleting the country preset",
+    onetime: false
   },
   "countryPresetSaveEmptyName": {
-    "type": "negative",
-    "header": "Save Failed",
-    "message": "Name cannot be empty"
+    id: "countryPresetSaveEmptyName",
+    type: "negative",
+    header: "Missing required field",
+    message: "Country preset name cannot be empty",
+    onetime: false
   },
   "countryPresetSaveSuccess": {
-    "type": "positive",
-    "header": "Save Success",
-    "message": "Preset saved successfully"
+    id: "countryPresetSaveSuccess",
+    type: "positive",
+    header: "Save successful",
+    message: "Country preset was saved successfully",
+    onetime: false
   },
   "countryPresetSaveFailedGeneric": {
-    "type": "negative",
-    "header": "Save Failed",
-    "message": "Error saving preset"
+    id: "countryPresetSaveFailedGeneric",
+    type: "negative",
+    header: "Save failed",
+    message: "There was an error while saving the country preset",
+    onetime: false
   },
   "countryPresetSaveFailed": {
-    "type": "negative",
-    "header": "Save Failed",
-    "message": "" // dynamic
+    id: "countryPresetSaveFailed",
+    type: "negative",
+    header: "Save failed",
+    message: "", // dynamic
+    onetime: false
   }
 };

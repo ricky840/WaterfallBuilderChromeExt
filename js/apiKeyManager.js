@@ -17,7 +17,7 @@ var apiKeyManager = (function(global) {
         const item = `
           <div class="item">
             <div class="right floated content">
-              <button class="ui grey tertiary button apikey-use-btn">Use</button>
+              <button class="ui grey tertiary button apikey-use-btn">Enable</button>
               <button class="ui grey tertiary button apikey-delete-btn">Delete</button>
             </div>
             <i class="big power off middle aligned icon ${powerIconColor}"></i>

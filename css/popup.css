@@ -5,7 +5,8 @@
 	animation-iteration-count: 1;
 }
 
-::-webkit-scrollbar {
+/* Hide scrollbar only for the main window */
+body::-webkit-scrollbar {
   width: 0px !important;
   height: 0px !important;
 }

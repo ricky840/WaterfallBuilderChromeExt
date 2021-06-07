@@ -318,11 +318,13 @@
 				<div class="row new-network-section" style="display: none;">
 					<div class="sixteen wide column">
 						<div class="ui grey segment">
-							<div style="margin-bottom: 1.5em;">
-								<h3 style="display: inline;">Select Order</h3>
-								<button class="ui small button blue circular right floated control-btn-close">Close</button>
+							<div class="ui basic right aligned fitted segment" style="margin-bottom: 0px;">
+								<button class="ui icon button gray circular mini control-btn-close">
+									<i class="close icon"></i>
+								</button>
 							</div>
-							<div class="ui search small selection error dropdown add-item-order-list" style="width: 100%;">
+							<label style="font-weight: bold;">Select Order</label>
+							<div class="ui search small selection error dropdown add-item-order-list" style="width: 100%; margin-top: 0.2em;">
 								<div class="text"></div>
 								<i class="dropdown icon"></i>
 							</div>
@@ -523,14 +525,22 @@
 						<!-- segment ends -->
 
 						<!-- Waterfall Table -->
+						<div class="ui message hidden temp-notification-message">
+							<p class="content">
+								<i class="exclamation circle icon"></i>
+								Guaranteed, Non-Guaranteed, Promo, Backfill-Promo line items are not included. 
+								It's not supported by MoPub API at the moment. However, you can still create new direct serve items via Add New
+							</p>
+						</div>
 						<div id="waterfall-adunit" class="grey"></div>
+
 					</div> <!-- Waterfall section end -->
 				</div> <!-- Row end -->
 
 				<!-- AB Table -->
 				<div class="row no-padding ab-table-section" style="display: none;">
 					<div class="sixteen wide column" id="waterfall-section">
-							<div id="ab-table" style="margin-top: 0px;"></div>
+						<div id="ab-table" class="grey" style="margin-top: 0px;"></div>
 					</div>
 				</div>
 			</div> <!-- End of Grid -->
@@ -634,7 +644,7 @@
 		<div class="ui header">Export to CSV
 			<div class="sub header">
 				<span class="ui blue text">
-					<span id="export-only-selected-count" class="export-only-selected-count"></span> Items
+					<span id="export-only-selected-count" class="export-only-selected-count"></span> Item(s) selected
 				</span>
 			</div>
 		</div>
@@ -901,6 +911,9 @@
 			</button>
 		</div>
 		<div class="scrolling content">
+			<div class="ui message">
+				<p>Please note that API Key is stored in Chrome's local storage, and never leaves the browser. It will not be exposed to the public internet.</p>
+			</div>
 			<div class="ui blue segment apikey-input-segment" style="display: none;">
 				<div class="ui basic right aligned fitted segment" style="margin-bottom: 0px;">
 					<button class="ui icon button gray circular mini apikey-add-close-btn">
@@ -919,7 +932,9 @@
 						</div>
 					</div>
 				</form>
-				<div class="ui small blue circular button apikey-manage-submit">Add</div>
+				<div class="ui basic right aligned fitted segment" style="margin-bottom: 0px;">
+					<div class="ui small blue circular button apikey-manage-submit">Add</div>
+				</div>
 			</div>
 			<div class="ui relaxed selection list"></div>
 		</div>

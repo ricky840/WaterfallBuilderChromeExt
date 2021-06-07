@@ -20,12 +20,20 @@ var notifier = (function(global) {
 		$("#notification").html(html);
 	}
 
+	function showAndClose(notification, milSec) {
+		show(notification);
+		setTimeout(function() {
+			clear();
+		}, milSec);
+	}
+
 	function clear() {
 		$("#notification").html("");
 	}
  
   return {
 		show: show,
-		clear: clear
+		clear: clear,
+		showAndClose: showAndClose
   }
 })(this);
