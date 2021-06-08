@@ -116,6 +116,16 @@ var newLineItemFactory = (function(global) {
 				newLineItem.networkType = "unity";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
 				break;
+			case "add-mintegral":
+				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
+				newLineItem.networkType = "mintegral";
+				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
+				break;
+			case "add-ogury":
+				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
+				newLineItem.networkType = "ogury";
+				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
+				break;
 			case "add-verizon":
 				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
 				newLineItem.networkType = "verizon";

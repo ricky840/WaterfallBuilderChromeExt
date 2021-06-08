@@ -70,6 +70,7 @@ const NETWORK_TYPE_NAME = {
 	pangle: "Pangle",
 	snap: "Snap",
 	mintegral: "Mintegral",
+	ogury: "Ogury",
 	inmobi_sdk: "InMobi",
 	fyber: "Fyber",
 	custom: "Custom JS",
@@ -186,6 +187,13 @@ const SUPPORTED_FORMAT_FOR_NETWORK = {
 	yahoo: [
 		"fullscreen",
 		"native"
+	],
+	ogury: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video",
 	]
 };
 

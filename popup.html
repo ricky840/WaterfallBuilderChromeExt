@@ -185,9 +185,11 @@
 						<div class="ui blue segment">
 							<div class="ui top attached blue label">
 								<i class="thumbtack icon"></i>
-								<span>Account Info</span>
+								<span>Logged in account</span>
 								<span id="info-company" class="detail"></span>
+								<span style="margin-left: 1em;">Primary</span>
 								<span id="info-primary-email" class="detail"></span>
+								<span style="margin-left: 1em;">Role</span>
 								<span id="info-primary-permission" class="detail"></span>
 							</div>
 							<div class="ui stackable grid" style="margin-top: 1em !important;">
@@ -367,6 +369,16 @@
 								<div class="item">
 									<button id="add-pangle" class="ui compact small blue basic button circular add-network add-item disabled" network="pangle">
 										<i class="plus icon"></i>Pangle
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-mintegral" class="ui compact small blue basic button circular add-network add-item disabled" network="mintegral">
+										<i class="plus icon"></i>Mintegral
+									</button>
+								</div>
+								<div class="item">
+									<button id="add-ogury" class="ui compact small blue basic button circular add-network add-item disabled" network="ogury">
+										<i class="plus icon"></i>Ogury
 									</button>
 								</div>
 								<div class="item">
@@ -657,9 +669,11 @@
 				<a class="import-instruction" href="importInstruction.html" target="_blank">Import Instruction</a>
 			</div>
 		</div>
-		<div class="actions" style="">
-			<div class="ui button small blue circular ok export-adunit-all">Including all fields</div>
-			<div class="ui button small blue circular ok export-adunit-importable right floated">Importable fields only</div>
+		<div class="actions">
+			<div class="two ui buttons">
+				<div class="ui button small basic blue circular ok export-adunit-all">Including all fields</div>
+				<div class="ui button small blue circular ok export-adunit-importable">Importable fields only</div>
+			</div>
 		</div>
 	</div>
 
