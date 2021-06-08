@@ -9,7 +9,7 @@ var apiKeyManager = (function(global) {
       html = `
         <div class="ui message">
           <div class="header">No API keys are available</div>
-          <p>You can obtain your API key from "Account settings" page in MoPub dashboard</p>
+          <p>You can obtain API keys from "Account settings -> Publisher Management API Keys" in MoPub dashboard</p>
         </div>`;
     } else {
       apiKeyList.forEach(apiKey => {
