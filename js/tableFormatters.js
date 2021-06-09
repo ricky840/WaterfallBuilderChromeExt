@@ -151,6 +151,27 @@ var tableFormatters = (function(global) {
 		});
 		return html;
 	}
+	
+	// Idfa Targeting formatter
+	function idfaTargetingFormatter(cell, formatterParams, onRendered) {
+		const cellValue = cell.getValue();
+		makeEditableCell(cell);
+		let idfaStatus;
+		switch (cellValue) {
+			case "all":
+				idfaStatus = "All";	
+				break;
+			case "only_idfa":
+				idfaStatus = "Only IDFA";	
+				break;
+			case "no_idfa":
+				idfaStatus = "No IDFA";	
+				break;
+			default:
+				break;
+		}
+		return idfaStatus;
+	}
 
 	// Status formatter
 	function statusFormatter(cell, formatterParams, onRendered) {
@@ -292,6 +313,7 @@ var tableFormatters = (function(global) {
 		lineItemTypeFormatter: lineItemTypeFormatter,
 		networkTypeNameFormatter: networkTypeNameFormatter,
 		cpmFormatter: cpmFormatter,
+		idfaTargetingFormatter: idfaTargetingFormatter,
 		priorityFormatter: priorityFormatter,
 		priorityFormatterNotEditable: priorityFormatterNotEditable,
 		statusFormatter: statusFormatter,

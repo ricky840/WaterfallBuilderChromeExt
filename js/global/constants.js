@@ -16,6 +16,7 @@ const DEFAULT_COLUMN_SET = [
 	"name",
 	"type",
 	"overrideFields",
+	"idfaTargeting",
 	"includeGeoTargeting",
 	"targetedCountries",
 	"bid",

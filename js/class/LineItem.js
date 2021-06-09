@@ -18,6 +18,7 @@ class LineItem {
     this._type = lineItem.type; // string
     this._enableOverrides = lineItem.enableOverrides; // boolean
     this._overrideFields = clearEmpties(this.cloneObject(lineItem.overrideFields)); // object
+    this._idfaTargeting = lineItem.idfaTargeting; // string
 
     // Device + Carrier + App Targetings + Budget
     this._budget = lineItem.budget; // string
@@ -134,6 +135,7 @@ class LineItem {
     this.setBudgetType(lineItem.budgetType);
     this.setFrequencyCaps(lineItem.frequencyCaps);
     this.setFrequencyCapsEnabled(lineItem.frequencyCapsEnabled);
+    this.setIdfaTargeting(lineItem.idfaTargeting);
   }
 
   /*
@@ -258,6 +260,13 @@ class LineItem {
     this._frequencyCapsEnabled = newFrequencyCapsEnabled; 
   }
 
+  // Field: idfaTargeting (string)
+  setIdfaTargeting(newIdfaTargeting) { 
+    if (this._idfaTargeting == newIdfaTargeting) return;
+    this.recordChange("idfaTargeting", this._idfaTargeting, newIdfaTargeting);
+    this._idfaTargeting = newIdfaTargeting; 
+  }
+
   /*
     Getters
   */
@@ -308,4 +317,5 @@ class LineItem {
   getAdvertiser() { return this._advertiser; }
   getAllocationPercentage() { return this._allocationPercentage; }
   getRefreshInterval() { return this._refreshInterval; }
+  getIdfaTargeting() { return this._idfaTargeting; }
 }

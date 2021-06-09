@@ -6,13 +6,13 @@ var moPubApi = (function(global) {
   const MOPUB_API_AUTH_HEADER = "X-API-KEY";
 	const MOPUB_PAGE_ITEM_LIMIT = 100;
 
-  const GET_ADUNITS = "/v1/adunits";
-	const GET_LINE_ITEMS = "/v1/line-items";
-	const GET_AB_LINE_ITEMS = "/v1/advanced-bidding-settings";
-	const GET_ORDERS = "/v1/orders";
-	const CREATE_LINE_ITEM = "/v1/line-items";
-	const CREATE_ORDER = "/v1/orders";
-	const UPDATE_LINE_ITEM = "/v1/line-items";
+  const GET_ADUNITS = "/v2/adunits";
+	const GET_LINE_ITEMS = "/v2/line-items";
+	const GET_AB_LINE_ITEMS = "/v2/advanced-bidding-settings";
+	const GET_ORDERS = "/v2/orders";
+	const CREATE_LINE_ITEM = "/v2/line-items";
+	const CREATE_ORDER = "/v2/orders";
+	const UPDATE_LINE_ITEM = "/v2/line-items";
 
 	// Internal APIs, should be updated later on
 	const COPY_LINE_ITEM = "https://app.mopub.com/web-client/api/line-items/copy";

@@ -82,6 +82,26 @@ var tableColumnDef = (function(global) {
 			sorter: 'string', 
 			cellClick: showEditModal
 		},
+		// Idfa Targeting field (string)
+		{ 
+			field: 'idfaTargeting', 
+			title: 'IDFA Targeting', 
+			visible: false, 
+			download: true, 
+			editor: "select", 
+			editable: isEditable,
+			editorParams: {
+				elementAttributes: { class: "capitalize" },
+				values:	[
+					{ label: "All", value: "all" },
+					{ label: "Only IDFA", value: "only_idfa" },
+					{ label: "No IDFA", value: "no_idfa" }
+				]
+			},
+			sorter: 'string', 
+			formatter: f.idfaTargetingFormatter,
+			width: 130
+		},
 		// DisallowAutoCpm field (boolean)
 		{ 
 			field: 'disallowAutoCpm', 

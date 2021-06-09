@@ -20,6 +20,7 @@ var csvManager = (function(global) {
 		"Custom Event ClassName (Custom network only)",
 		"Custom Event ClassData (Custom network only)",
 		"Status (Required)",
+		"IDFA Targeting (Required)",
 		"Keywords (Optional. Comma separated)",
 		"GeoTargetingMode(Required. If 'all', countires will be ignored)",
 		"Countries (Optional. Comma separated)"
@@ -62,9 +63,10 @@ var csvManager = (function(global) {
 					[colNames[15]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_name,
 					[colNames[16]]: (_.isEmpty(eachLineItem.overrideFields)) ? '' : eachLineItem.overrideFields.custom_event_class_data,
 					[colNames[17]]: eachLineItem.status,
-					[colNames[18]]: eachLineItem.keywords,
-					[colNames[19]]: eachLineItem.includeGeoTargeting,
-					[colNames[20]]: eachLineItem.targetedCountries
+					[colNames[18]]: eachLineItem.idfaTargeting,
+					[colNames[19]]: eachLineItem.keywords,
+					[colNames[20]]: eachLineItem.includeGeoTargeting,
+					[colNames[21]]: eachLineItem.targetedCountries
 				});
 			}
 		}
@@ -167,7 +169,7 @@ var csvManager = (function(global) {
 		for (let i=1; i < data.length; i++) {
 			let [name, key, orderName, orderKey, adUnitKeys, priority, bid, type, networkType, 
 				networkAccountId, networkAdUnitId, networkAppId, networkPlacementId, networkAppSignature, networkLocation,
-				customEventClassName, customEventClassData, status, keywords, geoMode, countries] = data[i];
+				customEventClassName, customEventClassData, status, idfaTargeting, keywords, geoMode, countries] = data[i];
 
 			// Process rows only has the right number of columns (to prevent empty row at the end)
 			if (data[i].length != colNames.length) continue;
@@ -196,6 +198,7 @@ var csvManager = (function(global) {
 					'networkType': (type == "network") ? csvFieldValidator('networkType', networkType) : undefined,
 					'overrideFields': (type == "network") ? overrideFieldValidator.validate(networkType, overrideFields) : undefined, // unified overridesfield form
 					'status': csvFieldValidator('status', status),
+					'idfaTargeting': csvFieldValidator('idfaTargeting', idfaTargeting),
 					'keywords': csvFieldValidator('keywords', keywords),
 					'includeGeoTargeting': csvFieldValidator('includeGeoTargeting', geoMode),
 					'targetedCountries': (geoMode == "all") ? [] : csvFieldValidator('targetedCountries', countries),
@@ -319,14 +322,14 @@ var csvManager = (function(global) {
 					throw new Error(`Status should be one of running, paused or archived. <b>${value}</b>`);
 				}
 				break;
-			// case "idfaTargeting":
-			// 	regex = /^all|^only_idfa|^no_idfa/i;
-			// 	if (regex.test(value)) {
-			// 		returnValue = value.toLowerCase();
-			// 	} else {
-			// 		throw new Error(`IDFA Targeting should be one of all, only_idfa or no_idfa. <b>${value}</b>`);
-			// 	}
-			// 	break;
+			case "idfaTargeting":
+				regex = /^all|^only_idfa|^no_idfa/i;
+				if (regex.test(value)) {
+					returnValue = value.toLowerCase();
+				} else {
+					throw new Error(`IDFA Targeting should be one of all, only_idfa or no_idfa. <b>${value}</b>`);
+				}
+				break;
 			case "keywords":
 				if (value == "") {
 					returnValue = [];

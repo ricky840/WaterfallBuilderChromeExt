@@ -7,6 +7,9 @@ var waterfallTableController = (function(global) {
         const lineItemList = await moPubApi.getLineItemsByAdUnit(adUnitKey);
         const lineItemListWithoutTestModeItems = filterTestModeLineItems(lineItemList); // Temp
 
+        // Temp
+        // console.log(lineItemList);
+
         WaterfallTable.blockRedraw();
         await WaterfallTable.replaceData(lineItemListWithoutTestModeItems); // replaceData will not fire any table events
         WaterfallTable.restoreRedraw();

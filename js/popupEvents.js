@@ -595,8 +595,9 @@ function editHandler() {
 		if ("adUnitKeys" in userData && row.type != "marketplace") {
 			row.adUnitKeys = userData.adUnitKeys;
 		}
-		// Update IDFA targeting
-		// if ("idfaTargeting" in userData) row.idfaTargeting = userData.idfaTargeting;
+		if ("idfaTargeting" in userData && row.type != "marketplace") {
+			row.idfaTargeting = userData.idfaTargeting;
+		}
 	});
 
 	WaterfallTable.blockRedraw();

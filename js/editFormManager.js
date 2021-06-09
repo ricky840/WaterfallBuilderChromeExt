@@ -8,7 +8,7 @@ var editFormManager = (function(global) {
 		priorityId: "edit-priority-select",
 		statusId: "edit-status-select",
 		autocpmId: "edit-disallow-autocpm-select",
-		// idfaTargetgId: "edit-idfa-targeting-select",
+		idfaTargetgId: "edit-idfa-targeting-select",
 		targetModeId: "target-mode",
 		targetCountryId: "target-country",
 		tagifyKeywords: "tagify-keywords",
@@ -20,7 +20,7 @@ var editFormManager = (function(global) {
 		$(`#${DOM_ID.priorityId}`).dropdown({ clearable: true });	
 		$(`#${DOM_ID.statusId}`).dropdown({ clearable: true });	
 		$(`#${DOM_ID.autocpmId}`).dropdown({ clearable: true });	
-		// $(`#${DOM_ID.idfaTargetgId}`).dropdown({ clearable: true });	
+		$(`#${DOM_ID.idfaTargetgId}`).dropdown({ clearable: true });	
 		$(`#${DOM_ID.targetCountryId} .menu`).html(createCountryMenuListHtml());
 		$(`#${DOM_ID.targetCountryId}`).dropdown({
 			onChange: function(value, text, element) {
@@ -75,8 +75,8 @@ var editFormManager = (function(global) {
 		} else {
 			$(`#${DOM_ID.autocpmId}`).dropdown('restore defaults');
 		}
-		//Idfa Targeting (does not work currently)
-		// $(`#${DOM_ID.idfaTargetgId}`).dropdown('set selected', rowData.idfaTargeting);
+		//Idfa Targeting
+		$(`#${DOM_ID.idfaTargetgId}`).dropdown('set selected', rowData.idfaTargeting);
 		$(`#${DOM_ID.assignAdUnitKey}`).dropdown('set exactly', rowData.adUnitKeys);
 	}
 
@@ -134,10 +134,10 @@ var editFormManager = (function(global) {
 					}
 					break;
 
-				// case "idfa_targeting":
-				// 	const idfaTargeting = data.value.trim();
-				// 	if (!_.isEmpty(idfaTargeting)) userData["idfaTargeting"] = idfaTargeting;
-				// 	break;
+				case "idfa_targeting":
+					const idfaTargeting = data.value.trim();
+					if (!_.isEmpty(idfaTargeting)) userData["idfaTargeting"] = idfaTargeting;
+					break;
 
 				case "disallow_autocpm":
 					let disallowAutoCpm = data.value.trim();
