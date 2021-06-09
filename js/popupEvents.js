@@ -688,24 +688,28 @@ async function copyLineItem(validatedUserData) {
 	try {
 		await lineItemCopyManager.copy(sourceLineItems, validatedUserData);
 		let msg = `${sourceLineItems.length} line items were copied.`;
-		msg += ` See <a href="${ADUNIT_PAGE_URL+targetAdUnit.key}" target="_blank">${targetAdUnit.name}</a> to verify the result.`
+		msg += ` Click ad unit <a href="${ADUNIT_PAGE_URL+targetAdUnit.key}" target="_blank">${targetAdUnit.name}</a> to verify the result.`
 		NOTIFICATIONS.copyLineItemSuccess.message = msg;
 		notifier.show(NOTIFICATIONS.copyLineItemSuccess);
+		// Reload current ad unit in case user copied line item to the same ad unit
+		$(".menu-adunit-dropdown").dropdown("set exactly", adUnitManager.getCurrentAdUnitKey());
+		// The loader will be hidden by reloading ad unit
+	  // loaders.hide("adunit");
 	} catch (error) {
 		let msg = `There was an error copying line items.`;	
 		msg += ` Click <span class="mopub-update-results">here</span> for more details.`
 		showErrorMsgWithDetails(error);
 		NOTIFICATIONS.copyLineItemFail.message = msg;
 		notifier.show(NOTIFICATIONS.copyLineItemFail);
+	  loaders.hide("adunit");
 	}
 
 	WaterfallTable.deselectRow();
-	loaders.hide("adunit");
 }
 
 /**
- * Use this only if API returns error message in { error: server_response, lineItemKey: "" }
- * Mostly for post APIs. This is to show entire error messages.
+ * Use this only if API returns error message in { error: server_response, lineItemKey: "" } format
+ * Mostly for post APIs. This is to show the entire error messages.
  * [To-do] Entire logic for showing error message should be changed :-(
  */
 function showErrorMsgWithDetails(errorObj, msg) {

@@ -81,6 +81,24 @@ const NETWORK_TYPE_NAME = {
 
 // Supported ad formats for each network
 const SUPPORTED_FORMAT_FOR_NETWORK = {
+	// These are for custom network, it should support all formats
+	custom: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video",
+		"native"
+	],
+	custom_native: [
+		"banner",
+		"medium_rectangle",
+		"fullscreen",
+		"rewarded",
+		"rewarded_video",
+		"native"
+	],
+	// Regular networks
 	admob_native: [
 		"banner",
 		"medium_rectangle",
