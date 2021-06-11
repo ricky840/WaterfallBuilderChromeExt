@@ -841,3 +841,12 @@ body {
 .field-label-title.disabled {
 	pointer-events: none !important;
 }
+
+/**
+* sudo company name
+*/
+.sudo-company {
+	text-transform: uppercase;
+	font-weight: bold;
+	text-decoration: underline;
+}

@@ -34,14 +34,20 @@ var sessionHandler = (function(global) {
     });
   }
 
-	function updatePopUpUIEmail() {
+	/**
+	 * When account was changed
+	 */
+	async function updatePopUpUIEmail() {
 		let views = chrome.extension.getViews({type: "tab"});
 		if (views.length > 0) {
-			let popup = views[0];
-			popup.accountManager.updateHtmlEmail();
+			const popup = views[0];
+			await popup.accountManager.loadUserInfo();
+			await popup.accountManager.loadAccountInfo();
+			const currentAccount = popup.accountManager.getCurrentAccount();
+			const company = _.has(currentAccount, "company") ? currentAccount.company : "Unknown";
 			popup.notifier.show({
-				header: "Sudo Detected! (account changed)",
-				message: "Please refresh the page to reload ad units. <a href=''>Click here to refresh.</a>",
+				header: `Account changed in MoPub dashboard`,
+				message: `You just sudoed into the account <span class="sudo-company">${company}</span>. Please make sure to use the right API Key.`,
 				type: "negative"
 			});
 		}

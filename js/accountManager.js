@@ -1,16 +1,20 @@
 var accountManager = (function(global) {
 	"use strict";
 
+	let currentUser = {};
+	let currentAccount = {};
+
 	function loadAccountInfo() {
 		return new Promise(async (resolve, reject) => { 
 			try {
 				const accountInfo = await moPubApi.getAccount();
+				currentAccount = accountInfo;
 				updateHtmlAccount(accountInfo);
 				resolve();
 			} catch (error) {
 				console.log("Error while loading account info");
 				console.log(error);
-				reject();
+				reject(error);
 			}
 		});
 	}
@@ -23,6 +27,7 @@ var accountManager = (function(global) {
 					for (let i=0; i < userList.length; i++) {
 						if (userList[i].isPrimary) {
 							console.log(`Logged in user ${userList[i].email}`);
+							currentUser = userList[i];
 							updateHtmlEmail(userList[i]);
 							break;
 						}
@@ -51,14 +56,19 @@ var accountManager = (function(global) {
 		$("#info-lineitem-limit").html(accountInfo.limits.lineItem);
 	}
 
-	function getUserEmail() {
-		return userEmail;
+	function getCurrentAccount() {
+		return currentAccount;
+	}
+
+	function getCurrentUser() {
+		return currentUser;
 	}
  
   return {
 		loadUserInfo: loadUserInfo,
 		loadAccountInfo: loadAccountInfo,
 		updateHtmlEmail: updateHtmlEmail,
-		getUserEmail: getUserEmail
+		getCurrentAccount: getCurrentAccount,
+		getCurrentUser: getCurrentUser
   }
 })(this);

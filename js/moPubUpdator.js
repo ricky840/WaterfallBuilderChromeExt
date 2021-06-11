@@ -36,6 +36,10 @@ var moPubUpdator = (function(global) {
 
     // Start new line item always
     change.startImmediately = true;
+
+    // If overrideFields exists, turn on enableOverrides
+    if ("overrideFields" in change) change.enableOverrides = true;
+
     return change;
   }
 
