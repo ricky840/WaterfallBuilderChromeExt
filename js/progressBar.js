@@ -5,9 +5,7 @@ var progressBar = (function(global) {
   let taskMessage = "";
 
   function init() {
-    bar.progress({
-      precision: 1
-    });
+    bar.progress();
   }
 
   function reset() {
@@ -24,7 +22,7 @@ var progressBar = (function(global) {
     bar.progress("increment");
     const value = bar.progress("get value");
     const total = bar.progress("get total");
-    loaders.setText("adunit", `${taskMessage} ${value}/${total}`);
+    loaders.setText("adunit", `${taskMessage} ${parseInt(value)}/${total}`);
   }
 
   return {
