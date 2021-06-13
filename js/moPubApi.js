@@ -24,6 +24,15 @@ var moPubApi = (function(global) {
 	const DELETE_COUNTRY_PRESET = "https://app.mopub.com/web-client/api/country-presets/delete"; // POST
 	const UPDATE_COUNTRY_PRESET = "https://app.mopub.com/web-client/api/country-presets/update";
 
+	/**
+	 * Delay - to avoid rate limiting
+	 */
+	const delay = (ms) => {
+		return new Promise(resolve => {
+			setTimeout(resolve, ms);
+		});
+	}
+
 	function mergeResponseData(responses) {
 		let finalData = [];
 		responses.forEach(res => {
@@ -233,8 +242,11 @@ var moPubApi = (function(global) {
 		});
 	}
 
-	function createNewLineItem(postData, lineItemKey) {
+	function createNewLineItem(postData, lineItemKey, delayMs) {
 		return new Promise(async (resolve, reject) => { 
+			// Delay between requests
+			await delay(delayMs);
+
 			const request = { 
         url: BASE_URL + CREATE_LINE_ITEM,
         headers: { [MOPUB_API_AUTH_HEADER]: apiKeyManager.getActiveApiKey().key },
@@ -255,11 +267,16 @@ var moPubApi = (function(global) {
 				};
 				reject(errorResponse);
 			}
+
+			progressBar.increase();
 		});
 	}
 
-	function createNewLineItemViaOldApi(postData, lineItemKey) {
+	function createNewLineItemViaOldApi(postData, lineItemKey, delayMs) {
 		return new Promise(async (resolve, reject) => { 
+			// Delay between requests
+			await delay(delayMs);
+
 			const request = { 
         url: CREATE_LINE_ITEM_INTERNAL,
 				headers: { "Content-Type": "application/json; charset=utf-8" },
@@ -280,6 +297,8 @@ var moPubApi = (function(global) {
 				};
 				reject(errorResponse);
 			}
+
+			progressBar.increase();
 		});
 	}
 
@@ -305,8 +324,11 @@ var moPubApi = (function(global) {
 		});
 	}	
 
-	function updateLineItem(changeData, lineItemKey) {
-		return new Promise(async (resolve, reject) => { 
+	function updateLineItem(changeData, lineItemKey, delayMs) {
+		return new Promise(async (resolve, reject) => {
+			// Delay between requests
+			await delay(delayMs);
+
 			const putData = {
 				op: "set",
 				data: changeData
@@ -331,11 +353,16 @@ var moPubApi = (function(global) {
 				};
 				reject(errorResponse);
 			}
+
+			progressBar.increase();
 		});
 	}
 
-	function copyLineItem(postData) {
+	function copyLineItem(postData, delayMs) {
 		return new Promise(async (resolve, reject) => { 
+			// Delay between requests
+			await delay(delayMs);
+
 			const lineItemKey = postData.key;
 			const request = { 
         url: COPY_LINE_ITEM,
@@ -354,6 +381,8 @@ var moPubApi = (function(global) {
 				};
 				reject(errorResponse)
 			}
+
+			progressBar.increase();
 		});
 	}
 

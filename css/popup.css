@@ -32,8 +32,9 @@ body::-webkit-scrollbar {
   border-radius: 0em !important;
 }
 
-.ui.progress.success .bar {
-  background-color: red !important;
+/* Progress bar under the menu */
+.ui.progress .bar {
+  /* background-color: red !important; */
 }
 
 .no-radius {

@@ -110,6 +110,7 @@ var moPubUpdator = (function(global) {
 
       // Promises
       let promiseTasks = [];
+      let delayMilSec = 0;
 
       changesForNewLineItems.forEach((eachChange) => {
         const lineItemKey = eachChange.key;
@@ -122,21 +123,27 @@ var moPubUpdator = (function(global) {
          */ 
         const directServeItems = ["gtee", "non_gtee", "promo", "backfill_promo"];
         if (directServeItems.includes(eachChange.type)) {
-          promiseTasks.push(moPubApi.createNewLineItemViaOldApi(postData, lineItemKey));
+          promiseTasks.push(moPubApi.createNewLineItemViaOldApi(postData, lineItemKey, delayMilSec));
         } else {
-          promiseTasks.push(moPubApi.createNewLineItem(postData, lineItemKey));
+          promiseTasks.push(moPubApi.createNewLineItem(postData, lineItemKey, delayMilSec));
         }
+
+        delayMilSec += DELAY_INCREMENT;
       });
 
       changesForUpdateLineItems.forEach((eachChange) => {
         const lineItemKey = eachChange.key;
         const putData = createPutDataForUpdatedLineItem(eachChange);
-        promiseTasks.push(moPubApi.updateLineItem(putData, lineItemKey));
+        promiseTasks.push(moPubApi.updateLineItem(putData, lineItemKey, delayMilSec));
+        delayMilSec += DELAY_INCREMENT;
       });
 
-      // Make requests
+      // Set progress bar total
+      progressBar.setTotal(promiseTasks.length, "Applying..");
+
       Promise.allSettled(promiseTasks).then((results) => {
         resolve(results);
+        progressBar.reset();
       });
     });
   }

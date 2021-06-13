@@ -139,14 +139,20 @@ var lineItemCopyManager = (function(global) {
 			}
 
 			// Order is ready. Create line items (copy).
+			let delayMilSec = 0;
 			postDatas.forEach(data => {
-				promiseTasks.push(moPubApi.copyLineItem(data));
+				promiseTasks.push(moPubApi.copyLineItem(data, delayMilSec));
+				delayMilSec += DELAY_INCREMENT;
 			});
+
+			// Set progress bar total
+			progressBar.setTotal(promiseTasks.length, "Copying line items..");
 
 			// Copying line items. Make sure all promises were success
 			Promise.all(promiseTasks).then(async (results) => {
 				console.log("Copying line items complete. See results below.");
 				console.log(results);
+				progressBar.reset();
 
 				let createdLineItems = [];
 				results.forEach(result => {
@@ -176,20 +182,26 @@ var lineItemCopyManager = (function(global) {
 	function overrideAdUnitKey(lineItems, adUnitKey) {
 		return new Promise((resolve, reject) => {
 			let promiseTasks = [];
+			let delayMilSec = 0;
 
 			lineItems.forEach(lineItem => {
 				const putData = {
 					adUnitKeys: [adUnitKey]
 				};
-				promiseTasks.push(moPubApi.updateLineItem(putData, lineItem.key));
+				promiseTasks.push(moPubApi.updateLineItem(putData, lineItem.key, delayMilSec));
+				delayMilSec += DELAY_INCREMENT;
 			});
 
+			// Set progress bar total
+			progressBar.setTotal(promiseTasks.length, "Updating ad units..");
+
 			Promise.all(promiseTasks).then((results) => {
+				progressBar.reset();
 				resolve(results);
 			}).catch(error => {
 				// Error while updating AdUnitKeys for copied line items
+				progressBar.reset();
 				reject(error);
-				return;
 			});
 		});
 	}

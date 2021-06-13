@@ -16,6 +16,9 @@ $(document).ready(async function() {
 		return false;
 	}	
 
+	// Temp
+	progressBar.init();
+
 	// Remove loader
 	loaders.hide("body");
 

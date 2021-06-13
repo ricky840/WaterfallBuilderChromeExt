@@ -56,12 +56,12 @@ var newLineItemFactory = (function(global) {
 				newLineItem.networkType = "admob_native";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
 				break;
-			case "add-applovin_sdk":
+			case "add-adcolony":
 				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
 				newLineItem.networkType = "adcolony";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);
 				break;
-			case "add-applovin":
+			case "add-applovin_sdk":
 				newLineItem = JSON.parse(JSON.stringify(templateNetwork));
 				newLineItem.networkType = "applovin_sdk";
 				newLineItem.overrideFields = overrideFieldValidator.validate(newLineItem.networkType, overrideFieldsTemplate);

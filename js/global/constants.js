@@ -11,6 +11,10 @@ const CHANGE_LOG_URL = "https://github.com/ricky840/WaterfallBuilderChromeExt/re
 // Extension Version
 const EXTENSION_VERSION = chrome.runtime.getManifest().version;
 
+// Delay ms between API requests
+const DELAY_INCREMENT = 206;
+// const DELAY_INCREMENT = 10000;
+
 // Default column set for column selectors
 const DEFAULT_COLUMN_SET = [
 	"name",
