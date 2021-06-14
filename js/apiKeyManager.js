@@ -29,7 +29,7 @@ var apiKeyManager = (function(global) {
         html += item;
       });
     }
-    $(".apikey-manage-modal .list").html(html);
+    $(".apikey-manage-modal .api-key-list").html(html);
   }
 
   function saveApiKey(newApiKey) {

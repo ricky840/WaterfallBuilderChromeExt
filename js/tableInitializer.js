@@ -59,7 +59,7 @@ var tableInitializer = (function(global) {
 		const rowData = row.getData();
 		const lineItem = lineItemStore.getLineItemByKey(rowData.key);
 
-		console.log("adding badge");
+		// console.log("adding badge");
 		// console.log(lineItem.isNewlyCreated());
 		// console.log(lineItem.getChanges());
 

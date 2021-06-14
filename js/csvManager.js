@@ -90,7 +90,7 @@ var csvManager = (function(global) {
 		let filteredData = [];
 		for (const lineItem of selectedData) {
 			/**
-			 *  Skip marketplace tab, advanced_bidding, custom JS network (custom_html)
+			 *  Skip marketplace tab, advanced_bidding, custom JS network (custom)
 			 *  and status that is NOT running/paused/archived
 			 */  
 			const statusRegex = /^running$|^paused$|^archived$/;
@@ -103,61 +103,95 @@ var csvManager = (function(global) {
 		exportToFile(filteredData);
 	}
 
-	function processUpload(file, callback) {
-		Papa.parse(file, {
-			config: { comments: true, skipEmptyLines: true },
-			complete: function(results) {
-				// Check if it is importable format, see if title matches
-				for (let i=0; i < results.data[0].length; i++) {
-					if (results.data[0][i] != colNames[i]) {
-						const msg = `Please check if uploaded file is in importable format. Column name "${colNames[i]}" does not match.`;
-						NOTIFICATIONS.importUnsuccessful.message = msg;
-						notifier.show(NOTIFICATIONS.importUnsuccessful);
-						return false;
+	function updateTableWithImported(parsedDataList) {
+		return new Promise(async (resolve, reject) => {
+			// Set progress bar
+			progressBar.setTotal(parsedDataList.length, "Importing..");
+			WaterfallTable.blockRedraw();
+
+			for (let currentData of parsedDataList) {
+				// See if data exists in the table
+				const row = WaterfallTable.searchData("key", "=", currentData.key);
+				try {
+					// Existing line item. Ignore order name and order key. It can't be updated anyway.
+					if (row.length == 1) {
+						delete currentData.orderName;
+						delete currentData.orderKey;
+						WaterfallTable.updateData([currentData]);
 					}
-				}
-
-				// Parse each row
-				let parsedDataList = csvManager.rowParser(results.data);
-				if (_.isEmpty(parsedDataList)) {
-					console.log("There is no item to import");
-					return false;
-				}
-
-				WaterfallTable.blockRedraw();
-				parsedDataList.forEach(currentData => {
-					// See if data exists in the table
-					const row = WaterfallTable.searchData("key", "=", currentData.key);
-					try {
-						// Existing line item. Ignore order name and order key. It can't be updated anyway.
-						if (row.length == 1) {
-							delete currentData.orderName;
-							delete currentData.orderKey;
-							WaterfallTable.updateData([currentData]);
+					// New line item, this requires order key. Otherwise throw error. order name will be ignored.
+					if (row.length == 0) {
+						if ("orderKey" in currentData) {
+							WaterfallTable.addData([currentData]);
+						} else {
+							throw new Error(`New line item <b>${currentData.name}</b> requires order key.`);
 						}
-						
-						// New line item, this requires order key. Otherwise throw error. order name will be ignored.
-						if (row.length == 0) {
-							if ("orderKey" in currentData) {
-								WaterfallTable.addData([currentData]);
-							} else {
-								throw new Error(`New line item <b>${currentData.name}</b> requires order key.`);
-							}
-						}
-					} catch (error) {
-						NOTIFICATIONS.importValidationError.message = error;
-						notifier.show(NOTIFICATIONS.importValidationError);
-						WaterfallTable.restoreRedraw();
-						return false;
 					}
-				});
-
-				// Import success
-				NOTIFICATIONS.importSuccessful.message = `${parsedDataList.length} line items were imported. Unnecessary overrides fields for network line items were ignored.`;
-				notifier.show(NOTIFICATIONS.importSuccessful);
-				WaterfallTable.restoreRedraw();
-				return true;
+				} catch (error) {
+					NOTIFICATIONS.importValidationError.message = error;
+					notifier.show(NOTIFICATIONS.importValidationError);
+					WaterfallTable.restoreRedraw();
+					reject();
+					return;
+				}
+				progressBar.increase();
+				await delay(1); // Give it a delay to show the progress bar, otherwise it won't show
 			}
+
+			// Import success
+			NOTIFICATIONS.importSuccessful.message = `${parsedDataList.length} line items were imported. Unnecessary overrides fields for network line items were ignored.`;
+			notifier.show(NOTIFICATIONS.importSuccessful);
+			WaterfallTable.restoreRedraw();
+			progressBar.reset();
+			resolve();
+		});
+	}
+
+	function validateImportFileFormat(file) {
+		return new Promise((resolve, reject) => {
+			Papa.parse(file, {
+				config: { comments: true, skipEmptyLines: true, preview: 1 },
+				complete: function(results, file) {
+					for (let i=0; i < results.data[0].length; i++) {
+						if (results.data[0][i] != colNames[i]) {
+							const msg = `Please check if uploaded file is in importable format. Column name "${colNames[i]}" does not match.`;
+							NOTIFICATIONS.importUnsuccessful.message = msg;
+							notifier.show(NOTIFICATIONS.importUnsuccessful);
+							resolve(false);
+							return;
+						}
+					}
+					resolve(true);
+				}
+			});
+		});
+	}
+
+	function processUpload(file) {
+		return new Promise(async (resolve, reject) => {
+			const formatValidation = await validateImportFileFormat(file);
+			if (!formatValidation) {
+				reject();
+				return;
+			}
+			Papa.parse(file, {
+				config: { comments: true, skipEmptyLines: true, worker: true },
+				complete: async function (results, file) {
+					// Parse each row, if there is an error with parsing row, it will return false
+					const parsedDataList = csvManager.rowParser(results.data);
+					if (_.isEmpty(parsedDataList)) {
+						console.log("There is no item to import");
+						reject();
+						return;
+					}
+					try {
+						await updateTableWithImported(parsedDataList);
+						resolve();
+					} catch (error) {
+						reject();
+					}
+				}
+			});
 		});
 	}
 
@@ -223,8 +257,8 @@ var csvManager = (function(global) {
 			}
 
 			// Temp
-			console.log('Row Parsed');
-			console.log(rowObj);
+			// console.log('Row Parsed');
+			// console.log(rowObj);
 		}
 		return uploadData;
 	}

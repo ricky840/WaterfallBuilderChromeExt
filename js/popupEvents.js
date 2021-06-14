@@ -59,12 +59,19 @@ $(".control-btn-import").click(function() {
 });
 
 // Import: when uploaded
-$('input[type="file"]').on('change', function() {
+$('input[type="file"]').on('change', async function() {
 	let file = $(this).prop('files')[0];
 	if (file == undefined) return;
 	// Reset file
 	$(this).val("");
-	csvManager.processUpload(file);
+
+	loaders.show("adunit");
+	try {
+		await csvManager.processUpload(file);
+	} catch (error) {
+		// do nothing
+	}
+	loaders.hide("adunit");
 });
 
 // Add button
@@ -178,6 +185,10 @@ $(".control-btn-apply-change").click(function() {
 $(".apikey-manage-btn").click(function() {
 	$(".apikey-manage-modal").modal({
 		duration: 300,
+		onShow: function() {
+			const currentAccount = accountManager.getCurrentAccount();
+			$("#apikey-modal-company").html(currentAccount.company);
+		},
 		onApprove: function () {
 			// Reload page, we have new API key in use
 			$(".mopub-logo-menu").trigger("click");
@@ -544,11 +555,7 @@ $(".notification-box").on("click", ".message .close", function() {
 });
 
 $("#notification").on('click', ".mopub-update-results", function() {
-	$('.update-result-modal').modal({
-		onHidden: function() {
-			$(".update-result-modal .content").html("");
-		}
-	}).modal("show");
+	window.open("updateResults.html", '_blank');
 });
 
 
@@ -611,55 +618,55 @@ function editHandler() {
 
 function verifyMoPubUpdateResults(results) {
 	let successCount = 0;
+	let successResults = [];
 	let failCount = 0;
 	let failResults = [];
 
 	results.forEach(result => {
 		if (result.status == "fulfilled") {
-			successCount += 1;
 			// Success. MoPub will respond with the line item object.
+			successCount += 1;
 			const updatedLineItem = result.value.mopubResponse.data;
 			const updateLineItemKey = result.value.lineItemKey;
+			// successResults.push({
+			// 	"lineItemKey": updateLineItemKey,
+			// 	"response": updatedLineItem
+			// });
 		} else if (result.status == "rejected") {
-			failCount += 1;
 			// Failed
+			failCount += 1;
 			const statusCode = result.reason.error.statusCode;
 			const moPubResponseTxt = result.reason.error.responseText;
 			const failedLineItemKey = result.reason.lineItemKey;
-
-			// Save result
-			try {
-				failResults.push({
-					"lineItemKey": failedLineItemKey,
-					"response": JSON.parse(moPubResponseTxt)
-				});
-			} catch (e) {
-				failResults.push({
-					"lineItemKey": failedLineItemKey,
-					"response": moPubResponseTxt
-				});
-			}
+			failResults.push({
+				"lineItemKey": failedLineItemKey,
+				"response": moPubResponseTxt
+			});
 		}
 	});
 
+	const allResults = {
+		// success: successResults,
+		success: [],
+		fail: failResults
+	};
+	saveUpdateResults(allResults);
+
 	if (successCount == results.length) {
-		const msg = `${successCount} line items were updated`;	
+		let msg = `${successCount} line items were successfully updated.`;	
+		// msg += ` Click <span class="mopub-update-results">here</span> for more details.`;
 		NOTIFICATIONS.moPubUpdateSucess.message = msg;
 		notifier.show(NOTIFICATIONS.moPubUpdateSucess);
 	} else if (failCount != 0) {
-		let msg = `Out of ${results.length}, ${failCount} line items update failed.`;	
+		let msg = `Out of ${results.length} line items, ${failCount} were failed.`;	
 		msg += ` Click <span class="mopub-update-results">here</span> for more details.`;
 		NOTIFICATIONS.moPubUpdateFail.message = msg;
 		notifier.show(NOTIFICATIONS.moPubUpdateFail);
-		updateResultModalContent(failResults);
 	}
 }
 
-function updateResultModalContent(results) {
-	if (results.length <= 0) return;
-	const prettyStr = JSON.stringify(results, null, 2);
-	const html = `<pre class="mopub-update-result-pre">${prettyStr}</pre>`;
-	$(".update-result-modal .content").html(html);
+function saveUpdateResults(allResults) {
+	chrome.storage.local.set({ updateResults: allResults });
 }
 
 async function copyLineItem(validatedUserData) {
@@ -714,18 +721,13 @@ async function copyLineItem(validatedUserData) {
  */
 function showErrorMsgWithDetails(errorObj, msg) {
 	let errorMessages = [];
-
-	try {
-		errorMessages.push({
-			"lineItemKey": errorObj.lineItemKey,
-			"response": JSON.parse(errorObj.error.responseText)
-		});
-	} catch (e) {
-		errorMessages.push({
-			"lineItemKey": errorObj.lineItemKey,
-			"response": errorObj.error.responseText
-		});
-	}
-
-	updateResultModalContent(errorMessages);
+	errorMessages.push({
+		"lineItemKey": errorObj.lineItemKey,
+		"response": errorObj.error.responseText
+	});
+	const allResults = {
+		success: [],
+		fail: errorMessages
+	};
+	saveUpdateResults(allResults);
 }

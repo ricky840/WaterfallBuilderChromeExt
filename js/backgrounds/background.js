@@ -30,6 +30,12 @@ var initStorage = function() {
       chrome.storage.local.set({ apiKeys: [] });
     }
   });
+
+  chrome.storage.local.get("updateResults", function(result) {
+    if(_.isUndefined(result['updateResults'])) {
+      chrome.storage.local.set({ updateResults: {} });
+    }
+  });
 }
 
 // Popup Window, open only when the badge is up

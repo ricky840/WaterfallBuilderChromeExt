@@ -88,3 +88,9 @@ function validateAdUnitKey(key) {
 function copyObject(obj) {
   return JSON.parse(JSON.stringify(obj));
 }
+
+const delay = (ms) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
+}

@@ -903,17 +903,6 @@
 	</div>
 	<!-- Edit Modal Save Country Preset End -->
 
-	<!-- Update Result Modal -->
-	<div class="ui modal update-result-modal">
-		<i class="close icon"></i>
-		<div class="ui header">Results</div>
-		<div class="scrolling content"></div>
-		<!-- buttons -->
-		<div class="actions">
-			<div class="ui small approve circular blue button right">Close</div>
-		</div>
-	</div>
-
 	<!-- API Key Manage Modal -->
 	<div class="ui modal large apikey-manage-modal">
 		<!-- <i class="close icon"></i> -->
@@ -925,7 +914,10 @@
 		</div>
 		<div class="scrolling content">
 			<div class="ui message">
-				<p>Please note that API Key is stored in Chrome's local storage, and never leaves the browser. It will not be exposed to the public internet.</p>
+				<ul class="list">
+					<li>Please note that API Key is stored in Chrome's local storage and it never leaves the browser. It will not be exposed to the public internet.</li>
+					<li>You are curretly logged in <span id="apikey-modal-company" class="sudo-company"></span> account. Please make sure that you're using the right API key.</li>
+				</ul>
 			</div>
 			<div class="ui blue segment apikey-input-segment" style="display: none;">
 				<div class="ui basic right aligned fitted segment" style="margin-bottom: 0px;">
@@ -949,7 +941,7 @@
 					<div class="ui small blue circular button apikey-manage-submit">Add</div>
 				</div>
 			</div>
-			<div class="ui relaxed selection list"></div>
+			<div class="ui relaxed selection list api-key-list"></div>
 		</div>
 		<div class="actions">
 			<div class="ui small deny button blue basic circular">Cancel</div>

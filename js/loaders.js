@@ -12,7 +12,7 @@ var loaders = (function(global) {
   };
 
 	function show(location) {
-    $(`.${classNames[location]} .text`).html("");
+    $(`.${classNames[location]} .text`).html(" ");
     $(`.${classNames[location]}`).removeClass("disabled").addClass("active");
     
     timeout1 = setTimeout(() => { 

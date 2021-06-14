@@ -6,6 +6,7 @@ var progressBar = (function(global) {
 
   function init() {
     bar.progress();
+    reset();
   }
 
   function reset() {
