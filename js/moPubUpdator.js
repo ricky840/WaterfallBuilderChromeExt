@@ -52,7 +52,10 @@ var moPubUpdator = (function(global) {
 
     // Key was added to pass the line item key to create the API end point.
     // This wasn't from the change object originally.
-    delete change.key;
+    delete change.key; 
+    
+    // If overrideFields exists, turn on enableOverrides
+    if ("overrideFields" in change) change.enableOverrides = true;
 
     // Status uses enabled + archived instead
     if ("status" in change) {
@@ -83,6 +86,7 @@ var moPubUpdator = (function(global) {
           delete change.status;
       }
     }
+
     return change;
   }
 

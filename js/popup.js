@@ -16,9 +16,6 @@ $(document).ready(async function() {
 		return false;
 	}	
 
-	// Temp
-	progressBar.init();
-
 	// Remove loader
 	loaders.hide("body");
 
@@ -72,6 +69,9 @@ async function initialize() {
 	// Init add direct serve item dropdown
 	initAddDirectServeItemDropDown();
 
+	// Init progress bar
+	progressBar.init();
+
 	return true;
 }
 
@@ -94,7 +94,7 @@ function initAdUnitListDropDowns(adUnits) {
 
 	// Dropdown in menu bar
 	$(".menu-adunit-dropdown").dropdown({
-		placeholder: "Search ad unit name or key",
+		placeholder: `Search ad unit name or key (${adUnits.length} ad units are available)`,
 		values: listInFullFormat,
 		fullTextSearch: "exact",
 		sortSelect: true,
@@ -109,7 +109,7 @@ function initAdUnitListDropDowns(adUnits) {
 					// Enable control buttons
 					controlBtnManager.enableControlBtns();
 					controlBtnManager.enableNetworkBtns();
-					// Show direct serve notification (temporary, need to be removed when api v2 comes out)
+					// Show direct serve notification (temporary, need to be removed when api starts supporting)
 					$(".temp-notification-message").show();
 				} catch (error) {
 					console.log(error);
