@@ -60,6 +60,7 @@ var tableColumnDef = (function(global) {
 			visible: false, 
 			download: true, 
 			sorter: 'string', 
+			resizable: false,
 			formatter: f.lineItemTypeFormatter, 
 			width: 120 
 		},
@@ -100,7 +101,8 @@ var tableColumnDef = (function(global) {
 			},
 			sorter: 'string', 
 			formatter: f.idfaTargetingFormatter,
-			width: 130
+			width: 130,
+			resizable: false
 		},
 		// DisallowAutoCpm field (boolean)
 		{ 
@@ -210,6 +212,7 @@ var tableColumnDef = (function(global) {
 			sorter: 'string', 
 			formatter: f.geoTargetModeFormatter, 
 			cellClick: showEditModal,
+			resizable: false,
 			width: 100 
 		},
 		// Targeted country (string array)
@@ -277,6 +280,7 @@ var tableColumnDef = (function(global) {
 			validator: ["required", "min:0.01", "max:9999"],
 			formatter: f.cpmFormatter,
 			minWidth: 100,
+			resizable: false,
 			width: 100
 		},
 		// Status field (string)
@@ -285,6 +289,7 @@ var tableColumnDef = (function(global) {
 			title: 'Status', 
 			visible: false, 
 			download: true, 
+			resizable: false,
 			editor: "select", 
 			editable: isEditable, 
 			editorParams: {
@@ -327,6 +332,7 @@ var tableColumnDef = (function(global) {
 			hozAlign: "left",
 			minWidth: 90,
 			width: 90,
+			resizable: false,
 			formatter: f.priorityFormatter
 		},
 		// Start field (Time format - string)
@@ -522,21 +528,25 @@ var tableColumnDef = (function(global) {
 			field: 'name',
 			title: 'Order Name',
 			visible: true,
+			download: true,
 			formatter: f.orderNameFormatter
 		},
 		{ 
 			field: 'key',
 			title: 'Key',
+			download: true,
 			visible: false
 		},
 		{
 			field: 'description',
 			title: 'Description',
+			download: true,
 			visible: true
 		},
 		{
 			field: 'advertiser',
 			title: 'Advertiser',
+			download: true,
 			visible: true 
 		},
 		{
@@ -545,6 +555,7 @@ var tableColumnDef = (function(global) {
 			visible: true,
 			minWidth: 90,
 			width: 90,
+			download: true,
 			formatter: f.statusFormatter
 		},
 	];
@@ -701,7 +712,7 @@ var tableColumnDef = (function(global) {
 				{ field: "status", type: "like", value },
 				{ field: "overrideFields", type: "like", value },
 				{ field: "includeGeoTargeting", type: "like", value },
-				{ field: "targetedCountries", type: "like", value },
+				// { field: "targetedCountries", type: "like", value }, we're using a separate filter for countries
 				{ field: "targetedRegions", type: "like", value },
 				{ field: "targetedCities", type: "like", value },
 				{ field: "targetedZipCodes", type: "like", value },

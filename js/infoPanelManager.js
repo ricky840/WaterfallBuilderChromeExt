@@ -30,17 +30,16 @@ var infoPanelManager = (function(global) {
   }
 
   function qrCodeGen(key, format) {
-    const adFormat = findFormat(format);
-   
-    $("#qrcode").empty();
-    let div = $("#qrcode")[0];
-    const testName = `${adFormat}_${new Date().getTime()}`;
-    const url = `mopub://load?adUnitId=${key}&format=${adFormat}&name=${testName}`;
-    const qrcode = new QRCode(div, {
-      text: url,
-      width: 120,
-      height: 120
-    });
+    // const adFormat = findFormat(format);
+    // $("#qrcode").empty();
+    // let div = $("#qrcode")[0];
+    // const testName = `${adFormat}_${new Date().getTime()}`;
+    // const url = `mopub://load?adUnitId=${key}&format=${adFormat}&name=${testName}`;
+    // const qrcode = new QRCode(div, {
+    //   text: url,
+    //   width: 120,
+    //   height: 120
+    // });
   }
 
   function qrCodeGenForModal(adUnit) {
@@ -69,16 +68,21 @@ var infoPanelManager = (function(global) {
     const dailyCap = (adUnit.dailyImpressionCap == 0) ? "Unlimited" : adUnit.dailyImpressionCap;
     const hourlyCap = (adUnit.hourlyImpressionCap == 0) ? "Unlimited" : adUnit.hourlyImpressionCap;
     const appType = (adUnit.appType == "ios") ? "iOS" : "Android";
+    const refreshRate = (adUnit.refreshInterval) ? adUnit.refreshInterval : 0;
+
     $("#info-daily-cap").html(dailyCap);
     $("#info-hourly-cap").html(hourlyCap);
     $("#info-platform").html(appType);
+    $("#info-refresh-rate").html(refreshRate + "s");
 
-    qrCodeGen(adUnit.key, adUnit.format);
+    // qrCodeGen(adUnit.key, adUnit.format);
   }
 
   function updateABStatus(status) {
     if (status) {
-      $("#info-ab-status").html(`<span class="ui green text">Enabled</span>`);
+      let html = '<span class="ui green text">Enabled</span>';
+      html += '<span id="show-ab-bidder" class="ui text"> (show)</span>';
+      $("#info-ab-status").html(html);
     } else {
       $("#info-ab-status").html(`<span class="ui disabled text">Disabled</span>`);
     }

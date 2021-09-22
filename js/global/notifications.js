@@ -188,5 +188,12 @@ var NOTIFICATIONS = {
     header: "Save failed",
     message: "", // dynamic
     onetime: false
+  },
+  "adUnitIsNotLoadedYet": {
+    id: "adUnitIsNotLoadedYet",
+    type: "negative",
+    header: "",
+    message: "Please select ad unit first",
+    onetime: false
   }
 };

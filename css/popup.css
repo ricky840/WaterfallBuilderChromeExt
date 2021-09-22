@@ -364,7 +364,7 @@ body::-webkit-scrollbar {
 }
 .count-waterfall-items {
 	float: left;
-	padding-right: 10px;
+	/* padding-right: 10px; */
 	font-weight: bold;
 }
 
@@ -811,6 +811,12 @@ body {
 .info-panel-value {
 	text-align: center;
 	padding-top: 1em;
+}
+
+#show-ab-bidder:hover {
+	color: #1da1f2 !important;
+	/* text-decoration: underline !important; */
+	cursor: pointer;
 }
 
 

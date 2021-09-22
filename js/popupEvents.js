@@ -260,6 +260,14 @@ $(".load-lineitem-by-order-btn").click(async function() {
 	$(this).removeClass("disabled");
 });
 
+// Export order table
+$("#export-order-table").click(function() {
+	const adUnitKey = adUnitManager.getCurrentAdUnitKey();
+	const adUnitName = adUnitManager.getCurrentAdUnitName();
+	let filename = `Orders_${adUnitName.replace(/\s+/g, "-")}_${adUnitKey}_${getCurrentTimeInEpoch()}.csv`;
+	OrderTable.download("csv", filename);
+});
+
 
 /********************************************************
  * Handles events in line item list table
@@ -345,6 +353,13 @@ $(".lineitem-table-assign-btn").click(async function() {
 	});
 });
 
+// Export line item table
+$("#export-lineitem-table").click(function() {
+	const adUnitKey = adUnitManager.getCurrentAdUnitKey();
+	const adUnitName = adUnitManager.getCurrentAdUnitName();
+	let filename = `LineItems_${adUnitName.replace(/\s+/g, "-")}_${adUnitKey}_${getCurrentTimeInEpoch()}.csv`;
+	LineItemTable.download("csv", filename);
+});
 
 /********************************************************
  * Handles search and sort buttons 
@@ -532,13 +547,36 @@ $(".edit-modal-load-country-preset").modal('attach events', '.ui.modal.edit-moda
  * QRCode
  ********************************************************/
 
-$(".qrcode-wrapper").click(function() {
+$(".test-adunit-btn").click(function() {
+	const currentAdUnit = adUnitManager.getCurrentAdUnit();
+	if (!currentAdUnit) {
+		toast.show(NOTIFICATIONS.adUnitIsNotLoadedYet);
+		return false;
+	}
 	$(".qrcode-modal").modal({
 		duration: 300,
 		onShow: function() {
-			infoPanelManager.qrCodeGenForModal(adUnitManager.getCurrentAdUnit());
+			infoPanelManager.qrCodeGenForModal(currentAdUnit);
 		}
 	}).modal("show");
+});
+
+/********************************************************
+ * AB Table
+ ********************************************************/
+
+$(".info-panel").on("click", "#show-ab-bidder", function() {
+	$(".ab-table-section").toggle();
+	const isVisible = $(".ab-table-section").is(":visible");
+	const msg = isVisible ? " (hide)" : " (show)";
+	$("#show-ab-bidder").html(msg);
+});
+
+$("#ab-table-export").click(function() {
+	const adUnitKey = adUnitManager.getCurrentAdUnitKey();
+	const adUnitName = adUnitManager.getCurrentAdUnitName();
+	let filename = `ABbidders_${adUnitName.replace(/\s+/g, "-")}_${adUnitKey}_${getCurrentTimeInEpoch()}.csv`;
+	ABTable.download("csv", filename);
 });
 
 

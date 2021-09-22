@@ -54,6 +54,8 @@ var accountManager = (function(global) {
 			</a>`;
 		$("#info-company").html(company);
 		$("#info-lineitem-limit").html(accountInfo.limits.lineItem);
+		$("#info-adunit-limit").html(accountInfo.limits.adUnit);
+		$("#info-testdevice-limit").html(accountInfo.maxTestDeviceLimit);
 	}
 
 	function getCurrentAccount() {

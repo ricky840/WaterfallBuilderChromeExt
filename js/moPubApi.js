@@ -31,7 +31,7 @@ var moPubApi = (function(global) {
 		return new Promise(resolve => {
 			setTimeout(resolve, ms);
 		});
-	}
+	};
 
 	function mergeResponseData(responses) {
 		let finalData = [];

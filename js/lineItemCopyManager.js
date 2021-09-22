@@ -8,7 +8,7 @@ var lineItemCopyManager = (function(global) {
 				key: lineItem.key,
 				active: true,
 				copyCreatives: true,
-				lineItemName: lineItem.name + " " + userData.lineItemNameSuffix,
+				lineItemName: lineItem.name + userData.lineItemNameSuffix,
 				orderKey: lineItem.orderKey,
 				startImmediately: true
 			});
@@ -21,7 +21,7 @@ var lineItemCopyManager = (function(global) {
 			const postData = {
 				advertiser: NEW_ORDER_ADVERTISER,
 				description: NEW_ORDER_DESC,
-				name: "New Order" + " " + userData.orderNameSuffix + " " + getCurrentDatetimeUTC()
+				name: "New Order" + userData.orderNameSuffix + " " + getCurrentDatetimeUTC()
 				// status: "running" // Status wasn't accepted unlike the document
 			};
 			let newOrderKey = "";

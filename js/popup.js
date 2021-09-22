@@ -60,6 +60,12 @@ async function initialize() {
 	// Init "Status" filters
 	initStatusFilters();
 
+	// Init "Country" filter
+	initCountryFilters();
+
+	// Init "IDFA" filters
+	initIdfaFilters();
+
 	// Init edit form
 	editFormManager.initForm();
 
@@ -104,6 +110,9 @@ function initAdUnitListDropDowns(adUnits) {
 				adUnitManager.saveCurrentAdUnit(value);
 				infoPanelManager.update(adUnitManager.getAdUnit(value));
 				$(".ab-table-section").hide();
+				// Reset order dropdown
+				$(".add-item-order-list").dropdown("clear");
+				$(".add-item-order-list").addClass('error');
 				try {
 					await loadWaterfallAndBidders(value);
 					// Enable control buttons
@@ -310,6 +319,97 @@ function initTypeFilters() {
 	});
 }
 
+function initIdfaFilters() {
+	$("#idfa-filter, #idfa-filter-lineitem").dropdown({
+		onChange: function(value, text, selectedItem) {	
+			let table;
+
+			let id = $(selectedItem).parents(".dropdown").attr("id");
+			switch (id) {
+				case "idfa-filter":
+					table = WaterfallTable;
+				break;
+				case "idfa-filter-lineitem":
+					table = LineItemTable;
+					break;
+				default:
+					return; // do nothing
+					break;
+			}
+
+			table.blockRedraw();
+			let filters = table.getFilters();
+
+			// Remove existing filters
+			for (let i=0; i < filters.length; i++) {
+				if (filters[i].field == "idfaTargeting") {
+					_.pullAt(filters, i);
+				}
+			}
+
+			if (value == "all") {
+				table.setFilter(filters);
+				$(`#${id}`).removeClass("brown");
+				table.restoreRedraw();
+				return;
+			}
+
+			filters.push({field: "idfaTargeting", type: "=", value: value});
+			table.setFilter(filters);
+			$(`#${id}`).addClass("brown");
+
+			table.restoreRedraw();
+		}
+	});
+}
+
+function initCountryFilters() {
+	let countryListHtml = "";
+	COUNTRY_LIST.forEach(each => {
+		countryListHtml +=	`<div class="item" data-value="${each.country_code}">${each.country}</div>`;
+	});
+	$(".country-filter-dropdown .menu").html(countryListHtml);
+
+	const geoFilter = function(rowData, filterParams) {
+		if (rowData.includeGeoTargeting == "all") return true;
+		const targetedCountries = rowData.targetedCountries.sort().join(",");
+		const filterCountries = filterParams.sort().join(",");
+		return targetedCountries.includes(filterCountries) ? true : false;
+	};
+
+	$(".country-filter-dropdown").dropdown({
+		onChange: function(value, text, selectedItem) {
+			if (_.isEmpty(value)) {
+				$("#country-filter").removeClass("brown");
+				return;
+			}
+
+			$("#country-filter").addClass("brown");
+
+			let filters = WaterfallTable.getFilters();	
+
+			// Remove existing custom(targetedCountries) filter
+			for (let i=0; i < filters.length; i++) {
+				if (typeof filters[i].field === "function") {
+					_.pullAt(filters, i);
+				}
+			}
+	
+			WaterfallTable.blockRedraw();
+			const selectedCountries = value.split(",");
+			let newFilter = {
+				field: geoFilter,
+				type: selectedCountries,
+				value: undefined
+			};
+			filters.push(newFilter);
+
+			WaterfallTable.setFilter(filters);
+			WaterfallTable.restoreRedraw();
+		}
+	});
+}
+
 function initCopyModeDropDown() {
 	// Copy(Duplicate) Mode (In Copy waterfall form)
 	$("#copy-mode").dropdown({ 
@@ -425,12 +525,10 @@ function loadWaterfallAndBidders(adUnitKey) {
 				reject(results[0].reason);
 				return;
 			}
-			// Show AB table based on the result (API returns 400 if AB enabled is not enabled for the ad unit)
+			// AB table (API returns 400 if AB enabled is not enabled for the ad unit)
 			if (results[1].status == "fulfilled") {
-				$(".ab-table-section").show(); 
 				infoPanelManager.updateABStatus(true);
 			} else {
-				$(".ab-table-section").hide();
 				infoPanelManager.updateABStatus(false);
 			}
 

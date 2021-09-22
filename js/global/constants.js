@@ -12,8 +12,8 @@ const CHANGE_LOG_URL = "https://github.com/ricky840/WaterfallBuilderChromeExt/re
 const EXTENSION_VERSION = chrome.runtime.getManifest().version;
 
 // Delay ms between API requests
-const DELAY_INCREMENT = 206;
-// const DELAY_INCREMENT = 10000;
+// const DELAY_INCREMENT = 300;
+const DELAY_INCREMENT = 800;
 
 // Default column set for column selectors
 const DEFAULT_COLUMN_SET = [
@@ -29,12 +29,12 @@ const DEFAULT_COLUMN_SET = [
 ];
 
 // When Create New Order
-const NEW_ORDER_NAME_POSTFIX = " (Created by WBExt)";
+const NEW_ORDER_NAME_POSTFIX = ""; // Changing this to empty string, requested by Sara 2021/09/22
 const NEW_ORDER_ADVERTISER = "Advertiser";
-const NEW_ORDER_DESC = "Created by WaterfallBuilder Chrome Ext";
+const NEW_ORDER_DESC = "Created by Chrome Ext";
 
 // When Create New Line Item (Suffix Default)
-const NEW_LINE_ITEM_NAME_SUFFIX = " (New)";
+const NEW_LINE_ITEM_NAME_SUFFIX = ""; // Changing this to empty string, requested by Sara 2021/09/22
 
 // Table Heights and Pagination
 const WATERFALL_TABLE_HEIGHT = 700;

@@ -265,8 +265,8 @@ var tableInitializer = (function(global) {
 			columns: tableColumnDef.getColumnDef("ABTable"),
 
 			dataLoaded: function(data) {
-				const html = `<span class="count-orders">${data.length} Items</span>`;
-				$(".count-ab-wrapper").html(html);
+				// const html = `<span class="count-orders">${data.length} Items</span>`;
+				// $(".count-ab-wrapper").html(html);
 			},
 
 			// footerElement: abTableFooterHtml

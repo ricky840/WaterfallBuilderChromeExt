@@ -21,8 +21,8 @@
 			<!-- Order Table Section -->
 			<div class="ui grey segment">
 				<div class="ui horizontal list" style="width: 100%;">
-					<div class="item" style="float: right;">
-						<div class="ui icon input small order-filter" style="float: right;">
+					<div class="item" style="float: right; margin-right: 0em;">
+						<div class="ui icon input tiny order-filter">
 							<input type="text" placeholder="Find order" id="order-search" class="mopub-input-search">
 							<i class="search icon"></i>
 						</div>
@@ -35,6 +35,7 @@
 					</div>
 				</div>
 			</div>
+			<button id="export-order-table" class="ui small right floated button basic tertiary blue">Export</button>
 			<div id="order-table"></div>
 			<!-- Line Item Table Section -->
 			<div class="ui fitted basic segment">
@@ -54,16 +55,34 @@
 						</div>
 						<!-- Search filter -->
 						<div class="item" style="float: right; margin-right: 0em;">
-							<div class="ui icon input small">
+							<div class="ui icon input tiny">
 								<input type="text" placeholder="Find line item" id="line-item-search" class="mopub-input-search">
 								<i class="search icon"></i>
+							</div>
+						</div>
+						<!-- IDFA Filter -->
+						<div class="item" style="float: right;">
+							<div id="idfa-filter-lineitem" class="ui tiny button circular dropdown labeled icon">
+								<i class="filter icon"></i>
+								<div class="default text">Filter: IDFA Targeting</div>
+								<div class="menu">
+									<div class="item" data-value="all">
+										All IDFA Targeting
+									</div>
+									<div class="item" data-value="only_idfa">
+										Only IDFA
+									</div>
+									<div class="item" data-value="no_idfa">
+										Only Non-IDFA
+									</div>
+								</div>
 							</div>
 						</div>
 						<!-- Type filter -->
 						<div class="item" style="float: right;">
 							<div id="type-filter-lineitem" class="ui small circular button dropdown labeled icon">
 								<i class="filter icon"></i>
-								<span class="text">Filter Type</span>
+								<span class="text">Filter: Type</span>
 								<div class="menu">
 									<div class="ui icon search input">
 										<i class="search icon"></i>
@@ -89,7 +108,7 @@
 						<div class="item" style="float: right; margin-right: 1em;">
 							<div id="status-filter-lineitem" class="ui small circular button dropdown labeled icon">
 								<i class="filter icon"></i>
-								<div class="default text">Filter Status</div>
+								<div class="default text">Filter: Status</div>
 								<div class="menu">
 									<div class="item" data-value="running">
 										<div class="ui green empty circular label tiny"></div>Running
@@ -107,16 +126,12 @@
 							</div>
 						</div>
 					</div>
-					<!-- Column selector -->
-					<div class="ui horizontal list" style="width: 100%;">
-						<div class="item" style="width: 100%;">
-							<form class="ui small form">
-								<div class="field">
-									<!-- <label>Columns</label> -->
-									<select class="ui fluid search four column dropdown column-selector lineitem-table-cols" multiple=""></select>
-								</div>
-							</form>
-						</div>
+				</div>
+				<!-- Column selector -->
+				<button id="export-lineitem-table" class="ui small right floated button basic tertiary blue">Export</button>
+				<div class="ui items no-margin">
+					<div class="item">
+						<select class="ui fluid search four column dropdown column-selector lineitem-table-cols" multiple=""></select>
 					</div>
 				</div>
 				<div class="ui inverted dimmer loader-lineitem-table">
@@ -154,8 +169,11 @@
 				</div>
 			</div>
 			<div class="right menu">
-				<div class="item">
-					<div class="ui button small inverted basic blue apikey-manage-btn">Manage API Keys</div>
+				<div class="item no-padding">
+					<div class="ui button small inverted tertiary apikey-manage-btn" style="color: #DCDDDE;">Manage API Keys</div>
+				</div>
+				<div class="item" style="padding-left: 0px;">
+					<div class="ui button small inverted tertiary test-adunit-btn" style="color: #DCDDDE;">Test Ad Unit</div>
 				</div>
 			</div>
 		</div>
@@ -169,7 +187,6 @@
 		</div>
 		<!-- Progress bar end -->
 
-
 		<div class="ui basic segment" style="margin-top: 0em; margin-bottom: auto;">
 
 			<!-- Loader -->
@@ -180,10 +197,9 @@
 			<!-- Information Panels -->
 			<div class="ui stackable grid container info-panel" style="width: 100%;">
 				<div class="row">
-					<div class="fourteen wide column">
+					<div class="sixteen wide column">
 						<div class="ui blue segment">
 							<div class="ui top attached blue label">
-								<i class="thumbtack icon"></i>
 								<span>Logged in account</span>
 								<span id="info-company" class="detail"></span>
 								<span style="margin-left: 1em;">Primary</span>
@@ -193,7 +209,7 @@
 							</div>
 							<div class="ui stackable grid" style="margin-top: 1em !important;">
 								<div class="row">
-									<div class="six wide column">
+									<div class="five wide column">
 										<div class="ui relaxed list">
 											<div class="item">
 												<div class="ui basic horizontal tiny label info-panel-label">AdUnit Key</div>
@@ -209,24 +225,44 @@
 											</div>
 										</div>
 									</div>
-									<div class="six wide column">
+									<div class="five wide column">
 										<div class="ui relaxed list">
 											<div class="item">
 												<div class="ui basic horizontal tiny label info-panel-label">API Key</div>
 												<span id="info-api-key"></span>
 											</div>
 											<div class="item">
+												<div class="ui basic horizontal tiny label info-panel-label">Platform</div>
+												<span id="info-platform"></span>
+											</div>
+											<div class="item">
+												<div class="ui basic horizontal tiny label info-panel-label">Format</div>
+												<span id="info-adunit-format"></span>
+											</div>
+										</div>
+									</div>
+									<div class="three wide column">
+										<div class="ui relaxed list">
+											<div class="item">
 												<div class="ui basic horizontal tiny label info-panel-label">AG Limit</div>
 												<span id="info-lineitem-limit"></span>
 											</div>
 											<div class="item">
-												<div class="ui basic horizontal tiny label info-panel-label">Platform</div>
-												<span id="info-platform"></span>
+												<div class="ui basic horizontal tiny label info-panel-label">AU Limit</div>
+												<span id="info-adunit-limit"></span>
+											</div>
+											<div class="item">
+												<div class="ui basic horizontal tiny label info-panel-label">Test Device</div>
+												<span id="info-testdevice-limit"></span>
 											</div>
 										</div>
 									</div>
-									<div class="four wide column">
+									<div class="three wide column">
 										<div class="ui relaxed list">
+											<div class="item">
+												<div class="ui basic horizontal tiny label info-panel-label">Refresh</div>
+												<span id="info-refresh-rate"></span>
+											</div>
 											<div class="item">
 												<div class="ui basic horizontal tiny label info-panel-label">Hourly Cap</div>
 												<span id="info-hourly-cap"></span>
@@ -235,21 +271,19 @@
 												<div class="ui basic horizontal tiny label info-panel-label">Daily Cap</div>
 												<span id="info-daily-cap"></span>
 											</div>
-											<div class="item">
-												<div class="ui basic horizontal tiny label info-panel-label">Format</div>
-												<span id="info-adunit-format"></span>
-											</div>
 										</div>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<div class="two wide column">
-						<div class="ui blue segment full-height-segment">
-							<div class="qrcode-wrapper" style="text-align: -webkit-center; margin-top: 0.4em;">
-								<div id="qrcode"></div>
-							</div>
+				</div>
+				<!-- AB Table -->
+				<div class="row ab-table-section no-padding" style="display: none;">
+					<div class="sixteen wide column">
+						<div class="no-padding">
+							<button id="ab-table-export" class="ui small right floated button basic tertiary blue">Export</button>
+							<div id="ab-table" class="compact" style="margin-top: 0px;"></div>
 						</div>
 					</div>
 				</div>
@@ -496,19 +530,28 @@
 									</div>
 								</div>
 
-								<!-- Redraw table -->
+								<!-- IDFA Filter -->
 								<div class="item">
-									<button id="colsize-reset" class="ui tiny button basic circular waterfall-filter">Resize Columns</button>
+									<div id="idfa-filter" class="ui tiny button circular dropdown labeled icon waterfall-filter">
+										<i class="filter icon"></i>
+										<div class="default text">Filter: IDFA Targeting</div>
+										<div class="menu">
+											<div class="item" data-value="all">
+												All IDFA Targeting
+											</div>
+											<div class="item" data-value="only_idfa">
+												Only IDFA
+											</div>
+											<div class="item" data-value="no_idfa">
+												Only Non-IDFA
+											</div>
+										</div>
+									</div>
 								</div>
 
 								<!-- Sort Reset -->
 								<div class="item">
 									<button id="sort-reset" class="ui tiny button basic circular waterfall-filter">Reset Sorting</button>
-								</div>
-
-								<!-- Sort Reset -->
-								<div class="item">
-									<button id="save-columns" class="ui tiny button basic tertiary blue waterfall-filter">Save Column Set</button>
 								</div>
 
 								<!-- Search items -->
@@ -518,50 +561,56 @@
 										<i class="search icon"></i>
 									</div>
 								</div>
-							</div>
 
-							<!-- Column selector -->
-							<div class="ui horizontal list" style="width: 100%;">
-								<div class="item" style="width: 100%;">
-									<form class="ui small form">
-										<div class="field">
-											<!-- <label>Columns</label> -->
-											<select class="ui fluid search dropdown column-selector waterfall-cols" multiple=""></select>
-										</div>
-									</form>
+								<!-- line item count -->
+								<div class="item" style="float: right;">
+									<button class="ui small button tertiary disabled count-waterfall-wrapper"></button>
 								</div>
 							</div>
 
+							<!-- Country Filter -->
+							<div class="ui horizontal list" style="width: 100%;">
+								<div class="item">
+									<div id="country-filter" class="ui tiny button circular dropdown labeled icon waterfall-filter">
+										<i class="filter icon"></i>
+										<div class="default text">Filter: Country</div>
+									</div>
+								</div>
+								<div class="item">
+									<div class="ui multiple small search clearable selection dropdown country-filter-dropdown">
+										<input type="hidden" name="country-filter">
+										<i class="dropdown icon"></i>
+										<div class="default text">Select Country</div>
+										<div class="menu"></div>
+									</div>
+								</div>
+							</div>
 						</div>
 						<!-- segment ends -->
 
-						<!-- Waterfall Table -->
-						<div class="ui message hidden temp-notification-message">
-							<p class="content">
-								<i class="exclamation circle icon"></i>
-								Guaranteed, Non-Guaranteed, Promo, Backfill-Promo line items are not included. 
-								It's not supported by MoPub API at the moment. However, you can still create new direct serve items via Add New
-							</p>
+						<!-- Column selector -->
+						<div class="ui items no-margin">
+							<button id="save-columns" class="ui mini right floated button basic tertiary blue">Save Column Set</button>
+							<!-- Redraw table -->
+							<button id="colsize-reset" class="ui mini right floated button basic tertiary blue">Reset Column Size</button>
+							<div class="item">
+								<select class="ui search small fluid dropdown column-selector waterfall-cols" multiple=""></select>
+							</div>
 						</div>
-						<div id="waterfall-adunit" class="grey"></div>
 
+						<!-- Waterfall Table -->
+						<div id="waterfall-adunit" class="grey"></div>
 					</div> <!-- Waterfall section end -->
 				</div> <!-- Row end -->
 
-				<!-- AB Table -->
-				<div class="row no-padding ab-table-section" style="display: none;">
-					<div class="sixteen wide column" id="waterfall-section">
-						<div id="ab-table" class="grey" style="margin-top: 0px;"></div>
-					</div>
-				</div>
 			</div> <!-- End of Grid -->
 
 		</div> <!-- loader waterfall table wrapper end-->
+
 		<!-- End of content wrapper -->
 
 	</div> 
 	<!-- End of body contents -->
-
 
 	<!-- 
 		Modals 
@@ -599,12 +648,12 @@
 						<ul class="ui list">
 							<li>Copyed line items will have the name in <span class="mopub-color-text">{NAME} {SUFFIX}</span> format.
 								<ul>
-									<li>Example) Existing Line Item Name (New)</li>
+									<li>Example) Existing Line Item Name {SUFFIX}</li>
 								</ul>
 							</li>
 							<li>New orders will have the name in <span class="mopub-color-text">New Order {DATETIME} {SUFFIX}</span> format.
 								<ul>
-									<li>Example) New Order 2020/05/30 12:00:01 (Created by WBExt)</li>
+									<li>Example) New Order 2020/05/30 12:00:01 {SUFFIX}</li>
 								</ul>
 							</li>
 						</ul>
@@ -613,12 +662,12 @@
 
 				<div class="two fields">
 					<div class="field">
-						<label>Override Suffix for New Line Item Name (leave blank for default)</label>
-						<input type="text" id="copy-form-lineitem-suffix" name="lineitem-name-suffix" placeholder="(New)">
+						<label>Override Suffix for New Line Item Name (leave blank for no suffix)</label>
+						<input type="text" id="copy-form-lineitem-suffix" name="lineitem-name-suffix" placeholder="">
 					</div>
 					<div class="field">
-						<label>Override Suffix for New Order Name (leave blank for default)</label>
-						<input type="text" id="copy-form-order-suffix" name="order-name-suffix" placeholder="(Created by WBExt)">
+						<label>Override Suffix for New Order Name (leave blank for no suffix)</label>
+						<input type="text" id="copy-form-order-suffix" name="order-name-suffix" placeholder="">
 					</div>
 				</div>
 
@@ -929,11 +978,11 @@
 					<div class="two fields">
 						<div class="six wide field required">
 							<label>Name</label>
-							<input type="text" name="apikey-name" placeholder="name">
+							<input type="text" name="apikey-name" placeholder="Name">
 						</div>
-						<div class="ten wide field required">
+						<div class="six wide field required">
 							<label>API Key</label>
-							<input type="text" name="apikey-key" placeholder="key">
+							<input type="text" name="apikey-key" placeholder="Key">
 						</div>
 					</div>
 				</form>
@@ -954,7 +1003,7 @@
 	<div class="ui modal tiny qrcode-modal">
 		<i class="close icon"></i>
 		<div class="ui header">
-			QRCode
+			Test Ad Unit	
 		</div>
 		<div class="content">
 			<div class="ui info message">
@@ -981,7 +1030,7 @@
 				<span>This is not an official product</span>
 			</div>
 			<div class="item">
-				developed by <a href="mailto:ricky840@gmail.com">ricky840@gmail.com</a>
+				Developed by <a href="mailto:jaejun@twitter.com">MoPub Professional Services Team</a>
 			</div>
 			<div class="item">
 				<span class="extension-version"></span>
