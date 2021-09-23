@@ -13,7 +13,7 @@ const EXTENSION_VERSION = chrome.runtime.getManifest().version;
 
 // Delay ms between API requests
 // const DELAY_INCREMENT = 300;
-const DELAY_INCREMENT = 800;
+const DELAY_INCREMENT = 400;
 
 // Default column set for column selectors
 const DEFAULT_COLUMN_SET = [
