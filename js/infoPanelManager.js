@@ -81,7 +81,7 @@ var infoPanelManager = (function(global) {
   function updateABStatus(status) {
     if (status) {
       let html = '<span class="ui green text">Enabled</span>';
-      html += '<span id="show-ab-bidder" class="ui text"> (show)</span>';
+      html += '<span id="show-ab-bidder" class="ui text"> (click here to expand)</span>';
       $("#info-ab-status").html(html);
     } else {
       $("#info-ab-status").html(`<span class="ui disabled text">Disabled</span>`);

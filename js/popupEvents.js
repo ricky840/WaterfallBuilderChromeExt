@@ -568,7 +568,7 @@ $(".test-adunit-btn").click(function() {
 $(".info-panel").on("click", "#show-ab-bidder", function() {
 	$(".ab-table-section").toggle();
 	const isVisible = $(".ab-table-section").is(":visible");
-	const msg = isVisible ? " (hide)" : " (show)";
+	const msg = isVisible ? " (click here to hide)" : " (click here to expand)";
 	$("#show-ab-bidder").html(msg);
 });
 
